@@ -1,0 +1,62 @@
+
+.diy-cursor {
+    cursor: pointer !important;
+}
+.text-expand-symbol::before,
+.text-expand-symbol::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+    border: 2px solid;
+    transition: .3s;
+    transition-timing-function: cubic-bezier(0.17,0.67,0.05,1.29);
+}
+
+.text-expand-symbol::before {
+    top: 0;
+    left: 0;
+    border-width: 2px 0 0 2px;
+    transform: translate3d(10px,10px,0);
+}
+
+.text-expand-symbol::after {
+    right: 0;
+    bottom: 0;
+    border-width: 0 2px 2px 0;
+    transform: translate3d(-10px,-10px,0);
+}
+
+.text-expand-symbol:hover::after {
+    opacity: 1;
+    transform: translate3d(10px,5px,0);
+}
+
+.text-expand-symbol:hover::before {
+    opacity: 1;
+    transform: translate3d(-10px,-5px,0);
+}
+
+*::-webkit-scrollbar{
+    width: 8px;
+    height: 8px;
+}
+*::-webkit-scrollbar-thumb{
+    background: rgba(0,0,0,.1);
+    border-radius: 5px;
+    border: 1px solid transparent;
+    height: 140px;
+    background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover{
+    background: #ccc;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    height: 140px;
+    background-clip: content-box;
+}
+*::-webkit-scrollbar-corner{
+    background: rgba(0, 0, 0, 0.1);
+}
+

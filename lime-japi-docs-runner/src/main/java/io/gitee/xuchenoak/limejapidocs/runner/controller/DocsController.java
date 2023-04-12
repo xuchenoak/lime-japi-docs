@@ -1,0 +1,110 @@
+package io.gitee.xuchenoak.limejapidocs.runner.controller;
+
+import io.gitee.xuchenoak.limejapidocs.parser.util.StringUtil;
+import io.gitee.xuchenoak.limejapidocs.runner.bean.AjaxResult;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.*;
+import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 接口文档业务接口
+ * @author xuchenoak
+ **/
+@RestController
+@RequestMapping("/lime_japi_docs/api")
+public class DocsController {
+
+    @Autowired
+    private DocsService docsService;
+
+    /**
+     * 获取生成时间集
+     * @return
+     */
+    @GetMapping("/list_create_time")
+    public AjaxResult<List<String>> listCreateTime() {
+        return AjaxResult.success(docsService.getCreateTimes());
+    }
+
+    /**
+     * 获取接口文档目录
+     * @param createTime 生成时间
+     * @param likeStr 搜索关键字
+     * @return
+     */
+    @GetMapping("/list_catalog")
+    public AjaxResult<List<DocsCatalogVo>> listCatalog(String createTime,
+                                                       String likeStr) {
+        if (StringUtil.isBlank(createTime)) {
+            return AjaxResult.success(new ArrayList<>());
+        }
+        return AjaxResult.success(docsService.getDocsCatalog(createTime, likeStr));
+    }
+
+
+    /**
+     * 获取接口文档列表
+     * @param createTime 生成时间
+     * @param controllerId controller标识
+     * @param hasComment 是否有注释
+     * @param hasType 是否有类型
+     * @param hasValid 是否有验证
+     * @param addDefaultValue 是否有默认值
+     * @param likeStr 搜索关键字
+     * @return
+     */
+    @GetMapping("/list_interface")
+    public AjaxResult<List<DocsInterfaceVo>> listInterface(String createTime,
+                                                           String controllerId,
+                                                           Boolean hasComment,
+                                                           Boolean hasType,
+                                                           Boolean hasValid,
+                                                           Boolean addDefaultValue,
+                                                           String likeStr) {
+        if (StringUtil.isBlank(createTime) || StringUtil.isBlank(controllerId)) {
+            return AjaxResult.success(new ArrayList<>());
+        }
+        hasComment = hasComment == null ? true : hasComment;
+        hasType = hasType == null ? true : hasType;
+        hasValid = hasValid == null ? true : hasValid;
+        addDefaultValue = addDefaultValue == null ? true : addDefaultValue;
+        return AjaxResult.success(docsService.getDocsInterface(createTime, controllerId, hasComment, hasType, hasValid, addDefaultValue, likeStr));
+    }
+
+    /**
+     * 获取接口文档配置
+     * @return
+     */
+    @GetMapping("/get_docs_config")
+    public AjaxResult<DocsConfigVo> getDocsConfig() {
+        return AjaxResult.success(docsService.getDocsConfig());
+    }
+
+    /**
+     * 执行文档解析
+     * @param password 解析秘钥
+     * @return
+     */
+    @GetMapping("/run_docs_parse")
+    public AjaxResult<DocsParseVo> runDocsParse(String password) {
+        return AjaxResult.success(docsService.runDocsParse(password));
+    }
+
+    /**
+     * 获取解析消息
+     * @param parseTimestamp 解析时间戳
+     * @return
+     */
+    @GetMapping("/get_parse_msg")
+    public AjaxResult<DocsParseMsgVo> getParseMsg(Long parseTimestamp) {
+        return AjaxResult.success(docsService.getParseMsg(parseTimestamp));
+    }
+
+
+}
