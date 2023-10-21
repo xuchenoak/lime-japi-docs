@@ -29,7 +29,7 @@ module.exports = {
         proxy: {
             // 配置跨域
             '/lime_japi_docs':{
-                target:'http://localhost:2023/', // target host
+                target:'http://localhost:3001/', // target host
                 ws:true, // proxy websockets 是否支持 websocket
                 secure: false, // 如果是 https 接口，需要配置这个参数
                 changeOrigin: true, // 设置成true,发送请求头中host会设置成target。request URL是http://localhost:5000/api/。设置成false, 请求头中host仍然是浏览器发送过来的host。也就是localhost:9000

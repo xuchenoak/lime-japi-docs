@@ -40,10 +40,14 @@ Vue.component('Loading', Loading)
 import LimeLogo from '@/components/LimeLogo'
 Vue.component('LimeLogo', LimeLogo)
 
+// LimeLogoFixed
+import LimeLogoFixed from '@/components/LimeLogoFixed'
+Vue.component('LimeLogoFixed', LimeLogoFixed)
+
 // 路由
-// import router from '@/router'
+import router from '@/router'
 Vue.config.productionTip = false
 new Vue({
-  // router,
+  router,
   render: h => h(App)
 }).$mount('#app')
