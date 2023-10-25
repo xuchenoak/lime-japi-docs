@@ -2,10 +2,15 @@ package io.gitee.xuchenoak.limejapidocs.runner.handler;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import cn.hutool.script.ScriptUtil;
+import io.gitee.xuchenoak.limejapidocs.parser.basenode.AnnotationNode;
+import io.gitee.xuchenoak.limejapidocs.parser.basenode.BaseNode;
 import io.gitee.xuchenoak.limejapidocs.parser.bean.ControllerData;
 import io.gitee.xuchenoak.limejapidocs.parser.config.ParserConfig;
 import io.gitee.xuchenoak.limejapidocs.parser.exception.CustomException;
 import io.gitee.xuchenoak.limejapidocs.parser.handler.ParserConfigHandler;
+import io.gitee.xuchenoak.limejapidocs.parser.parsendoe.FieldInfo;
 import io.gitee.xuchenoak.limejapidocs.parser.util.ListUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.bean.DocsConfig;
 import io.gitee.xuchenoak.limejapidocs.runner.config.DocsParserConfig;
@@ -15,8 +20,9 @@ import io.gitee.xuchenoak.limejapidocs.runner.util.MsgUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.List;
+import javax.script.ScriptException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 接口文档配置控制类
@@ -144,5 +150,51 @@ public class DocsParserConfigHandler implements ParserConfigHandler {
         apiDocsParseLogService.addMsg(msg);
     }
 
+    /**
+     * 参数验证注入
+     * @param annotationNodeList
+     * @param fieldInfo
+     */
+    @Override
+    public void paramValidInjectHandle(List<AnnotationNode> annotationNodeList, FieldInfo fieldInfo) {
+        String func = "";
+        if (StrUtil.isBlank(func)) {
+            ParserConfigHandler.super.paramValidInjectHandle(annotationNodeList, fieldInfo);
+            return;
+        }
+        Set<String> annotationNames = Optional.ofNullable(annotationNodeList.stream().map(AnnotationNode::getName).collect(Collectors.toSet())).orElse(new HashSet<>());
+        String valid = "";
+        try {
+            Object value = ScriptUtil.invoke(func, "valid", ScriptUtil.eval(JSONUtil.toJsonStr(annotationNames)), fieldInfo.getName(), fieldInfo.getComment());
+            if (value != null) {
+                valid = value.toString();
+            }
+        } catch (Exception e) {} finally {
+            fieldInfo.setValidation(valid);
+        }
+    }
+
+    /**
+     * 参数默认值注入
+     * @param annotationNodeList
+     * @param fieldInfo
+     */
+    @Override
+    public void paramDefaultValueInjectHandle(List<AnnotationNode> annotationNodeList, FieldInfo fieldInfo) {
+        String func = "";
+        if (StrUtil.isBlank(func)) {
+            ParserConfigHandler.super.paramDefaultValueInjectHandle(annotationNodeList, fieldInfo);
+            return;
+        }
+        String valid = "";
+        try {
+            Object value = ScriptUtil.invoke(func, "defaultValue", fieldInfo.getType(), fieldInfo.getName(), fieldInfo.getComment());
+            if (value != null) {
+                valid = value.toString();
+            }
+        } catch (Exception e) {} finally {
+            fieldInfo.setDefaultValue(valid);
+        }
+    }
 
 }
