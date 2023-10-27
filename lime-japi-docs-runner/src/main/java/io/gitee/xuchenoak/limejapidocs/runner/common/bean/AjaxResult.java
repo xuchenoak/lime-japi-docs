@@ -1,4 +1,6 @@
-package io.gitee.xuchenoak.limejapidocs.runner.bean;
+package io.gitee.xuchenoak.limejapidocs.runner.common.bean;
+
+import io.gitee.xuchenoak.limejapidocs.runner.common.enums.ResCodeEnum;
 
 /**
  * 响应数据对象
@@ -56,7 +58,7 @@ public class AjaxResult<T> {
     }
 
     public static <T> AjaxResult success(String msg, T data) {
-        return new AjaxResult(200, msg, data);
+        return new AjaxResult(ResCodeEnum.Succeed.getCode(), msg, data);
     }
 
     public static AjaxResult error() {
@@ -64,11 +66,15 @@ public class AjaxResult<T> {
     }
 
     public static AjaxResult error(String msg) {
-        return AjaxResult.error(msg, null);
+        return AjaxResult.error(ResCodeEnum.Fail.getCode(), msg);
     }
 
-    public static <T> AjaxResult error(String msg, T data) {
-        return new AjaxResult(500, msg, data);
+    public static AjaxResult error(Integer code, String msg) {
+        return new AjaxResult(code, msg);
+    }
+
+    public static <T> AjaxResult error(ResCodeEnum e, T data) {
+        return new AjaxResult(e.getCode(), e.getMsg(), data);
     }
 
 

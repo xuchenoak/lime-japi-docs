@@ -1,13 +1,12 @@
-package io.gitee.xuchenoak.limejapidocs.runner.service.impl;
+package io.gitee.xuchenoak.limejapidocs.runner.service.base;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.gitee.xuchenoak.limejapidocs.parser.util.ListUtil;
+import io.gitee.xuchenoak.limejapidocs.runner.common.mybatisplus.EntityBaseService;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsParseLog;
 import io.gitee.xuchenoak.limejapidocs.runner.mapper.ApiDocsParseLogMapper;
-import io.gitee.xuchenoak.limejapidocs.runner.service.inter.ApiDocsParseLogService;
 import io.gitee.xuchenoak.limejapidocs.runner.util.MsgUtil;
 import org.springframework.stereotype.Service;
 
@@ -20,27 +19,28 @@ import java.util.List;
  * @author xuchenoak
  **/
 @Service
-public class ApiDocsParseLogServiceImpl extends ServiceImpl<ApiDocsParseLogMapper, ApiDocsParseLog> implements ApiDocsParseLogService {
+public class ApiDocsParseLogService extends EntityBaseService<ApiDocsParseLogMapper, ApiDocsParseLog> {
 
     /**
      * 添加消息
+     * @param docsConfigId 文档配置Id
      * @param msg 消息内容
      */
-    @Override
-    public void addMsg(String msg) {
+    public void addMsg(Long docsConfigId, String msg) {
         msg = StrUtil.format("[{}]  {}", DateUtil.date().toString("yyyy-MM-dd HH:mm:ss"), msg);
-        save(new ApiDocsParseLog(0L, MsgUtil.getParseTimestamp(), msg, System.currentTimeMillis()));
+        save(new ApiDocsParseLog(0L, docsConfigId, MsgUtil.getParseTimestamp(docsConfigId), msg, System.currentTimeMillis()));
     }
 
     /**
      * 获取消息内容
+     * @param docsConfigId 文档配置Id
      * @param parseTimestamp 解析时间戳
      * @return
      */
-    @Override
-    public List<String> listMsg(Long parseTimestamp) {
+    public List<String> listMsg(Long docsConfigId, Long parseTimestamp) {
         List<String> msgList = new ArrayList<>();
         List<ApiDocsParseLog> list = list(new LambdaQueryWrapper<ApiDocsParseLog>()
+                .eq(ApiDocsParseLog::getDocsConfigId, docsConfigId)
                 .eq(ApiDocsParseLog::getParseTimestamp, parseTimestamp)
                 .orderByAsc(ApiDocsParseLog::getCreateTimestamp));
         if (ListUtil.isNotBlank(list)) {
@@ -50,4 +50,5 @@ public class ApiDocsParseLogServiceImpl extends ServiceImpl<ApiDocsParseLogMappe
         }
         return msgList;
     }
+
 }

@@ -1,6 +1,9 @@
 package io.gitee.xuchenoak.limejapidocs.runner.service.inter;
 
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.*;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsCatalogVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsInterfaceVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsParseMsgVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsParseVo;
 
 import java.util.List;
 
@@ -14,17 +17,19 @@ public interface DocsService {
 
     /**
      * 获取生成时间集
+     * @param docsConfigId 文档配置Id
      * @return
      */
-    List<String> getCreateTimes();
+    List<String> getCreateTimes(Long docsConfigId);
 
     /**
      * 获取接口文档目录
+     * @param docsConfigId 文档配置Id
      * @param createTime 生成时间
      * @param likeStr 搜索关键字
      * @return
      */
-    List<DocsCatalogVo> getDocsCatalog(String createTime, String likeStr);
+    List<DocsCatalogVo> getDocsCatalog(Long docsConfigId, String createTime, String likeStr);
 
     /**
      * 获取接口文档列表
@@ -40,21 +45,17 @@ public interface DocsService {
     List<DocsInterfaceVo> getDocsInterface(String createTime, String controllerId, boolean hasComment, boolean hasType, boolean hasValid, boolean addDefaultValue, String likeStr);
 
     /**
-     * 获取接口文档配置
-     * @return
-     */
-    DocsConfigVo getDocsConfig();
-
-    /**
      * 执行文档解析
+     * @param docsConfigId 文档配置Id
      * @param password 解析秘钥
      */
-    DocsParseVo runDocsParse(String password);
+    DocsParseVo runDocsParse(Long docsConfigId, String password);
 
     /**
      * 获取解析消息
+     * @param docsConfigId 文档配置Id
      * @param parseTimestamp 解析时间戳
      * @return
      */
-    DocsParseMsgVo getParseMsg(Long parseTimestamp);
+    DocsParseMsgVo getParseMsg(Long docsConfigId, Long parseTimestamp);
 }

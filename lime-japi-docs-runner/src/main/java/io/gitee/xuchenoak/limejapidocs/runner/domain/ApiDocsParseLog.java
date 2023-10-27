@@ -23,6 +23,9 @@ public class ApiDocsParseLog {
     @TableId(value = "id", type= IdType.AUTO)
     private Long id;
 
+    /** 文档配置Id */
+    private Long docsConfigId;
+
     /** 生成时间戳（毫秒） */
     private Long parseTimestamp;
 

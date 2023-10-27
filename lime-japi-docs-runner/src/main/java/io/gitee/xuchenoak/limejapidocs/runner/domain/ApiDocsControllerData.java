@@ -25,6 +25,9 @@ public class ApiDocsControllerData {
     @TableId(value = "id", type= IdType.AUTO)
     private Long id;
 
+    /** 文档配置Id */
+    private Long docsConfigId;
+
     /** controller唯一标识 */
     private String controllerId;
 

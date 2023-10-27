@@ -29,19 +29,5 @@ logging:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 docs-parser:
-  # 文档名称
-  docsName: XX接口文档
-  # 文档版本
-  version: V1.0
-  # 启动时是否解析 true/false
-  sysStartParse: false
-  # java文件所在目录绝对路径（必须写到java目录，多个用英文逗号分隔）
-  javaFilePaths: D:/test-project/src/main/java
-  # 仅扫描解析该包集合下的controller类（必须位于javaFilePaths下，若不配置默认扫描javaFilePaths下所有，多个用英文逗号分隔）
-  filterPackages: com.test
-  # 仅扫描的controller类名集（非类全名，多个用英文逗号分隔）
-  filterClassNames:
-  # 需要排除的controller类名集（非类全名，多个用英文逗号分隔）
-  ignoreClassNames:
-  # 执行解析秘钥（在页面端请求解析接口需要携带该执行解析秘钥）
-  apiRunKey: 123456
+  # 文档管理秘钥
+  docsConfigKey: 123456

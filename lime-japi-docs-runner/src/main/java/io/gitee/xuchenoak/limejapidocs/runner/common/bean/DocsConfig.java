@@ -1,4 +1,4 @@
-package io.gitee.xuchenoak.limejapidocs.runner.bean;
+package io.gitee.xuchenoak.limejapidocs.runner.common.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
