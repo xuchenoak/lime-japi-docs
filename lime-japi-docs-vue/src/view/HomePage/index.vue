@@ -27,8 +27,8 @@
                                         @click="() => (collapsed =! collapsed)"
                                     />
                                     <div class="config-doc-name">
-                                        <span>{{docsConfig.docName}}</span>
-                                        <a-tag style="margin-left: 10px" color="green">{{docsConfig.docVersion}}</a-tag>
+                                        <span>{{docsConfig.docsName}}</span>
+                                        <a-tag style="margin-left: 10px" color="green">{{docsConfig.docsVersion}}</a-tag>
                                     </div>
                                     <div class="config-doc-run-parse diy-cursor">
                                         <a-tooltip placement="bottom">
@@ -110,11 +110,7 @@
                 </a-drawer>
             </div>
         </div>
-        <div v-if="!show.pageShow" class="page-git">
-            <a href="https://gitee.com/xuchenoak/lime-japi-docs">
-                <a-icon class="git-icon" type="github" />
-            </a>
-        </div>
+        <gitee-box v-if="!show.pageShow" style="position: absolute; top: 50px; right: 100px;"/>
     </loading>
 </template>
 
@@ -122,7 +118,8 @@
 
 import Interface from "@/view/HomePage/components/Interface"
 import CataLog from "@/view/HomePage/components/CataLog"
-import {listCreateTime, getDocsConfig, runDocsParse, getPareMsg} from "@/api/docs"
+import {listCreateTime, runDocsParse, getPareMsg} from "@/api/docs"
+import {getDocsConfigSimple} from "@/api/docsConfig"
 export default {
     components: { Interface, CataLog },
     name: "index",
@@ -139,8 +136,8 @@ export default {
                 interfaceShow: false,
             },
             docsConfig: {
-                docName: 'XX项目接口文档',
-                docVersion: 'V1.0'
+                docsName: 'XX项目接口文档',
+                docsVersion: 'V1.0'
             },
             createTime: '',
             checkedInterface: {
@@ -175,7 +172,7 @@ export default {
         // 获取文档配置
         getDocsConfig() {
             this.loading = true
-            getDocsConfig().then(res => {
+            getDocsConfigSimple().then(res => {
                 if (res.code == 200) {
                     this.docsConfig = res.data
                 }
@@ -420,20 +417,6 @@ export default {
             color: #666;
         }
     }
-}
-
-.page-git {
-    position: absolute;
-    right: 100px;
-    top: 50px;
-    .git-icon {
-        font-size: 25px;
-        color: #888;
-        transition: all .5s;
-    }
-}
-.page-git:hover .git-icon{
-    color: #666;
 }
 
 /deep/ .ant-anchor-wrapper {

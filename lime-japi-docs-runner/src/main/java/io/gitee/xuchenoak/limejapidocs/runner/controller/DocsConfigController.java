@@ -68,7 +68,7 @@ public class DocsConfigController {
      * @return
      */
     @GetMapping("/check_config_key")
-    public AjaxResult<DocsConfigKeyCheckResultVo> checkConfigKey(@NotBlank(message = "文档管理秘钥不能为空") String docsConfigKey) {
+    public AjaxResult<DocsConfigKeyCheckResultVo> checkConfigKey(String docsConfigKey) {
         return AjaxResult.success(new DocsConfigKeyCheckResultVo(docsConfigKey, docsParserConfig.checkDocsConfigKey(docsConfigKey)));
     }
 

@@ -24,6 +24,10 @@ import '@/assets/styles/public-style.css'
 import CodeEditor from '@/components/CodeEditor'
 Vue.component('CodeEditor', CodeEditor)
 
+// 代码查看器组件
+import CodeViewer from '@/components/CodeViewer'
+Vue.component('CodeViewer', CodeViewer)
+
 // 复制组件
 import CopyText from '@/components/CopyText'
 Vue.component('CopyText', CopyText)
@@ -43,6 +47,14 @@ Vue.component('LimeLogo', LimeLogo)
 // LimeLogoFixed
 import LimeLogoFixed from '@/components/LimeLogoFixed'
 Vue.component('LimeLogoFixed', LimeLogoFixed)
+
+// GiteeBox
+import GiteeBox from '@/components/GiteeBox'
+Vue.component('GiteeBox', GiteeBox)
+
+// DrawerBox
+import DrawerBox from '@/components/DrawerBox'
+Vue.component('DrawerBox', DrawerBox)
 
 // 路由
 import router from '@/router'

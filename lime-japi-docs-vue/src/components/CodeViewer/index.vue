@@ -2,9 +2,9 @@
     <div class="editor-container">
         <div class="editor-language">{{language}}</div>
 
-<!--        <copy-text :value="value" class="editor-copy">-->
-<!--            <a-icon type="copy"/>-->
-<!--        </copy-text>-->
+        <copy-text :value="value" class="editor-copy">
+            <a-icon type="copy"/>
+        </copy-text>
 
         <editor
                 ref="myEditor"
@@ -81,10 +81,6 @@
                 type: Number,
                 default() { return 0 }
             },
-            subHeight: {
-                type: Number,
-                default() { return 0 }
-            },
             options: {
                 type: Object,
                 default() { return {}}
@@ -97,19 +93,19 @@
                     enableBasicAutocompletion: true, // 启用基本自动完成
                     enableSnippets: true, // 启用代码段
                     enableLiveAutocompletion: true, // 启用实时自动完成
-                    displayIndentGuides: true, // 显示参考线
+                    displayIndentGuides: false, // 显示参考线
                     enableEmmet: false, // 启用Emmet
                     tabSize: 2, // 标签大小
-                    fontSize: 16, // 设置字号
+                    fontSize: 14, // 设置字号
                     useWorker: false, // 使用辅助对象
                     showPrintMargin: false, //去除编辑器里的竖线
                     readOnly: false, // 是否可读
                     showFoldWidgets: true, // 显示折叠部件
                     fadeFoldWidgets: true, // 淡入折叠部件
-                    wrap: true, // 代码超过显示后是否换行
+                    wrap: false, // 代码超过显示后是否换行
                     highlightActiveLine: false, // 是否点亮光标所在行
                     showLineNumbers: true, // 是否显示行号
-                    showGutter: true, // 是否显示行号区域
+                    showGutter: false, // 是否显示行号区域
                     behavioursEnabled: true, // 是否开启代码编辑行为（智能写代码）
                     cursorStyle: "slim" // 光标样式
                 },
@@ -120,9 +116,6 @@
         created() {
 
             Object.assign(this.boxOptions, this.options)
-            if (this.subHeight) {
-                this.boxHeight = 'calc(100vh - ' + this.subHeight + 'px)'
-            }
             if (this.height) {
                 this.boxHeight = this.height
             }
@@ -141,11 +134,11 @@
                 // 监听编辑器变化
                 editor.getSession().on("change", () => {
                     this.$emit("change", editor.getValue())
-                    // if (!this.height) {
-                    //     this.boxHeight = editor.getSession().getLength() * 25
-                    // } else {
-                    //     this.boxHeight = this.height
-                    // }
+                    if (!this.height) {
+                        this.boxHeight = editor.getSession().getLength() * 25
+                    } else {
+                        this.boxHeight = this.height
+                    }
                 })
             },
         }
@@ -156,22 +149,20 @@
     .editor-container {
         position: relative;
         width: 100%;
-        padding: 30px 0px 00px 0px;
+        padding: 30px 20px 20px 20px;
         background: #f8f8f8;
         .editor-language {
-            color: #fff;
+            color: #ccc;
             font-size: .6rem;
             font-weight: 600;
-            height: 30px;
-            line-height: 26px;
-            padding: 0px 10px;
+            height: 15px;
+            line-height: 15px;
+            padding: 5px 10px 0;
             position: absolute;
             left: 0;
             text-align: left;
             top: 0;
             user-select: none;
-            width: 100%;
-            background: #666;
          }
         .editor-copy {
             color: #999;

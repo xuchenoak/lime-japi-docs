@@ -58,40 +58,40 @@
                                             </a-tab-pane>
                                             <a-tab-pane key="2" tab="JSON示例">
                                                 <div class="codeEditBox">
-                                                    <code-editor
+                                                    <code-viewer
                                                         :value="inter.formDataJson"
                                                         :options="{readOnly: true}"
                                                         language="json"
-                                                    ></code-editor>
+                                                    ></code-viewer>
                                                 </div>
                                             </a-tab-pane>
                                             <a-tab-pane key="3" tab="JS Object">
                                                 <div class="codeEditBox">
-                                                    <code-editor
+                                                    <code-viewer
                                                         :value="inter.formDataJsObj"
                                                         :options="{readOnly: true}"
                                                         language="javascript"
-                                                    ></code-editor>
+                                                    ></code-viewer>
                                                 </div>
                                             </a-tab-pane>
                                         </a-tabs>
                                         <a-tabs class="content-tab" v-if="inter.bodyData" default-active-key="1" size="small">
                                             <a-tab-pane key="1" tab="JSON参数">
                                                 <div class="codeEditBox">
-                                                    <code-editor
+                                                    <code-viewer
                                                         :value="inter.bodyData"
                                                         :options="{readOnly: true}"
                                                         language="json"
-                                                    ></code-editor>
+                                                    ></code-viewer>
                                                 </div>
                                             </a-tab-pane>
                                             <a-tab-pane key="2" tab="JS Object">
                                                 <div class="codeEditBox">
-                                                    <code-editor
+                                                    <code-viewer
                                                         :value="inter.bodyDataJsObj"
                                                         :options="{readOnly: true}"
                                                         language="javascript"
-                                                    ></code-editor>
+                                                    ></code-viewer>
                                                 </div>
                                             </a-tab-pane>
                                         </a-tabs>
@@ -108,20 +108,20 @@
                                         <a-tabs class="content-tab" default-active-key="1" size="small">
                                             <a-tab-pane v-if="inter.resData" key="1" tab="响应示例">
                                                 <div class="codeEditBox">
-                                                    <code-editor
+                                                    <code-viewer
                                                         :value="inter.resData"
                                                         :options="{readOnly: true}"
                                                         language="json"
-                                                    ></code-editor>
+                                                    ></code-viewer>
                                                 </div>
                                             </a-tab-pane>
                                             <a-tab-pane v-if="inter.resDataJsObj" key="2" tab="JS Object">
                                                 <div class="codeEditBox">
-                                                    <code-editor
+                                                    <code-viewer
                                                         :value="inter.resDataJsObj"
                                                         :options="{readOnly: true}"
                                                         language="javascript"
-                                                    ></code-editor>
+                                                    ></code-viewer>
                                                 </div>
                                             </a-tab-pane>
                                         </a-tabs>

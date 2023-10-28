@@ -4,7 +4,9 @@
             <lime-logo-fixed/>
             <div class="project-header">
                 <span>文档中心</span>
-                <span class="header-btn"><a-button type="primary" icon="plus-square">新增</a-button></span>
+                <span class="header-btn" v-if="isAdmin">
+                    <a-button type="primary" icon="plus-square" @click="$refs['edit_docs_config'].open()">新增</a-button>
+                </span>
             </div>
             <div class="project-list-box" :style="dataList && dataList.length > 0 ? '' : 'min-height: 200px'">
                 <a-list
@@ -14,18 +16,17 @@
                     :data-source="dataList"
                 >
                     <a-list-item slot="renderItem" slot-scope="item, index" style="height: 100px">
-                        <a slot="actions">文档</a>
-                        <a slot="actions">设置</a>
-                        <a slot="actions">删除</a>
+                        <a slot="actions" v-if="isAdmin">设置</a>
+                        <a slot="actions" v-if="isAdmin">删除</a>
                         <a-list-item-meta>
                             <span slot="description">
-                                <span>{{item.createUser}}</span>
-                                <span style="padding: 0 5px">/</span>
+<!--                                <span>{{item.createUser}}</span>-->
+<!--                                <span style="padding: 0 5px">/</span>-->
                                 <span>{{item.createTime}}</span>
                             </span>
                             <span slot="title">
-                                <span style="font-size: 18px">{{item.docName}}</span>
-                                <a-tag style="margin-left: 10px" color="green">{{item.docVersion}}</a-tag>
+                                <span style="font-size: 18px; cursor: pointer">{{item.docsName}}</span>
+                                <a-tag style="margin-left: 10px; cursor: pointer" color="green">{{item.docsVersion}}</a-tag>
                             </span>
                             <div slot="avatar" style="font-size: 30px; color: #666; font-weight: 300; font-style: italic">
                                 {{getIndex(index)}}
@@ -36,19 +37,21 @@
                 <empty-box v-else />
             </div>
         </div>
-        <div v-if="!show.pageShow" class="page-git">
-            <a href="https://gitee.com/xuchenoak/lime-japi-docs">
-                <a-icon class="git-icon" type="github" />
-            </a>
+        <div class="user-box" @click="handleDocsConfigKey">
+            <a-icon class="user-icon" :type="isAdmin ? 'user' : 'usergroup-add'" />
         </div>
+        <gitee-box v-if="!show.pageShow" style="position: absolute; top: 50px; right: 100px;"/>
+        <docs-config-key ref="docs_config_key" @save="handleSaveDocsConfigKey"/>
+        <edit-docs-config ref="edit_docs_config" />
     </loading>
 </template>
 
 <script>
-
-import {listCreateTime} from "@/api/docs"
+import DocsConfigKey from "./components/DocsConfigKey.vue"
+import EditDocsConfig from "./components/EditDocsConfig.vue"
+import {checkConfigKey, list} from "@/api/docsConfig"
 export default {
-    components: { },
+    components: { DocsConfigKey, EditDocsConfig },
     name: "index",
     data() {
         return {
@@ -59,17 +62,8 @@ export default {
                 initInfoShow: true,
                 interfaceShow: false,
             },
-            dataList: [{
-                docName: '政务服务系统接口文档（收件）',
-                docVersion: 'v1.0.1',
-                createTime: '2023-10-21 10:06:01',
-                createUser: '张三'
-            },{
-                docName: '政务服务系统接口文档（考评）',
-                docVersion: 'v1.0.1',
-                createTime: '2023-10-21 10:06:01',
-                createUser: '张三'
-            }]
+            isAdmin: false,
+            dataList: []
         };
     },
     created() {
@@ -80,26 +74,47 @@ export default {
 
         // 初始化
         init() {
+            this.listDocs()
+            this.checkDocsConfigKey()
         },
 
-        // 获取文档生成时间列表
-        getCreateTimeList() {
+        // 验证文档管理秘钥
+        checkDocsConfigKey() {
+            const docsConfigKey = localStorage.getItem("docs_config_key")
             this.loading = true
-            listCreateTime().then(res => {
-                if (res.code == 200) {
-                    let createTimeList = []
-                    res.data.map(item => {
-                        createTimeList.push({
-                            value: item,
-                            label: item
-                        })
-                    })
-                    if (createTimeList.length > 0) {
-                        this.createTimeList = createTimeList
-                        this.createTime = createTimeList[0].value
-                        this.show.pageShow = true
-                        this.showCatalog()
-                    }
+            checkConfigKey(docsConfigKey).then(res => {
+                this.isAdmin = res['data'] && res['data']['checkResult']
+            }).finally(()=> {
+                this.loading = false
+            })
+        },
+
+        // 验证管理员秘钥
+        handleDocsConfigKey() {
+            this.$refs['docs_config_key'].init()
+        },
+
+        // 文档管理秘钥验证成功
+        handleSaveDocsConfigKey(docsConfigKey) {
+            localStorage.setItem("docs_config_key", docsConfigKey)
+            this.checkDocsConfigKey()
+        },
+
+        // 获取文档列表
+        listDocs() {
+            this.loading = true
+            list().then(res => {
+                if (res['data']) {
+                    this.dataList = res['data']
+                    this.dataList = [{
+                        docsName: '政务服务系统接口文档（收件）',
+                        docsVersion: 'v1.0.1',
+                        createTime: '2023-10-21 10:06:01'
+                    },{
+                        docsName: '政务服务系统接口文档（考评）',
+                        docsVersion: 'v1.0.1',
+                        createTime: '2023-10-21 10:06:01'
+                    }]
                 }
             }).finally(()=> {
                 this.loading = false
@@ -147,19 +162,30 @@ export default {
         box-shadow: 2px 2px 25px rgba(0,0,0,.05);
     }
 }
-
-.page-git {
+.user-box {
     position: absolute;
-    right: 100px;
     top: 50px;
-    .git-icon {
-        font-size: 25px;
-        color: #888;
+    right: 140px;
+    border: 1.5px solid #999;
+    box-sizing: border-box;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .5s;
+    .user-icon {
+        font-size: 18px;
+        color: #999;
         transition: all .5s;
     }
 }
-.page-git:hover .git-icon{
-    color: #666;
+.user-box:hover {
+    border-color: #666;
+    .user-icon {
+        color: #666;
+    }
 }
 
 </style>

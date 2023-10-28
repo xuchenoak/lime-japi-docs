@@ -29,7 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
             public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
                 String docsConfigKey = request.getHeader("DCK");
                 if (!docsParserConfig.checkDocsConfigKey(docsConfigKey)) {
-                    CusExc.e("文档管理秘钥错误");
+                    CusExc.e("无权访问此接口");
                 }
                 return true;
             }
@@ -37,7 +37,8 @@ public class WebConfig implements WebMvcConfigurer {
         }).addPathPatterns("/lime_japi_docs/api/config/**")
                 .excludePathPatterns(
                         "/lime_japi_docs/api/config/list",
-                        "/lime_japi_docs/api/config/get_docs_config_simple"
+                        "/lime_japi_docs/api/config/get_docs_config_simple",
+                        "/lime_japi_docs/api/config/check_config_key"
                 );
     }
 
