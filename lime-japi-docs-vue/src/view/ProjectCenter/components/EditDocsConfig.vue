@@ -88,13 +88,14 @@
             <a-tab-pane key="3" tab="参数验证回调">
                 <code-editor
                     :value="configItem.paramValidFunc"
+                    @input="(e)=>{configItem.paramValidFunc = e}"
                     :sub-height="280"
                     language="javascript"
                 ></code-editor>
             </a-tab-pane>
             <a-tab-pane key="4" tab="默认值回调">
                 <code-editor
-                    :value="configItem.paramDefaultValueFunc"
+                    v-model="configItem.paramDefaultValueFunc"
                     :sub-height="280"
                     language="javascript"
                 ></code-editor>
@@ -116,13 +117,16 @@ export default {
             wrapperCol: { span: 20 },
             form: this.$form.createForm(this),
             configItem: {
+                docsName: '',
+                docsVersion: '',
+                sysStartParse: 0,
+                apiRunKey: '',
                 javaFilePaths: [],
                 filterPackages: [],
                 filterClassNames: [],
                 ignoreClassNames: [],
                 paramValidFunc: '',
                 paramDefaultValueFunc: '',
-
             },
         }
     },
@@ -140,9 +144,53 @@ export default {
             }
         },
         handleSave() {
+            this.form.validateFields((errors, values)=> {
+                if (!errors) {
+                    // this.loading = true
+                    values['javaFilePaths'] = this.configItem.javaFilePaths.filter(item => !!item.trim())
+                    values['filterPackages'] = this.configItem.filterPackages.filter(item => !!item.trim())
+                    values['filterClassNames'] = this.configItem.filterClassNames.filter(item => !!item.trim())
+                    values['ignoreClassNames'] = this.configItem.ignoreClassNames.filter(item => !!item.trim())
+                    values['paramValidFunc'] = this.configItem.paramValidFunc
+                    values['paramDefaultValueFunc'] = this.configItem.paramDefaultValueFunc
 
+                    console.log(values, 'v')
+
+                    // if (!this.id) {
+                    //     add(values).then(()=> {
+                    //         this.$message.success('新增成功')
+                    //         this.$emit('ok')
+                    //         this.closeDrawer()
+                    //     }).finally(()=> {
+                    //         this.loading = false
+                    //     })
+                    // } else {
+                    //     values['id'] = this.id
+                    //     edit(values).then(()=> {
+                    //         this.$message.success('保存成功')
+                    //         this.$emit('ok')
+                    //         this.closeDrawer()
+                    //     }).finally(()=> {
+                    //         this.loading = false
+                    //     })
+                    // }
+                }
+            })
         },
         close() {
+            this.form.resetFields()
+            this.configItem = {
+                docsName: '',
+                docsVersion: '',
+                sysStartParse: 0,
+                apiRunKey: '',
+                javaFilePaths: [],
+                filterPackages: [],
+                filterClassNames: [],
+                ignoreClassNames: [],
+                paramValidFunc: '',
+                paramDefaultValueFunc: '',
+            }
             this.visible = false
         },
     }
@@ -154,5 +202,8 @@ export default {
     position: absolute;
     top: 2px;
     right: -13px;
+}
+/deep/ .ant-drawer-body {
+    padding-top: 0!important;
 }
 </style>

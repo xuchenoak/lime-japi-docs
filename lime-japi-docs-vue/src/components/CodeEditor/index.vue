@@ -68,6 +68,7 @@
         components: {
             Editor
         },
+        name: 'CodeEdit',
         props: {
             value: {
                 type: String,
@@ -100,7 +101,7 @@
                     displayIndentGuides: true, // 显示参考线
                     enableEmmet: false, // 启用Emmet
                     tabSize: 2, // 标签大小
-                    fontSize: 16, // 设置字号
+                    fontSize: 15, // 设置字号
                     useWorker: false, // 使用辅助对象
                     showPrintMargin: false, //去除编辑器里的竖线
                     readOnly: false, // 是否可读
@@ -140,7 +141,7 @@
             editorInit(editor) {
                 // 监听编辑器变化
                 editor.getSession().on("change", () => {
-                    this.$emit("change", editor.getValue())
+                    this.$emit("input", editor.getValue())
                     // if (!this.height) {
                     //     this.boxHeight = editor.getSession().getLength() * 25
                     // } else {
