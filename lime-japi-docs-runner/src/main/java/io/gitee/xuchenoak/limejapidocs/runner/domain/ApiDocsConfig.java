@@ -28,7 +28,7 @@ import java.util.Optional;
 public class ApiDocsConfig {
 
     /** Id */
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /** 文档名称 */
@@ -71,7 +71,22 @@ public class ApiDocsConfig {
     /** 更新时间 */
     private Date updateTime;
 
-    public Boolean isSysStartParse() {
+    public ApiDocsConfig(String docsName, String docsVersion, Integer sysStartParse, String apiRunKey, List<String> javaFilePaths, List<String> filterPackages, List<String> filterClassNames, List<String> ignoreClassNames, String paramValidFunc, String paramDefaultValueFunc, Date createTime, Date updateTime) {
+        this.docsName = docsName;
+        this.docsVersion = docsVersion;
+        this.sysStartParse = sysStartParse;
+        this.apiRunKey = apiRunKey;
+        this.javaFilePaths = javaFilePaths;
+        this.filterPackages = filterPackages;
+        this.filterClassNames = filterClassNames;
+        this.ignoreClassNames = ignoreClassNames;
+        this.paramValidFunc = paramValidFunc;
+        this.paramDefaultValueFunc = paramDefaultValueFunc;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+    }
+
+    public Boolean hasSysStartParse() {
         return Optional.ofNullable(sysStartParse).orElse(TrueOrFalseEnum.FALSE.value()).equals(TrueOrFalseEnum.TRUE.value());
     }
 

@@ -2,7 +2,7 @@ package io.gitee.xuchenoak.limejapidocs.runner.common.mybatisplus;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import org.apache.ibatis.type.MappedTypes;
 
 /**
@@ -11,7 +11,7 @@ import org.apache.ibatis.type.MappedTypes;
  * @author xuchenoak
  **/
 @MappedTypes({Object.class})
-public class StringListTypeHandler extends FastjsonTypeHandler {
+public class StringListTypeHandler extends JacksonTypeHandler {
 
     public StringListTypeHandler(Class<Object> type) {
         super(type);

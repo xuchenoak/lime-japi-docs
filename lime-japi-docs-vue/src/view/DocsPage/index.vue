@@ -57,10 +57,11 @@
                                     </div>
                                 </a-space>
                                 <a-space class="docs-config-right" align="center">
+                                    <div class="home-box" @click="$router.push({path: '/'})">
+                                        <a-icon class="home-icon" type="home" />
+                                    </div>
                                     <div class="config-doc-git">
-                                        <a href="https://gitee.com/xuchenoak/lime-japi-docs">
-                                            <a-icon class="git-icon" type="github" />
-                                        </a>
+                                        <gitee-box :size="25"/>
                                     </div>
                                 </a-space>
                             </div>
@@ -78,9 +79,11 @@
             <div class="empty-interface-bg" v-else>
                 <lime-logo class="lime-logo" :width="460"/>
                 <div class="empty-box">
-                    <empty-box text="未找到接口数据"/>
+                    <empty-box :text="docsNotFound ? '文档不存在' : '未生成接口数据'"/>
                     <div class="empty-box-btn">
-                        <a-button :icon="parseRunning ? 'loading' : 'plus-square'" @click="showDrawer" type="primary">
+                        <a-button v-if="docsNotFound" @click="$router.push({path: '/'})" type="primary">
+                            返回主页</a-button>
+                        <a-button v-else :icon="parseRunning ? 'loading' : 'plus-square'" @click="showDrawer" type="primary">
                             {{ parseRunning ? '正在生成' : '去生成' }}</a-button>
                     </div>
                 </div>
@@ -110,14 +113,19 @@
                 </a-drawer>
             </div>
         </div>
-        <gitee-box v-if="!show.pageShow" style="position: absolute; top: 50px; right: 100px;"/>
+        <div v-if="!show.pageShow" class="empty-handle-box">
+            <div class="home-box" @click="$router.push({path: '/'})">
+                <a-icon class="home-icon" type="home" />
+            </div>
+            <gitee-box/>
+        </div>
     </loading>
 </template>
 
 <script>
 
-import Interface from "@/view/HomePage/components/Interface"
-import CataLog from "@/view/HomePage/components/CataLog"
+import Interface from "@/view/DocsPage/components/Interface"
+import CataLog from "@/view/DocsPage/components/CataLog"
 import {listCreateTime, runDocsParse, getPareMsg} from "@/api/docs"
 import {getDocsConfigSimple} from "@/api/docsConfig"
 export default {
@@ -153,7 +161,9 @@ export default {
             password: '',
             msgList: [],
             parseRunning: false,
-            parseTimestamp: null
+            parseTimestamp: null,
+            docsConfigId: null,
+            docsNotFound: false
         };
     },
     created() {
@@ -164,6 +174,12 @@ export default {
 
         // 初始化
         init() {
+            let docsConfigId = this.$route.params['id']
+            if (!docsConfigId || Number(docsConfigId) < 1) {
+                this.docsNotFound = true
+                return
+            }
+            this.docsConfigId = docsConfigId
             this.getDocsConfig()
             this.getCreateTimeList()
             this.refreshParseMsg()
@@ -172,10 +188,12 @@ export default {
         // 获取文档配置
         getDocsConfig() {
             this.loading = true
-            getDocsConfigSimple().then(res => {
-                if (res.code == 200) {
-                    this.docsConfig = res.data
+            getDocsConfigSimple(this.docsConfigId).then(res => {
+                if (!res["data"]) {
+                    this.docsNotFound = true
+                    return
                 }
+                this.docsConfig = res.data
             }).finally(()=> {
                 this.loading = false
             })
@@ -184,7 +202,7 @@ export default {
         // 获取文档生成时间列表
         getCreateTimeList() {
             this.loading = true
-            listCreateTime().then(res => {
+            listCreateTime(this.docsConfigId).then(res => {
                 if (res.code == 200) {
                     let createTimeList = []
                     res.data.map(item => {
@@ -224,7 +242,7 @@ export default {
                 this.show.interfaceShow = false
                 this.show.initInfoShow = true
                 const likeStr = this.searchConfig.type == 'controller' ? this.searchConfig.value : null
-                this.$refs['catalogRef'].init(this.createTime, likeStr)
+                this.$refs['catalogRef'].init(this.docsConfigId, this.createTime, likeStr)
             }
         },
 
@@ -271,7 +289,7 @@ export default {
         // 执行解析
         handleParse() {
             this.msgList = []
-            runDocsParse(this.password).then(res => {
+            runDocsParse(this.docsConfigId, this.password).then(res => {
                 if (res['code'] === 200) {
                     const msg = res.data['msg']
                     const parseRunning = res.data['running']
@@ -289,7 +307,7 @@ export default {
 
         // 刷新解析消息
         refreshParseMsg() {
-            getPareMsg(this.parseTimestamp).then(res => {
+            getPareMsg(this.docsConfigId, this.parseTimestamp).then(res => {
                 if (res['code'] === 200) {
                     const msgList = res.data['msgList']
                     const parseTimestamp = res.data['parseTimestamp']
@@ -321,7 +339,37 @@ export default {
 </script>
 
 <style scoped lang="less">
-
+.empty-handle-box {
+    position: absolute;
+    top: 50px;
+    right: 100px;
+    >div {
+        float: left;
+    }
+    .home-box {
+        margin-right: 10px;
+        border: 1.5px solid #999;
+        box-sizing: border-box;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        line-height: 30px;
+        text-align: center;
+        cursor: pointer;
+        transition: all .5s;
+        .home-icon {
+            font-size: 18px;
+            color: #999;
+            transition: all .5s;
+        }
+    }
+    .home-box:hover {
+        border-color: #666;
+        .home-icon {
+            color: #666;
+        }
+    }
+}
 .empty-interface-bg {
     height: 300px;
     position: absolute;
@@ -406,15 +454,31 @@ export default {
     .docs-config-right {
         position: absolute;
         right: 340px;
-        .config-doc-git {
-            .git-icon {
-                font-size: 25px;
-                color: #888;
+        height: 64px;
+        .home-box {
+            border: 1.5px solid #999;
+            box-sizing: border-box;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            line-height: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .5s;
+            .home-icon {
+                font-size: 15px;
+                color: #999;
                 transition: all .5s;
             }
         }
-        .config-doc-git:hover .git-icon{
-            color: #666;
+        .home-box:hover {
+            border-color: #666;
+            .home-icon {
+                color: #666;
+            }
+        }
+        .config-doc-git {
+            padding-top: 12px;
         }
     }
 }

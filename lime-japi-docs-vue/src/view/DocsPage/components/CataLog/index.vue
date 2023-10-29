@@ -37,11 +37,12 @@ export default {
     methods: {
 
         // 初始化
-        init(createTime, likeStr) {
+        init(docsConfigId, createTime, likeStr) {
             if (!createTime) {
                 this.docsCatalogList = []
                 return
             }
+            this.cataLogParams.docsConfigId = docsConfigId
             this.cataLogParams.createTime = createTime
             this.cataLogParams.likeStr = likeStr
             this.getCatalogList()

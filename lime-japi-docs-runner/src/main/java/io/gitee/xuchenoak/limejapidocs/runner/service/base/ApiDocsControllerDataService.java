@@ -109,7 +109,6 @@ public class ApiDocsControllerDataService extends EntityBaseService<ApiDocsContr
      */
     private ApiDocsControllerData toApiDocsControllerData(Long docsConfigId, ControllerData data) {
         return new ApiDocsControllerData(
-                0L,
                 docsConfigId,
                 data.getControllerId(),
                 data.getControllerFullName(),

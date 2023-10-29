@@ -16,15 +16,24 @@
                     :data-source="dataList"
                 >
                     <a-list-item slot="renderItem" slot-scope="item, index" style="height: 100px">
-                        <a slot="actions" v-if="isAdmin">设置</a>
-                        <a slot="actions" v-if="isAdmin">删除</a>
+                        <a slot="actions" v-if="isAdmin" @click="$refs['edit_docs_config'].open(item.id)">设置</a>
+                        <a-popconfirm
+                            slot="actions"
+                            v-if="isAdmin"
+                            title="确认删除？"
+                            ok-text="确认"
+                            cancel-text="取消"
+                            @confirm="handleDel(item.id)"
+                        >
+                            <a>删除</a>
+                        </a-popconfirm>
                         <a-list-item-meta>
                             <span slot="description">
 <!--                                <span>{{item.createUser}}</span>-->
 <!--                                <span style="padding: 0 5px">/</span>-->
                                 <span>{{item.createTime}}</span>
                             </span>
-                            <span slot="title">
+                            <span slot="title" @click="handleView(item.id)">
                                 <span style="font-size: 18px; cursor: pointer">{{item.docsName}}</span>
                                 <a-tag style="margin-left: 10px; cursor: pointer" color="green">{{item.docsVersion}}</a-tag>
                             </span>
@@ -42,14 +51,14 @@
         </div>
         <gitee-box v-if="!show.pageShow" style="position: absolute; top: 50px; right: 100px;"/>
         <docs-config-key ref="docs_config_key" @save="handleSaveDocsConfigKey"/>
-        <edit-docs-config ref="edit_docs_config" />
+        <edit-docs-config ref="edit_docs_config" @ok="listDocs" />
     </loading>
 </template>
 
 <script>
 import DocsConfigKey from "./components/DocsConfigKey.vue"
 import EditDocsConfig from "./components/EditDocsConfig.vue"
-import {checkConfigKey, list} from "@/api/docsConfig"
+import {checkConfigKey, list, del} from "@/api/docsConfig"
 export default {
     components: { DocsConfigKey, EditDocsConfig },
     name: "index",
@@ -89,6 +98,13 @@ export default {
             })
         },
 
+        // 查看文档
+        handleView(id) {
+            this.$router.push({
+                path: '/docs/' + id
+            })
+        },
+
         // 验证管理员秘钥
         handleDocsConfigKey() {
             this.$refs['docs_config_key'].init()
@@ -106,19 +122,21 @@ export default {
             list().then(res => {
                 if (res['data']) {
                     this.dataList = res['data']
-                    this.dataList = [{
-                        docsName: '政务服务系统接口文档（收件）',
-                        docsVersion: 'v1.0.1',
-                        createTime: '2023-10-21 10:06:01'
-                    },{
-                        docsName: '政务服务系统接口文档（考评）',
-                        docsVersion: 'v1.0.1',
-                        createTime: '2023-10-21 10:06:01'
-                    }]
                 }
             }).finally(()=> {
                 this.loading = false
                 this.firstOpen = false
+            })
+        },
+
+        // 删除
+        handleDel(id) {
+            this.loading = true
+            del(id).then(() => {
+                this.$message.success("删除成功")
+                this.listDocs()
+            }).finally(()=> {
+                this.loading = false
             })
         },
 

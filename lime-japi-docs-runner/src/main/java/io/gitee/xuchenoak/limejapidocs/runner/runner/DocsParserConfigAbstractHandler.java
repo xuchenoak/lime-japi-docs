@@ -84,7 +84,7 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
             ParserConfigHandler.super.paramValidInjectHandle(annotationNodeList, fieldInfo);
             return;
         }
-        Set<String> annotationNames = Optional.ofNullable(annotationNodeList.stream().map(AnnotationNode::getName).collect(Collectors.toSet())).orElse(new HashSet<>());
+        Set<String> annotationNames = Optional.ofNullable(annotationNodeList).orElse(new ArrayList<>()).stream().map(AnnotationNode::getName).collect(Collectors.toSet());
         String valid = "";
         try {
             Object value = ScriptUtil.invoke(func, "valid", ScriptUtil.eval(JSONUtil.toJsonStr(annotationNames)), fieldInfo.getName(), fieldInfo.getComment());

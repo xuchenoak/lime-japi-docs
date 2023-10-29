@@ -37,7 +37,7 @@ public class DocsParserRunner implements ApplicationRunner {
         List<ApiDocsConfig> docsConfigs = apiDocsConfigService.list();
         if (ListUtils.isNotBlank(docsConfigs)) {
             for (ApiDocsConfig docsConfig : docsConfigs) {
-                if (ListUtils.isBlank(docsConfig.getJavaFilePaths()) || !docsConfig.isSysStartParse()) {
+                if (ListUtils.isBlank(docsConfig.getJavaFilePaths()) || !docsConfig.hasSysStartParse()) {
                     return;
                 }
                 try {

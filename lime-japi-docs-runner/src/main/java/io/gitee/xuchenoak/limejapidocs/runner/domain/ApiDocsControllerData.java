@@ -49,4 +49,14 @@ public class ApiDocsControllerData {
     /** 生成时间 */
     private Date createTime;
 
+    public ApiDocsControllerData(Long docsConfigId, String controllerId, String controllerFullName, String comment, String baseUriList, String interfaceDataList, Integer sort, Date createTime) {
+        this.docsConfigId = docsConfigId;
+        this.controllerId = controllerId;
+        this.controllerFullName = controllerFullName;
+        this.comment = comment;
+        this.baseUriList = baseUriList;
+        this.interfaceDataList = interfaceDataList;
+        this.sort = sort;
+        this.createTime = createTime;
+    }
 }

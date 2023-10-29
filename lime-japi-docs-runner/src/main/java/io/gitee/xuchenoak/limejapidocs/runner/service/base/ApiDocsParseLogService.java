@@ -28,7 +28,7 @@ public class ApiDocsParseLogService extends EntityBaseService<ApiDocsParseLogMap
      */
     public void addMsg(Long docsConfigId, String msg) {
         msg = StrUtil.format("[{}]  {}", DateUtil.date().toString("yyyy-MM-dd HH:mm:ss"), msg);
-        save(new ApiDocsParseLog(0L, docsConfigId, MsgUtil.getParseTimestamp(docsConfigId), msg, System.currentTimeMillis()));
+        save(new ApiDocsParseLog(docsConfigId, MsgUtil.getParseTimestamp(docsConfigId), msg, System.currentTimeMillis()));
     }
 
     /**

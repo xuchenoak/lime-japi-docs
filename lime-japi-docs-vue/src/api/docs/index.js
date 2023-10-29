@@ -1,10 +1,11 @@
 import request from '@/util/request'
 
 // 获取生成时间集
-export function listCreateTime() {
+export function listCreateTime(docsConfigId) {
     return request({
         url: '/lime_japi_docs/api/docs/list_create_time',
-        method: 'get'
+        method: 'get',
+        params: {docsConfigId}
     })
 }
 
@@ -27,19 +28,19 @@ export function listInterface(params) {
 }
 
 // 执行文档解析
-export function runDocsParse(password) {
+export function runDocsParse(docsConfigId, password) {
     return request({
         url: '/lime_japi_docs/api/docs/run_docs_parse',
         method: 'get',
-        params: {password}
+        params: {docsConfigId, password}
     })
 }
 
 // 获取解析消息
-export function getPareMsg(parseTimestamp) {
+export function getPareMsg(docsConfigId, parseTimestamp) {
     return request({
         url: '/lime_japi_docs/api/docs/get_parse_msg',
         method: 'get',
-        params: {parseTimestamp}
+        params: {docsConfigId, parseTimestamp}
     })
 }

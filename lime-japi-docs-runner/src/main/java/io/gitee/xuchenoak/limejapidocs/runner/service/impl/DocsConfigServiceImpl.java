@@ -97,8 +97,8 @@ public class DocsConfigServiceImpl implements DocsConfigService {
                 bean.getDocsVersion(),
                 bean.getSysStartParse(),
                 bean.getApiRunKey(),
-                bean.getFilterPackages(),
                 bean.getJavaFilePaths(),
+                bean.getFilterPackages(),
                 bean.getFilterClassNames(),
                 bean.getIgnoreClassNames(),
                 bean.getParamValidFunc(),
@@ -117,7 +117,6 @@ public class DocsConfigServiceImpl implements DocsConfigService {
     public DocsConfigVo add(DocsConfigAddRf rf) {
         DateTime now = DateUtil.date();
         ApiDocsConfig bean = new ApiDocsConfig(
-                0L,
                 rf.getDocsName(),
                 rf.getDocsVersion(),
                 rf.getSysStartParse(),

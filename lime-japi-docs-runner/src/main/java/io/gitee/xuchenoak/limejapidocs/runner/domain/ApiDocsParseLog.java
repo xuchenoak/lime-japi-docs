@@ -35,4 +35,10 @@ public class ApiDocsParseLog {
     /** 创建时间戳（毫秒） */
     private Long createTimestamp;
 
+    public ApiDocsParseLog(Long docsConfigId, Long parseTimestamp, String logMsg, Long createTimestamp) {
+        this.docsConfigId = docsConfigId;
+        this.parseTimestamp = parseTimestamp;
+        this.logMsg = logMsg;
+        this.createTimestamp = createTimestamp;
+    }
 }

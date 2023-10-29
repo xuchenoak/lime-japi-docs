@@ -1,6 +1,7 @@
 <template>
     <drawer-box
         title="文档配置"
+        :width="700"
         :loading="loading"
         :visible="visible"
         @close="close"
@@ -85,7 +86,7 @@
                     </a-button>
                 </a-form-item>
             </a-tab-pane>
-            <a-tab-pane key="3" tab="参数验证回调">
+            <a-tab-pane key="3" tab="参数验证描述注入">
                 <code-editor
                     :value="configItem.paramValidFunc"
                     @input="(e)=>{configItem.paramValidFunc = e}"
@@ -93,7 +94,7 @@
                     language="javascript"
                 ></code-editor>
             </a-tab-pane>
-            <a-tab-pane key="4" tab="默认值回调">
+            <a-tab-pane key="4" tab="字段默认值注入">
                 <code-editor
                     v-model="configItem.paramDefaultValueFunc"
                     :sub-height="280"
@@ -125,8 +126,8 @@ export default {
                 filterPackages: [],
                 filterClassNames: [],
                 ignoreClassNames: [],
-                paramValidFunc: '',
-                paramDefaultValueFunc: '',
+                paramValidFunc: defaultParamValidFuc,
+                paramDefaultValueFunc: defaultParamDefaultValueFunc,
             },
         }
     },
@@ -137,7 +138,29 @@ export default {
             if (id) {
                 this.loading = true
                 getDocsConfig(id).then(res => {
-                    this.configItem = res['data']
+                    if (res['data']) {
+                        const data = res['data']
+                        this.configItem = {
+                            docsName: data.docsName,
+                            docsVersion: data.docsVersion,
+                            sysStartParse: data.sysStartParse,
+                            apiRunKey: data.apiRunKey,
+                            javaFilePaths: data.javaFilePaths || [],
+                            filterPackages: data.filterPackages || [],
+                            filterClassNames: data.filterClassNames || [],
+                            ignoreClassNames: data.ignoreClassNames || [],
+                            paramValidFunc: data.paramValidFunc,
+                            paramDefaultValueFunc: data.paramDefaultValueFunc
+                        }
+                        this.$nextTick(()=> {
+                            this.form.setFieldsValue({
+                                docsName: data.docsName,
+                                docsVersion: data.docsVersion,
+                                sysStartParse: data.sysStartParse,
+                                apiRunKey: data.apiRunKey
+                            })
+                        })
+                    }
                 }).finally(()=> {
                     this.loading = false
                 })
@@ -146,34 +169,32 @@ export default {
         handleSave() {
             this.form.validateFields((errors, values)=> {
                 if (!errors) {
-                    // this.loading = true
                     values['javaFilePaths'] = this.configItem.javaFilePaths.filter(item => !!item.trim())
                     values['filterPackages'] = this.configItem.filterPackages.filter(item => !!item.trim())
                     values['filterClassNames'] = this.configItem.filterClassNames.filter(item => !!item.trim())
                     values['ignoreClassNames'] = this.configItem.ignoreClassNames.filter(item => !!item.trim())
                     values['paramValidFunc'] = this.configItem.paramValidFunc
                     values['paramDefaultValueFunc'] = this.configItem.paramDefaultValueFunc
-
                     console.log(values, 'v')
-
-                    // if (!this.id) {
-                    //     add(values).then(()=> {
-                    //         this.$message.success('新增成功')
-                    //         this.$emit('ok')
-                    //         this.closeDrawer()
-                    //     }).finally(()=> {
-                    //         this.loading = false
-                    //     })
-                    // } else {
-                    //     values['id'] = this.id
-                    //     edit(values).then(()=> {
-                    //         this.$message.success('保存成功')
-                    //         this.$emit('ok')
-                    //         this.closeDrawer()
-                    //     }).finally(()=> {
-                    //         this.loading = false
-                    //     })
-                    // }
+                    this.loading = true
+                    if (!this.id) {
+                        add(values).then(()=> {
+                            this.$message.success('新增成功')
+                            this.$emit('ok')
+                            this.close()
+                        }).finally(()=> {
+                            this.loading = false
+                        })
+                    } else {
+                        values['id'] = this.id
+                        edit(values).then(()=> {
+                            this.$message.success('保存成功')
+                            this.$emit('ok')
+                            this.close()
+                        }).finally(()=> {
+                            this.loading = false
+                        })
+                    }
                 }
             })
         },
@@ -188,13 +209,59 @@ export default {
                 filterPackages: [],
                 filterClassNames: [],
                 ignoreClassNames: [],
-                paramValidFunc: '',
-                paramDefaultValueFunc: '',
+                paramValidFunc: defaultParamValidFuc,
+                paramDefaultValueFunc: defaultParamDefaultValueFunc,
             }
             this.visible = false
         },
     }
 }
+
+const defaultParamValidFuc = `
+/**
+ * 参数验证描述注入回调函数（请勿修改函数名！！！）
+ * @param annotationNames 参数的（多个）注解名称数组
+ * @param fieldName 参数字段名称
+ * @param fieldComment 参数字段注释
+ * @return 注入的参数验证描述
+ */
+function valid(annotationNames, fieldName, fieldComment) {
+  if(annotationNames.includes('NotNull')) {
+    return '对象非空';
+  }
+  if(annotationNames.includes('NotBlank')) {
+    return '字符串非空';
+  }
+  return '';
+}
+`
+const defaultParamDefaultValueFunc = `
+/**
+ * 字段默认值注入回调函数（请勿修改函数名！！！）
+ * @param type 字段类型（Java类型，基本数据类型->包装类）
+ * @param fieldName 参数字段名称
+ * @param fieldComment 参数字段注释
+ * @return 注入的默认值
+ */
+function defaultValue(type, fieldName, fieldComment) {
+  if (type == 'String') {
+    // 返回字符串的话双引号需要自己拼接
+    return '"字符串"';
+  }
+  if (type == 'Date') {
+    return '"2023-10-29 19:16:00"';
+  }
+  if (['Integer', 'BigInteger', 'Long'].includes(type)) {
+    return 0;
+  }
+  if (['Double', 'Float', 'BigDecimal'].includes(type)) {
+    return 0.1;
+  }
+  return '';
+}
+`
+
+
 </script>
 
 <style scoped lang="less">
