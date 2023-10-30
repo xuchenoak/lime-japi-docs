@@ -461,7 +461,7 @@ export default {
             width: 25px;
             height: 25px;
             border-radius: 50%;
-            line-height: 20px;
+            line-height: 25px;
             text-align: center;
             cursor: pointer;
             transition: all .5s;
@@ -478,7 +478,7 @@ export default {
             }
         }
         .config-doc-git {
-            padding-top: 12px;
+            padding-top: 15px;
         }
     }
 }

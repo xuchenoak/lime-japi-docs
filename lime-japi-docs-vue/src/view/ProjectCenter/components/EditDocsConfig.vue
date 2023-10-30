@@ -251,6 +251,9 @@ function defaultValue(type, fieldName, fieldComment) {
   if (type == 'Date') {
     return '"2023-10-29 19:16:00"';
   }
+  if (type == 'Boolean') {
+    return true;
+  }
   if (['Integer', 'BigInteger', 'Long'].includes(type)) {
     return 0;
   }
