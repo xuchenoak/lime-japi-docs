@@ -1,5 +1,6 @@
 package io.gitee.xuchenoak.limejapidocs.runner.controller;
 
+import cn.hutool.core.io.IoUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.common.bean.AjaxResult;
 import io.gitee.xuchenoak.limejapidocs.runner.common.config.DocsParserConfig;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfigrf.DocsConfigAddRf;
@@ -9,17 +10,23 @@ import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigKey
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigListVo;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigVo;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsConfigService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
  * 文档配置业务接口
  * @author xuchenoak
  **/
+@Slf4j
 @Validated
 @RestController
 @RequestMapping("/lime_japi_docs/api/config")
@@ -99,6 +106,36 @@ public class DocsConfigController {
     public AjaxResult del(@Validated @RequestBody DocsConfigIdRf rf) {
         docsConfigService.del(rf.getId());
         return AjaxResult.success();
+    }
+
+    /**
+     * 验证logo文件是否存在
+     * @return
+     */
+    @GetMapping("/check_logo")
+    public AjaxResult checkLogo() {
+        Boolean res;
+        try {
+            ClassPathResource resource = new ClassPathResource("logo.png");
+            res = resource.exists();
+        } catch (Exception e) {
+            res = false;
+        }
+        return AjaxResult.success(res);
+    }
+
+    /**
+     * 验证logo文件是否存在
+     * @return
+     */
+    @GetMapping("/logo")
+    public void logo(HttpServletResponse response) {
+        ClassPathResource resource = new ClassPathResource("logo.png");
+        try (InputStream inputStream = resource.getInputStream()){
+            IoUtil.copy(inputStream, response.getOutputStream());
+        } catch (Exception e) {
+            log.error("获取logo文件异常", e);
+        }
     }
 
 }
