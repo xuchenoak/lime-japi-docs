@@ -1,13 +1,32 @@
 <template>
     <loading :loading="firstOpen && loading">
+        <div class="project-header-bg">
+            <a-row class="project-header">
+                <a-col :span="12">
+                    <a-space align="center" size="small">
+                        <lime-logo :height="65" :open-click="true"/>
+                        <div style="height: 80px; line-height: 80px;">
+                            <span style="padding: 3px 15px; border-left: 1px solid #aaa; font-weight: 300">接口文档中心</span>
+                        </div>
+                    </a-space>
+                </a-col>
+                <a-col :span="12" style="text-align: right">
+                    <a-space align="center" size="middle" class="header-func-box">
+                        <div class="user-box" @click="handleDocsConfigKey">
+                            <a-icon class="user-icon" :type="isAdmin ? 'user' : 'usergroup-add'" />
+                        </div>
+                        <div>
+                            <gitee-box v-if="!show.pageShow"/>
+                        </div>
+                        <div class="header-btn" v-if="isAdmin">
+                            <a-button type="primary" icon="plus-square" @click="$refs['edit_docs_config'].open()">新增</a-button>
+                        </div>
+                        <div style="height: 80px"></div>
+                    </a-space>
+                </a-col>
+            </a-row>
+        </div>
         <div class="project-list-bg">
-            <lime-logo-fixed/>
-            <div class="project-header">
-                <span>文档中心</span>
-                <span class="header-btn" v-if="isAdmin">
-                    <a-button type="primary" icon="plus-square" @click="$refs['edit_docs_config'].open()">新增</a-button>
-                </span>
-            </div>
             <div class="project-list-box" :style="dataList && dataList.length > 0 ? '' : 'min-height: 200px'">
                 <a-list
                     v-if="dataList && dataList.length > 0"
@@ -30,7 +49,7 @@
                         <a-list-item-meta>
                             <span slot="description">
 <!--                                <span>{{item.createUser}}</span>-->
-<!--                                <span style="padding: 0 5px">/</span>-->
+                                <!--                                <span style="padding: 0 5px">/</span>-->
                                 <span>{{item.createTime}}</span>
                             </span>
                             <span slot="title" @click="handleView(item.id)">
@@ -46,10 +65,6 @@
                 <empty-box v-else />
             </div>
         </div>
-        <div class="user-box" @click="handleDocsConfigKey">
-            <a-icon class="user-icon" :type="isAdmin ? 'user' : 'usergroup-add'" />
-        </div>
-        <gitee-box v-if="!show.pageShow" style="position: absolute; top: 50px; right: 100px;"/>
         <docs-config-key ref="docs_config_key" @save="handleSaveDocsConfigKey"/>
         <edit-docs-config ref="edit_docs_config" @ok="listDocs" />
     </loading>
@@ -72,6 +87,10 @@ export default {
                 interfaceShow: false,
             },
             isAdmin: false,
+            queryParams: {
+                viewKey: "",
+                views: ""
+            },
             dataList: []
         };
     },
@@ -83,7 +102,9 @@ export default {
 
         // 初始化
         init() {
-            this.listDocs()
+            sessionStorage.setItem("root", this.$route.fullPath || "/")
+            this.queryParams.viewKey = this.$route.query["viewKey"] || ""
+            this.queryParams.views = this.$route.query["views"] || ""
             this.checkDocsConfigKey()
         },
 
@@ -93,7 +114,8 @@ export default {
             this.loading = true
             checkConfigKey(docsConfigKey).then(res => {
                 this.isAdmin = res['data'] && res['data']['checkResult']
-            }).finally(()=> {
+                this.listDocs()
+            }).catch(()=> {
                 this.loading = false
             })
         },
@@ -119,7 +141,7 @@ export default {
         // 获取文档列表
         listDocs() {
             this.loading = true
-            list().then(res => {
+            list(this.queryParams).then(res => {
                 if (res['data']) {
                     this.dataList = res['data']
                 }
@@ -152,58 +174,70 @@ export default {
 </script>
 
 <style scoped lang="less">
-.project-list-bg {
+.project-header-bg {
     width: 100%;
-    padding: 100px 0;
+    z-index: 1;
+    background: #fff;
+    height: 80px;
+    padding: 0 25px;
+    font-size: 20px;
+    position: fixed;
+    box-shadow: 2px 2px 25px rgba(0,0,0,.05);
     .project-header {
-        width: 800px;
-        margin: 0 auto 15px auto;
-        background: #fff;
-        height: 60px;
-        line-height: 60px;
-        padding: 0 25px;
-        font-size: 20px;
-        position: relative;
-        box-shadow: 2px 2px 25px rgba(0,0,0,.05);
-        .header-btn {
-            position: absolute;
-            right: 25px;
-            top: -3px;
+        margin: 0 auto;
+        min-width: 800px;
+        max-width: 1000px;
+        .header-func-box {
+            margin-right: 5px;
+            >div:nth-last-child(2) {
+                margin-right: 0!important;
+            }
+            .user-box {
+                border: 1.5px solid #999;
+                box-sizing: border-box;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                line-height: 30px;
+                text-align: center;
+                cursor: pointer;
+                transition: all .5s;
+                .user-icon {
+                    font-size: 18px;
+                    color: #999;
+                    transition: all .5s;
+                }
+            }
+            .user-box:hover {
+                border-color: #666;
+                .user-icon {
+                    color: #666;
+                }
+            }
+            .header-btn {
+                line-height: 77px;
+                height: 80px;
+            }
         }
     }
+}
+.project-list-bg {
+    position: relative;
+    width: 100%;
+    padding: 100px 0 30px 0;
+    background: #F3F5F7;
+    max-height: 100vh;
+    overflow-y: auto;
     .project-list-box {
         position: relative;
-        width: 800px;
+        min-width: 800px;
+        max-width: 1000px;
         margin: 0 auto;
         background: #fff;
         padding: 0 25px;
         box-shadow: 2px 2px 25px rgba(0,0,0,.05);
     }
 }
-.user-box {
-    position: absolute;
-    top: 50px;
-    right: 140px;
-    border: 1.5px solid #999;
-    box-sizing: border-box;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    line-height: 30px;
-    text-align: center;
-    cursor: pointer;
-    transition: all .5s;
-    .user-icon {
-        font-size: 18px;
-        color: #999;
-        transition: all .5s;
-    }
-}
-.user-box:hover {
-    border-color: #666;
-    .user-icon {
-        color: #666;
-    }
-}
+
 
 </style>

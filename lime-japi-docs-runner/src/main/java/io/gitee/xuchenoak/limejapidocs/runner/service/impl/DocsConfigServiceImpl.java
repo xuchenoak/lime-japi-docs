@@ -17,12 +17,14 @@ import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsControllerDataService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsParseLogService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsConfigService;
+import io.gitee.xuchenoak.limejapidocs.runner.util.IdUtils;
 import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 文档配置业务实现
@@ -45,16 +47,20 @@ public class DocsConfigServiceImpl implements DocsConfigService {
     /**
      * 获取文档列表
      * @param docsName 文档名称
+     * @param ids Ids
      * @return
      */
     @Override
-    public List<DocsConfigListVo> list(String docsName) {
+    public List<DocsConfigListVo> list(String docsName, List<Long> ids) {
         return ListUtils.listOrMapDoing(apiDocsConfigService.list(new LambdaQueryWrapper<ApiDocsConfig>()
-                        .like(StrUtil.isNotBlank(docsName), ApiDocsConfig::getDocsName, docsName)),
+                        .like(StrUtil.isNotBlank(docsName), ApiDocsConfig::getDocsName, docsName)
+                        .in(ListUtils.isNotBlank(ids), ApiDocsConfig::getId, ids)
+                        .orderByDesc(ApiDocsConfig::getSort)),
                 bean -> new DocsConfigListVo(
-                        bean.getId(),
+                        IdUtils.encryptId(bean.getId()),
                         bean.getDocsName(),
                         bean.getDocsVersion(),
+                        bean.getSort(),
                         bean.getCreateTime(),
                         bean.getUpdateTime()
                 ));
@@ -72,9 +78,10 @@ public class DocsConfigServiceImpl implements DocsConfigService {
             return null;
         }
         return new DocsConfigListVo(
-                bean.getId(),
+                IdUtils.encryptId(bean.getId()),
                 bean.getDocsName(),
                 bean.getDocsVersion(),
+                bean.getSort(),
                 bean.getCreateTime(),
                 bean.getUpdateTime()
         );
@@ -92,7 +99,7 @@ public class DocsConfigServiceImpl implements DocsConfigService {
             return null;
         }
         return new DocsConfigVo(
-                bean.getId(),
+                IdUtils.encryptId(bean.getId()),
                 bean.getDocsName(),
                 bean.getDocsVersion(),
                 bean.getSysStartParse(),
@@ -103,6 +110,7 @@ public class DocsConfigServiceImpl implements DocsConfigService {
                 bean.getIgnoreClassNames(),
                 bean.getParamValidFunc(),
                 bean.getParamDefaultValueFunc(),
+                bean.getSort(),
                 bean.getCreateTime(),
                 bean.getUpdateTime()
         );
@@ -127,6 +135,7 @@ public class DocsConfigServiceImpl implements DocsConfigService {
                 rf.getIgnoreClassNames(),
                 rf.getParamValidFunc(),
                 rf.getParamDefaultValueFunc(),
+                Optional.ofNullable(rf.getSort()).orElse(0),
                 now,
                 now
         );
@@ -141,7 +150,8 @@ public class DocsConfigServiceImpl implements DocsConfigService {
      */
     @Override
     public DocsConfigVo edit(DocsConfigEditRf rf) {
-        ApiDocsConfig bean = apiDocsConfigService.getById(rf.getId());
+        Long id = IdUtils.decryptIdOrExc(rf.getId());
+        ApiDocsConfig bean = apiDocsConfigService.getById(id);
         if (bean == null) {
             CusExc.e("文档配置不存在");
         }
@@ -155,10 +165,11 @@ public class DocsConfigServiceImpl implements DocsConfigService {
                 rf.getFilterClassNames(),
                 rf.getIgnoreClassNames(),
                 rf.getParamValidFunc(),
-                rf.getParamDefaultValueFunc()
+                rf.getParamDefaultValueFunc(),
+                Optional.ofNullable(rf.getSort()).orElse(0)
         );
         apiDocsConfigService.edit(bean);
-        return getDocsConfig(rf.getId());
+        return getDocsConfig(id);
     }
 
     /**

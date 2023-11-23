@@ -65,13 +65,16 @@ public class ApiDocsConfig {
     /** 参数默认值函数 */
     private String paramDefaultValueFunc;
 
+    /** 排序号 */
+    private Integer sort;
+
     /** 创建时间 */
     private Date createTime;
 
     /** 更新时间 */
     private Date updateTime;
 
-    public ApiDocsConfig(String docsName, String docsVersion, Integer sysStartParse, String apiRunKey, List<String> javaFilePaths, List<String> filterPackages, List<String> filterClassNames, List<String> ignoreClassNames, String paramValidFunc, String paramDefaultValueFunc, Date createTime, Date updateTime) {
+    public ApiDocsConfig(String docsName, String docsVersion, Integer sysStartParse, String apiRunKey, List<String> javaFilePaths, List<String> filterPackages, List<String> filterClassNames, List<String> ignoreClassNames, String paramValidFunc, String paramDefaultValueFunc, Integer sort, Date createTime, Date updateTime) {
         this.docsName = docsName;
         this.docsVersion = docsVersion;
         this.sysStartParse = sysStartParse;
@@ -82,6 +85,7 @@ public class ApiDocsConfig {
         this.ignoreClassNames = ignoreClassNames;
         this.paramValidFunc = paramValidFunc;
         this.paramDefaultValueFunc = paramDefaultValueFunc;
+        this.sort = sort;
         this.createTime = createTime;
         this.updateTime = updateTime;
     }
@@ -100,7 +104,7 @@ public class ApiDocsConfig {
         return this.apiRunKey.equals(apiRunKey);
     }
 
-    public ApiDocsConfig buildEdit(String docsName, String docsVersion, Integer sysStartParse, String apiRunKey, List<String> javaFilePaths, List<String> filterPackages, List<String> filterClassNames, List<String> ignoreClassNames, String paramValidFunc, String paramDefaultValueFunc) {
+    public ApiDocsConfig buildEdit(String docsName, String docsVersion, Integer sysStartParse, String apiRunKey, List<String> javaFilePaths, List<String> filterPackages, List<String> filterClassNames, List<String> ignoreClassNames, String paramValidFunc, String paramDefaultValueFunc, Integer sort) {
         this.docsName = docsName;
         this.docsVersion = docsVersion;
         this.sysStartParse = sysStartParse;
@@ -111,6 +115,7 @@ public class ApiDocsConfig {
         this.ignoreClassNames = ignoreClassNames;
         this.paramValidFunc = paramValidFunc;
         this.paramDefaultValueFunc = paramDefaultValueFunc;
+        this.sort = sort;
         this.updateTime = DateUtil.date();
         return this;
     }

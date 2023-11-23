@@ -27,8 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new HandlerInterceptor() {
             @Override
             public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-                String docsConfigKey = request.getHeader("Dck");
-                if (!docsParserConfig.checkDocsConfigKey(docsConfigKey)) {
+                if (!docsParserConfig.checkDocsConfigKey(request)) {
                     CusExc.e("无权访问此接口");
                 }
                 return true;

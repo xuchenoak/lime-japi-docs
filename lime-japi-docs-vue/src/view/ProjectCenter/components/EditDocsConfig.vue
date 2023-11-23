@@ -38,6 +38,13 @@
                             :rows="3"
                             v-decorator="['apiRunKey']" />
                     </a-form-item>
+                    <a-form-item
+                        label="排序号（越大越靠前）"
+                    >
+                        <a-input-number
+                            style="width: 100%"
+                            v-decorator="['sort', { initialValue: 0 }]" />
+                    </a-form-item>
                 </a-form>
             </a-tab-pane>
             <a-tab-pane key="2" tab="源码扫描配置">
@@ -122,6 +129,7 @@ export default {
                 docsVersion: '',
                 sysStartParse: 0,
                 apiRunKey: '',
+                sort: 0,
                 javaFilePaths: [],
                 filterPackages: [],
                 filterClassNames: [],
@@ -150,14 +158,16 @@ export default {
                             filterClassNames: data.filterClassNames || [],
                             ignoreClassNames: data.ignoreClassNames || [],
                             paramValidFunc: data.paramValidFunc,
-                            paramDefaultValueFunc: data.paramDefaultValueFunc
+                            paramDefaultValueFunc: data.paramDefaultValueFunc,
+                            sort: data.sort
                         }
                         this.$nextTick(()=> {
                             this.form.setFieldsValue({
                                 docsName: data.docsName,
                                 docsVersion: data.docsVersion,
                                 sysStartParse: data.sysStartParse,
-                                apiRunKey: data.apiRunKey
+                                apiRunKey: data.apiRunKey,
+                                sort: data.sort
                             })
                         })
                     }
@@ -175,7 +185,6 @@ export default {
                     values['ignoreClassNames'] = this.configItem.ignoreClassNames.filter(item => !!item.trim())
                     values['paramValidFunc'] = this.configItem.paramValidFunc
                     values['paramDefaultValueFunc'] = this.configItem.paramDefaultValueFunc
-                    console.log(values, 'v')
                     this.loading = true
                     if (!this.id) {
                         add(values).then(()=> {
@@ -205,6 +214,7 @@ export default {
                 docsVersion: '',
                 sysStartParse: 0,
                 apiRunKey: '',
+                sort: 0,
                 javaFilePaths: [],
                 filterPackages: [],
                 filterClassNames: [],

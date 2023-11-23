@@ -18,9 +18,10 @@ public interface DocsConfigService {
     /**
      * 获取文档列表
      * @param docsName 文档名称
+     * @param ids Ids
      * @return
      */
-    List<DocsConfigListVo> list(String docsName);
+    List<DocsConfigListVo> list(String docsName, List<Long> ids);
 
     /**
      * 获取单个文档配置（简单版）

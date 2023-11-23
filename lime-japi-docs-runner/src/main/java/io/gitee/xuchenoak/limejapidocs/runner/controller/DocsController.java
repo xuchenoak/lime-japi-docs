@@ -7,6 +7,7 @@ import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsInterfaceVo;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsParseMsgVo;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsParseVo;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsService;
+import io.gitee.xuchenoak.limejapidocs.runner.util.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +36,8 @@ public class DocsController {
      * @return
      */
     @GetMapping("/list_create_time")
-    public AjaxResult<List<String>> listCreateTime(@NotNull(message = "文档配置Id不能为空") Long docsConfigId) {
-        return AjaxResult.success(docsService.getCreateTimes(docsConfigId));
+    public AjaxResult<List<String>> listCreateTime(@NotNull(message = "文档配置Id不能为空") String docsConfigId) {
+        return AjaxResult.success(docsService.getCreateTimes(IdUtils.decryptIdOrExc(docsConfigId)));
     }
 
     /**
@@ -46,13 +47,13 @@ public class DocsController {
      * @return
      */
     @GetMapping("/list_catalog")
-    public AjaxResult<List<DocsCatalogVo>> listCatalog(@NotNull(message = "文档配置Id不能为空") Long docsConfigId,
+    public AjaxResult<List<DocsCatalogVo>> listCatalog(@NotNull(message = "文档配置Id不能为空") String docsConfigId,
                                                        String createTime,
                                                        String likeStr) {
         if (StringUtil.isBlank(createTime)) {
             return AjaxResult.success(new ArrayList<>());
         }
-        return AjaxResult.success(docsService.getDocsCatalog(docsConfigId, createTime, likeStr));
+        return AjaxResult.success(docsService.getDocsCatalog(IdUtils.decryptIdOrExc(docsConfigId), createTime, likeStr));
     }
 
 
@@ -92,8 +93,8 @@ public class DocsController {
      * @return
      */
     @GetMapping("/run_docs_parse")
-    public AjaxResult<DocsParseVo> runDocsParse(@NotNull(message = "文档配置Id不能为空") Long docsConfigId, String password) {
-        return AjaxResult.success(docsService.runDocsParse(docsConfigId, password));
+    public AjaxResult<DocsParseVo> runDocsParse(@NotNull(message = "文档配置Id不能为空") String docsConfigId, String password) {
+        return AjaxResult.success(docsService.runDocsParse(IdUtils.decryptIdOrExc(docsConfigId), password));
     }
 
     /**
@@ -103,8 +104,8 @@ public class DocsController {
      * @return
      */
     @GetMapping("/get_parse_msg")
-    public AjaxResult<DocsParseMsgVo> getParseMsg(@NotNull(message = "文档配置Id不能为空") Long docsConfigId, Long parseTimestamp) {
-        return AjaxResult.success(docsService.getParseMsg(docsConfigId, parseTimestamp));
+    public AjaxResult<DocsParseMsgVo> getParseMsg(@NotNull(message = "文档配置Id不能为空") String docsConfigId, Long parseTimestamp) {
+        return AjaxResult.success(docsService.getParseMsg(IdUtils.decryptIdOrExc(docsConfigId), parseTimestamp));
     }
 
 

@@ -18,13 +18,16 @@ import java.util.Date;
 public class DocsConfigListVo {
 
     /** Id */
-    private Long id;
+    private String id;
 
     /** 文档名称 */
     private String docsName;
 
     /** 文档版本号 */
     private String docsVersion;
+
+    /** 排序号 */
+    private Integer sort;
 
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

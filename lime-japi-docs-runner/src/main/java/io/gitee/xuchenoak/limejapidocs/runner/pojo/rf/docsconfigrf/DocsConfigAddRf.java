@@ -54,4 +54,7 @@ public class DocsConfigAddRf {
     /** 参数默认值函数 */
     private String paramDefaultValueFunc;
 
+    /** 排序号 */
+    private Integer sort;
+
 }

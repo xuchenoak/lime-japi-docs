@@ -22,8 +22,8 @@ import java.util.List;
 public class DocsConfigEditRf {
 
     /** Id */
-    @NotNull(message = "Id不能为空")
-    private Long id;
+    @NotBlank(message = "Id不能为空")
+    private String id;
 
     /** 文档名称 */
     @NotBlank(message = "文档名称不能为空")
@@ -58,5 +58,8 @@ public class DocsConfigEditRf {
 
     /** 参数默认值函数 */
     private String paramDefaultValueFunc;
+
+    /** 排序号 */
+    private Integer sort;
 
 }

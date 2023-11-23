@@ -10,16 +10,20 @@ import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigKey
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigListVo;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigVo;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsConfigService;
+import io.gitee.xuchenoak.limejapidocs.runner.util.IdUtils;
+import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,8 +48,22 @@ public class DocsConfigController {
      * @return
      */
     @GetMapping("/list")
-    public AjaxResult<List<DocsConfigListVo>> list(String docsName) {
-        return AjaxResult.success(docsConfigService.list(docsName));
+    public AjaxResult<List<DocsConfigListVo>> list(String viewKey,
+                                                   @RequestParam("views") List<String> views,
+                                                   String docsName,
+                                                   HttpServletRequest request) {
+        List<Long> ids = null;
+        if (!docsParserConfig.checkDocsConfigKey(request) && !docsParserConfig.checkDocsViewKey(viewKey)) {
+            // 查看秘钥验证不通过则降级为查询指定文档（若也未传指定文档Id则返回空）
+            if (ListUtils.isBlank(views)) {
+                return AjaxResult.success(new ArrayList<>());
+            }
+            ids = new ArrayList<>();
+            for (String view : views) {
+                ids.add(IdUtils.decryptIdOrExc(view));
+            }
+        }
+        return AjaxResult.success(docsConfigService.list(docsName, ids));
     }
 
     /**
@@ -54,8 +72,8 @@ public class DocsConfigController {
      * @return
      */
     @GetMapping("/get_docs_config_simple")
-    public AjaxResult<DocsConfigListVo> getDocsConfigSimple(@NotNull(message = "Id不能为空") Long id) {
-        return AjaxResult.success(docsConfigService.getDocsConfigSimple(id));
+    public AjaxResult<DocsConfigListVo> getDocsConfigSimple(@NotNull(message = "Id不能为空") String id) {
+        return AjaxResult.success(docsConfigService.getDocsConfigSimple(IdUtils.decryptIdOrExc(id)));
     }
 
     /**
@@ -64,8 +82,8 @@ public class DocsConfigController {
      * @return
      */
     @GetMapping("/get_docs_config")
-    public AjaxResult<DocsConfigVo> getDocsConfig(@NotNull(message = "Id不能为空") Long id) {
-        return AjaxResult.success(docsConfigService.getDocsConfig(id));
+    public AjaxResult<DocsConfigVo> getDocsConfig(@NotNull(message = "Id不能为空") String id) {
+        return AjaxResult.success(docsConfigService.getDocsConfig(IdUtils.decryptIdOrExc(id)));
     }
 
     /**
@@ -104,7 +122,7 @@ public class DocsConfigController {
      */
     @PostMapping("/del")
     public AjaxResult del(@Validated @RequestBody DocsConfigIdRf rf) {
-        docsConfigService.del(rf.getId());
+        docsConfigService.del(IdUtils.decryptIdOrExc(rf.getId()));
         return AjaxResult.success();
     }
 

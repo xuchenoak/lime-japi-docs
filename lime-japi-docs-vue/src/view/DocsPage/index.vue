@@ -57,12 +57,10 @@
                                     </div>
                                 </a-space>
                                 <a-space class="docs-config-right" align="center">
-                                    <div class="home-box" @click="$router.push({path: '/'})">
+                                    <div class="home-box" @click="backToRoot">
                                         <a-icon class="home-icon" type="home" />
                                     </div>
-                                    <div class="config-doc-git">
-                                        <gitee-box :size="25"/>
-                                    </div>
+                                    <gitee-box :size="25"/>
                                 </a-space>
                             </div>
                         </a-layout-header>
@@ -81,7 +79,7 @@
                 <div class="empty-box">
                     <empty-box :text="docsNotFound ? '文档不存在' : '未生成接口数据'"/>
                     <div class="empty-box-btn">
-                        <a-button v-if="docsNotFound" @click="$router.push({path: '/'})" type="primary">
+                        <a-button v-if="docsNotFound" @click="backToRoot" type="primary">
                             返回主页</a-button>
                         <a-button v-else :icon="parseRunning ? 'loading' : 'plus-square'" @click="showDrawer" type="primary">
                             {{ parseRunning ? '正在生成' : '去生成' }}</a-button>
@@ -114,10 +112,12 @@
             </div>
         </div>
         <div v-if="!show.pageShow" class="empty-handle-box">
-            <div class="home-box" @click="$router.push({path: '/'})">
-                <a-icon class="home-icon" type="home" />
-            </div>
-            <gitee-box/>
+            <a-space align="center" size="small">
+                <div class="home-box" @click="backToRoot">
+                    <a-icon class="home-icon" type="home" />
+                </div>
+                <gitee-box/>
+            </a-space>
         </div>
     </loading>
 </template>
@@ -329,6 +329,11 @@ export default {
                     }
                 }
             })
+        },
+
+        // 返回主页
+        backToRoot() {
+            this.$router.push({path: sessionStorage.getItem("root") || "/"})
         }
 
     },
@@ -347,7 +352,6 @@ export default {
         float: left;
     }
     .home-box {
-        margin-right: 10px;
         border: 1.5px solid #999;
         box-sizing: border-box;
         width: 30px;
@@ -430,7 +434,7 @@ export default {
     position: fixed;
     width: 100%;
     height: 64px;
-    min-width: 1100px;
+    min-width: 1200px;
     z-index: 999;
     box-shadow: rgba(0,0,0,.1) 10px 5px 20px;
     .docs-config-bg {
@@ -476,9 +480,6 @@ export default {
             .home-icon {
                 color: #666;
             }
-        }
-        .config-doc-git {
-            padding-top: 15px;
         }
     }
 }

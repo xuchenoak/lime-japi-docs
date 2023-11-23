@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS `api_docs_config`  (
     `filter_packages` text NULL COMMENT '仅扫描解析该包集合下的controller类（必须位于javaFilePaths下，若不配置默认扫描javaFilePaths下所有）',
     `filter_class_names` varchar(2048) NULL DEFAULT NULL COMMENT '仅扫描的controller类名集（非类全名）',
     `ignore_class_names` varchar(2048) NULL DEFAULT NULL COMMENT '需要排除的controller类名集（非类全名）',
+    `sort` int(11) NOT NULL DEFAULT 0 COMMENT '排序号',
     `param_valid_func` text NULL COMMENT '参数验证函数',
     `param_default_value_func` text NULL COMMENT '参数默认值函数',
     `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',

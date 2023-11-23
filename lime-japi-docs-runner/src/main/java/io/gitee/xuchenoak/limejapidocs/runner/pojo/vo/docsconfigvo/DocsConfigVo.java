@@ -19,7 +19,7 @@ import java.util.List;
 public class DocsConfigVo {
 
     /** Id */
-    private Long id;
+    private String id;
 
     /** 文档名称 */
     private String docsName;
@@ -50,6 +50,9 @@ public class DocsConfigVo {
 
     /** 参数默认值函数 */
     private String paramDefaultValueFunc;
+
+    /** 排序号 */
+    private Integer sort;
 
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
