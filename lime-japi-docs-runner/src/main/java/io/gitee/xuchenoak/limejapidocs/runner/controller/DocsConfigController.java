@@ -6,6 +6,7 @@ import io.gitee.xuchenoak.limejapidocs.runner.common.config.DocsParserConfig;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfigrf.DocsConfigAddRf;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfigrf.DocsConfigEditRf;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfigrf.DocsConfigIdRf;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.CommonConfigVo;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigKeyCheckResultVo;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigListVo;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigVo;
@@ -22,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,25 +130,25 @@ public class DocsConfigController {
      * 验证logo文件是否存在
      * @return
      */
-    @GetMapping("/check_logo")
-    public AjaxResult checkLogo() {
-        Boolean res;
+    @GetMapping("/common")
+    public AjaxResult<CommonConfigVo> common() {
+        Boolean logoExist;
         try {
-            ClassPathResource resource = new ClassPathResource("logo.png");
-            res = resource.exists();
+            ClassPathResource resource = new ClassPathResource("log1.png");
+            logoExist = resource.exists();
         } catch (Exception e) {
-            res = false;
+            logoExist = false;
         }
-        return AjaxResult.success(res);
+        return AjaxResult.success(new CommonConfigVo(docsParserConfig.getSlogan(), logoExist));
     }
 
     /**
-     * 验证logo文件是否存在
+     * 获取logo图标
      * @return
      */
     @GetMapping("/logo")
     public void logo(HttpServletResponse response) {
-        ClassPathResource resource = new ClassPathResource("logo.png");
+        ClassPathResource resource = new ClassPathResource("log1.png");
         try (InputStream inputStream = resource.getInputStream()){
             IoUtil.copy(inputStream, response.getOutputStream());
         } catch (Exception e) {

@@ -1,7 +1,6 @@
 package io.gitee.xuchenoak.limejapidocs.runner.common.config;
 
 import io.gitee.xuchenoak.limejapidocs.parser.util.StringUtil;
-import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -18,6 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @ConfigurationProperties(prefix = "docs-parser")
 public class DocsParserConfig {
+
+    /** 标语 */
+    private String slogan;
 
     /** 文档管理秘钥 */
     private String docsConfigKey;

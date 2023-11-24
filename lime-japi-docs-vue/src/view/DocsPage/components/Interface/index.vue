@@ -249,6 +249,9 @@ export default {
                     this.interfaceList = res.data
                     this.interfaceShow = true
                     this.checkBoxShow = true
+                    this.$nextTick(()=> {
+                        this.getContainer().scrollTop = 0
+                    })
                     return
                 }
                 this.interfaceShow = false
@@ -296,12 +299,12 @@ export default {
     width: 800px;
     height: auto;
     background: #fff;
-    margin: 20px auto;
+    margin: 30px auto 50px auto;
     box-shadow: rgba(0, 0, 0, 0.06) 0px 0px 10px 0px, rgba(0, 0, 0, 0.04) 0px 0px 0px 1px;
     padding: 50px;
     .interface-content-bg {
         margin-top: 40px;
-        min-height: calc(100vh - 275px);
+        min-height: calc(100vh - 310px);
         position: relative;
     }
     .interface-content {

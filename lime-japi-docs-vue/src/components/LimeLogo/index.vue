@@ -1,10 +1,11 @@
 <template>
     <div class="box-bg"
          @click="handleLogo"
-         :style="'--width:' + realWidth + 'px; --height:' + realHeight + 'px'"/>
+         :style="'--width:' + realWidth + 'px; --height:' + realHeight + 'px; background: url(' + url + ') no-repeat'"/>
 </template>
 
 <script>
+import img from "@/assets/images/lime-logo.png"
 export default {
     name: "index",
     props: {
@@ -23,12 +24,16 @@ export default {
     },
     data() {
         return {
+            url: img
         }
+    },
+    mounted() {
+        this.url = this.$store.getters.logoExist ? "/lime_japi_docs/api/config/logo" : img
     },
     computed: {
         realWidth() {
             if (this.width) {
-            return this.width
+                return this.width
             }
             else if (this.height) {
                 return this.height * 3.25
@@ -56,11 +61,11 @@ export default {
 </script>
 
 <style scoped lang="less">
-    .box-bg {
-        height: var(--height);
-        width: var(--width);
-        background: url("~@/assets/images/lime-logo.png") no-repeat;
-        background-size: var(--width) var(--height);
-        cursor: pointer;
-    }
+.box-bg {
+    height: var(--height);
+    width: var(--width);
+    background: url("~@/assets/images/lime-logo.png") no-repeat;
+    background-size: var(--width) var(--height)!important;
+    cursor: pointer;
+}
 </style>

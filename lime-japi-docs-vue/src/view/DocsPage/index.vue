@@ -13,7 +13,7 @@
                                 <span>目录</span>
                             </a-layout-footer>
                             <a-layout-content class="menu-content" style="background: transparent">
-                                <cata-log ref="catalogRef" @handleMenuItem="handleMenuItem"/>
+                                <catalog ref="catalogRef" @handleMenuItem="handleMenuItem"/>
                             </a-layout-content>
                         </a-layout-sider>
                     </a-layout-sider>
@@ -56,11 +56,10 @@
                                         </a-input-group>
                                     </div>
                                 </a-space>
-                                <a-space class="docs-config-right" align="center">
+                                <a-space class="docs-config-right" align="center" :style="{right: collapsed ? '40px' : '340px'}">
                                     <div class="home-box" @click="backToRoot">
                                         <a-icon class="home-icon" type="home" />
                                     </div>
-                                    <gitee-box :size="25"/>
                                 </a-space>
                             </div>
                         </a-layout-header>
@@ -68,13 +67,14 @@
                             <interface v-show="show.interfaceShow" ref="interface"/>
                             <div v-if="show.initInfoShow" style="position: absolute; top: 250px; left: 50%; transform: translateX(-50%);">
                                 <lime-logo :width="360"/>
-                                <div style="width: 100%; text-align: center; margin-top: 30px; font-size: 25px; font-weight: 200">这是一个简单的Java接口文档</div>
+                                <div style="width: 100%; text-align: center; margin-top: 30px; font-size: 25px; font-weight: 200">{{slogan}}</div>
                             </div>
+                            <powered-box style="position:fixed; z-index: 99999; bottom: 0; background-color: #F3F5F7" :style="{width: collapsed ? '100%' : 'calc(100% - 300px)'}"/>
                         </a-layout-content>
                     </a-layout>
                 </a-layout>
             </div>
-            <div class="empty-interface-bg" v-else>
+            <div v-else class="empty-interface-bg">
                 <lime-logo class="lime-logo" :width="460"/>
                 <div class="empty-box">
                     <empty-box :text="docsNotFound ? '文档不存在' : '未生成接口数据'"/>
@@ -86,6 +86,7 @@
                     </div>
                 </div>
             </div>
+            <powered-box v-if="!show.pageShow" style="position:fixed; z-index: 99999; bottom: 0; background-color: #F3F5F7"/>
             <div>
                 <a-drawer
                     placement="right"
@@ -116,7 +117,6 @@
                 <div class="home-box" @click="backToRoot">
                     <a-icon class="home-icon" type="home" />
                 </div>
-                <gitee-box/>
             </a-space>
         </div>
     </loading>
@@ -125,11 +125,11 @@
 <script>
 
 import Interface from "@/view/DocsPage/components/Interface"
-import CataLog from "@/view/DocsPage/components/CataLog"
+import Catalog from "./components/Catalog"
 import {listCreateTime, runDocsParse, getPareMsg} from "@/api/docs"
 import {getDocsConfigSimple} from "@/api/docsConfig"
 export default {
-    components: { Interface, CataLog },
+    components: { Interface, Catalog },
     name: "index",
     data() {
         return {
@@ -147,6 +147,7 @@ export default {
                 docsName: 'XX项目接口文档',
                 docsVersion: 'V1.0'
             },
+            slogan: '',
             createTime: '',
             checkedInterface: {
                 controllerId: '',
@@ -169,11 +170,11 @@ export default {
     created() {
         this.init()
     },
-
     methods: {
 
         // 初始化
         init() {
+            this.slogan = this.$store.getters.slogan || "这是一个简单的Java接口文档"
             let docsConfigId = this.$route.params['id']
             if (!docsConfigId || Number(docsConfigId) < 1) {
                 this.docsNotFound = true
@@ -181,7 +182,6 @@ export default {
             }
             this.docsConfigId = docsConfigId
             this.getDocsConfig()
-            this.getCreateTimeList()
             this.refreshParseMsg()
         },
 
@@ -191,10 +191,11 @@ export default {
             getDocsConfigSimple(this.docsConfigId).then(res => {
                 if (!res["data"]) {
                     this.docsNotFound = true
-                    return
+                } else {
+                    this.docsConfig = res.data
                 }
-                this.docsConfig = res.data
-            }).finally(()=> {
+                this.getCreateTimeList()
+            }).catch(()=> {
                 this.loading = false
             })
         },
@@ -257,7 +258,6 @@ export default {
             if (key) {
                 this.show.interfaceShow = true
                 this.$refs['interface'].init(this.createTime, key, item.value.name, likeStr)
-                document.documentElement.scrollTop = 0
             }
             this.show.initInfoShow = false
         },

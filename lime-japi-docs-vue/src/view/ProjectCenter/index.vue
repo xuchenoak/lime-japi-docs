@@ -15,9 +15,6 @@
                         <div class="user-box" @click="handleDocsConfigKey">
                             <a-icon class="user-icon" :type="isAdmin ? 'user' : 'usergroup-add'" />
                         </div>
-                        <div>
-                            <gitee-box v-if="!show.pageShow"/>
-                        </div>
                         <div class="header-btn" v-if="isAdmin">
                             <a-button type="primary" icon="plus-square" @click="$refs['edit_docs_config'].open()">新增</a-button>
                         </div>
@@ -48,8 +45,6 @@
                         </a-popconfirm>
                         <a-list-item-meta>
                             <span slot="description">
-<!--                                <span>{{item.createUser}}</span>-->
-                                <!--                                <span style="padding: 0 5px">/</span>-->
                                 <span>{{item.createTime}}</span>
                             </span>
                             <span slot="title" @click="handleView(item.id)">
@@ -65,6 +60,7 @@
                 <empty-box v-else />
             </div>
         </div>
+        <powered-box style="position:fixed; bottom: 0; background-color: #F3F5F7"/>
         <docs-config-key ref="docs_config_key" @save="handleSaveDocsConfigKey"/>
         <edit-docs-config ref="edit_docs_config" @ok="listDocs" />
     </loading>
@@ -224,7 +220,7 @@ export default {
 .project-list-bg {
     position: relative;
     width: 100%;
-    padding: 100px 0 30px 0;
+    padding: 110px 0 50px 0;
     background: #F3F5F7;
     max-height: 100vh;
     overflow-y: auto;

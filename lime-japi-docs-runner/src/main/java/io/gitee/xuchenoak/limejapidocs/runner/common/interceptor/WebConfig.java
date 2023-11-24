@@ -38,7 +38,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/lime_japi_docs/api/config/list",
                         "/lime_japi_docs/api/config/get_docs_config_simple",
                         "/lime_japi_docs/api/config/check_config_key",
-                        "/lime_japi_docs/api/config/check_logo",
+                        "/lime_japi_docs/api/config/common",
                         "/lime_japi_docs/api/config/logo"
                 );
     }
