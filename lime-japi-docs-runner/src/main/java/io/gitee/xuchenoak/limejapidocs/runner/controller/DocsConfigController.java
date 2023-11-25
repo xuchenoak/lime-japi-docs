@@ -134,7 +134,7 @@ public class DocsConfigController {
     public AjaxResult<CommonConfigVo> common() {
         Boolean logoExist;
         try {
-            ClassPathResource resource = new ClassPathResource("log1.png");
+            ClassPathResource resource = new ClassPathResource("logo.png");
             logoExist = resource.exists();
         } catch (Exception e) {
             logoExist = false;
@@ -148,7 +148,7 @@ public class DocsConfigController {
      */
     @GetMapping("/logo")
     public void logo(HttpServletResponse response) {
-        ClassPathResource resource = new ClassPathResource("log1.png");
+        ClassPathResource resource = new ClassPathResource("logo.png");
         try (InputStream inputStream = resource.getInputStream()){
             IoUtil.copy(inputStream, response.getOutputStream());
         } catch (Exception e) {

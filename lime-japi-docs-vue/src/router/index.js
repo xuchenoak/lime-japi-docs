@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import store from '../util/store'
 import DocsPage from '../view/DocsPage'
 import ProjectCenter from '@/view/ProjectCenter'
+import HomePage from '@/view/HomePage'
 import {common} from "@/api/docsConfig";
 
 
@@ -16,6 +17,10 @@ const constantRoutes = [
     {
         path: '/docs/:id',
         component: DocsPage,
+    },
+    {
+        path: '/home',
+        component: HomePage,
     },
 ]
 

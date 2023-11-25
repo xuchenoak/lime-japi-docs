@@ -12,6 +12,7 @@
                         <div class="interface-content-bg">
                             <div v-if="interfaceShow">
                                 <a-descriptions class="interface-content" layout="vertical" bordered size="small"
+                                                :key="inter.interfaceId + '_' + index"
                                                 v-for="(inter, index) in interfaceList">
                                     <template #title>
                                         <h2>
@@ -26,13 +27,13 @@
                                     <a-descriptions-item :span="3">
                                         <template #label>
                                             <span style="padding-right: 20px">请求地址</span>
-                                            <copy-text :value="reqType" placement="right" v-for="reqType in inter.requestTypeList">
+                                            <copy-text :value="reqType" placement="right" :key="inter.interfaceId + '_' + reqType" v-for="reqType in inter.requestTypeList">
                                                 <a-tag color="orange" class="diy-cursor">
                                                     {{ reqType }}
                                                 </a-tag>
                                             </copy-text>
                                         </template>
-                                        <copy-text :value="uri" placement="right" v-for="uri in inter.uriList">
+                                        <copy-text :value="uri" placement="right" :key="inter.interfaceId + '_' + uri" v-for="uri in inter.uriList">
                                             <span class="request-uri diy-cursor">{{uri}}</span>
                                         </copy-text>
                                     </a-descriptions-item>
