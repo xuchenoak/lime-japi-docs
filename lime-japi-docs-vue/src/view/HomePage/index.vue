@@ -53,27 +53,21 @@
             </a-row>
         </div>
         <div class="page-content-bg">
-            <a-row class="page-content">
-                <a-col flex="">
-
-                </a-col>
-                <a-col flex="">
-                    <a-carousel class="carousel-box">
-                        <div class="carousel-item">
-                            <img src="https://xuchenoak.com/prod-file/sc/20230628/e045110ee1c14e388e5cbe2a120dafd8.jfif" alt="">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="https://xuchenoak.com/prod-file/sc/20230628/e045110ee1c14e388e5cbe2a120dafd8.jfif" alt="">
-                        </div>
-                    </a-carousel>
-                </a-col>
-            </a-row>
+            <page-front/>
         </div>
     </div>
 </template>
 
 <script>
+import PageFront from "./components/PageFront.vue";
 
+export default {
+    components: {PageFront},
+    name: "index",
+    data() {
+        return {}
+    }
+}
 </script>
 
 <style scoped lang="less">
@@ -114,18 +108,5 @@
 .page-content-bg {
     width: 100%;
     padding: 80px 25px 0 25px;
-    .page-content {
-        margin: 0 auto;
-        max-width: 1200px;
-        height: 500px;
-        background: #eee;
-        .carousel-box {
-            .carousel-item {
-                height: 400px;
-                width: 500px;
-                overflow: hidden;
-            }
-        }
-    }
 }
 </style>
