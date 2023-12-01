@@ -1,6 +1,5 @@
 <template>
     <div class="page-container">
-        <div>test</div>
         <div class="page-header-bg">
             <a-row class="page-header">
                 <a-col :span="12">

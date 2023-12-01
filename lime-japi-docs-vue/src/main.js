@@ -13,14 +13,6 @@ Spin.setDefaultIndicator({
 // 自定义公共样式
 import '@/assets/styles/public-style.css'
 
-// 代码编辑器组件
-import CodeEditor from '@/components/CodeEditor'
-Vue.component('CodeEditor', CodeEditor)
-
-// 代码查看器组件
-import CodeViewer from '@/components/CodeViewer'
-Vue.component('CodeViewer', CodeViewer)
-
 // 复制组件
 import CopyText from '@/components/CopyText'
 Vue.component('CopyText', CopyText)
