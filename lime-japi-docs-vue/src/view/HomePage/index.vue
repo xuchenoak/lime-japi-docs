@@ -54,15 +54,18 @@
         </div>
         <div class="page-content-bg">
             <page-front/>
+            <page-version id="v_2.0.1" background="#f5f5f5"/>
+            <page-version id="v_1.0.1"/>
         </div>
     </div>
 </template>
 
 <script>
 import PageFront from "./components/PageFront.vue";
+import PageVersion from "./components/PageVersion.vue";
 
 export default {
-    components: {PageFront},
+    components: {PageFront, PageVersion},
     name: "index",
     data() {
         return {}
@@ -107,6 +110,6 @@ export default {
 }
 .page-content-bg {
     width: 100%;
-    padding: 80px 25px 0 25px;
+    padding-top: 80px;
 }
 </style>

@@ -41,6 +41,10 @@ Vue.component('PoweredBox', PoweredBox)
 import DrawerBox from '@/components/DrawerBox'
 Vue.component('DrawerBox', DrawerBox)
 
+// PageBox
+import PageBox from '@/components/PageBox'
+Vue.component('PageBox', PageBox)
+
 // 路由
 import router from '@/router'
 import store from '@/util/store'
