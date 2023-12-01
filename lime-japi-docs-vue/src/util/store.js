@@ -13,9 +13,6 @@ const store = new Vuex.Store({
         }
     },
     mutations: {
-        changePhoneView (state, val) {
-            state.phoneView = val
-        },
         setCommonConfig(state, val) {
             state.commonConfig = {
                 refresh: true,
