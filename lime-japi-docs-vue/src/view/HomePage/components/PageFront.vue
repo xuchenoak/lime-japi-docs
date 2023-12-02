@@ -5,7 +5,7 @@
                 <div class="info-title">
                     <h1>lime-japi-docs</h1>
                     <div style="position: relative; width: 70px; min-height: 32px;">
-                        <div class="info-version">v2.0.1</div>
+                        <a-tag class="info-version" color="green">v2.0.1</a-tag>
                     </div>
                 </div>
                 <h4>
@@ -23,20 +23,28 @@
                     </a>
                 </div>
             </div>
-            <a-carousel class="carousel-box" arrows>
-                <div slot="prevArrow" class="custom-slick-arrow" style="left: 15px;zIndex: 1">
-                    <a-icon type="left-circle" />
+            <div class="image-box">
+                <div class="checked-box">
+                    <div class="checked-item checked-active">文档中心</div>
+                    <div class="checked-item">文档中心</div>
+                    <div class="checked-item">文档中心</div>
+                    <div class="checked-item">文档中心</div>
                 </div>
-                <div slot="nextArrow" class="custom-slick-arrow" style="right: 15px">
-                    <a-icon type="right-circle" />
-                </div>
-                <div class="carousel-item">
-                    <img src="https://xuchenoak.com/prod-file/sc/20230628/e045110ee1c14e388e5cbe2a120dafd8.jfif" alt="">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://xuchenoak.com/prod-file/sc/20230628/e045110ee1c14e388e5cbe2a120dafd8.jfif" alt="">
-                </div>
-            </a-carousel>
+                <a-carousel class="carousel-box" arrows :dots="false">
+                    <div slot="prevArrow" class="custom-slick-arrow" style="left: 15px;zIndex: 1">
+                        <a-icon type="left-circle" />
+                    </div>
+                    <div slot="nextArrow" class="custom-slick-arrow" style="right: 15px">
+                        <a-icon type="right-circle" />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://xuchenoak.com/prod-file/sc/20230628/e045110ee1c14e388e5cbe2a120dafd8.jfif" alt="">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://xuchenoak.com/prod-file/sc/20230628/e045110ee1c14e388e5cbe2a120dafd8.jfif" alt="">
+                    </div>
+                </a-carousel>
+            </div>
         </div>
         <div class="content-row">
             <div class="feature-box">
@@ -93,12 +101,11 @@
                 height: 32px;
                 line-height: 32px;
                 text-align: center;
-                background: #EDCE02;
                 font-size: 20px;
-                color: #fff;
                 padding: 0 10px;
                 border-radius: 2px;
                 user-select: none;
+                margin: 0;
             }
         }
         >h4 {
@@ -117,36 +124,58 @@
             }
         }
     }
-    .carousel-box {
-        max-width: 700px;
-        height: 400px;
-        overflow: hidden;
-        user-select: none;
-        cursor: pointer;
-        .custom-slick-arrow {
-            width: 25px;
-            height: 25px;
-            font-size: 25px;
-            color: #444;
-            opacity: 0;
-            transition: all .5s;
-        }
-        .custom-slick-arrow:before {
-            display: none;
-        }
-        .custom-slick-arrow:hover {
-            opacity: 0.6;
-        }
-        .carousel-item {
-            >img {
-                height: 400px;
-                width: 700px;
+    .image-box {
+        .checked-box {
+            height: 40px;
+            display: flex;
+            margin-bottom: 10px;
+            justify-content: space-between;
+            .checked-item {
+                width: 24%;
+                height: 50px;
+                line-height: 40px;
+                text-align: center;
+                padding: 5px;
+            }
+            .checked-item::before {
+                content: '';
+            }
+            .checked-item-active {
+                border: 1px solid #444;
             }
         }
-    }
-    .carousel-box:hover {
-        .custom-slick-arrow {
-            opacity: 0.3;
+        .carousel-box {
+            max-width: 700px;
+            height: 400px;
+            overflow: hidden;
+            user-select: none;
+            cursor: pointer;
+            border-radius: 15px;
+            .custom-slick-arrow {
+                width: 25px;
+                height: 25px;
+                font-size: 25px;
+                color: #444;
+                opacity: 0;
+                transition: all .5s;
+            }
+            .custom-slick-arrow:before {
+                display: none;
+            }
+            .custom-slick-arrow:hover {
+                opacity: 0.6;
+            }
+            .carousel-item {
+                >img {
+                    height: 400px;
+                    width: 700px;
+                }
+            }
+        }
+        .carousel-box:hover {
+            .custom-slick-arrow {
+                opacity: 0.3;
+            }
         }
     }
     .feature-box {
