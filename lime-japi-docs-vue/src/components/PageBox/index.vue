@@ -102,7 +102,7 @@ export default {
             }
         }
         .page-box-content-footer {
-            margin-bottom: 100px;
+            margin-bottom: 50px;
             .page-box-content-slot {
                 min-height: 100px;
                 //background: #2196F3;

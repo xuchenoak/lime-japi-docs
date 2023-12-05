@@ -80,7 +80,7 @@ export default {
 }
 .page-header-bg {
     width: 100%;
-    z-index: 1;
+    z-index: 99999;
     background: #fff;
     height: 80px;
     padding: 0 25px;
