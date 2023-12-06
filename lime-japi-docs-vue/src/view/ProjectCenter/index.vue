@@ -15,6 +15,9 @@
                         <div class="user-box" @click="handleDocsConfigKey">
                             <a-icon class="user-icon" :type="isAdmin ? 'user' : 'usergroup-add'" />
                         </div>
+                        <div class="user-box" v-if="isAdmin" @click="handleDocsConfigKey">
+                            <a-icon class="user-icon" type="setting" />
+                        </div>
                         <div class="header-btn" v-if="isAdmin">
                             <a-button type="primary" icon="plus-square" @click="$refs['edit_docs_config'].open()">新增</a-button>
                         </div>
@@ -194,14 +197,14 @@ export default {
                 width: 30px;
                 height: 30px;
                 border-radius: 50%;
-                line-height: 30px;
+                line-height: 27px;
                 text-align: center;
                 cursor: pointer;
-                transition: all .5s;
+                transition: border .5s;
                 .user-icon {
                     font-size: 18px;
                     color: #999;
-                    transition: all .5s;
+                    transition: color .5s;
                 }
             }
             .user-box:hover {
@@ -211,7 +214,7 @@ export default {
                 }
             }
             .header-btn {
-                line-height: 77px;
+                line-height: 72px;
                 height: 80px;
             }
         }

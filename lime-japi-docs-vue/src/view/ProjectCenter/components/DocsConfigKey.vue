@@ -12,10 +12,13 @@
     >
         <a-form :form="form">
             <a-form-item
-                label="文档管理秘钥"
                 :labelCol="labelCol"
                 :wrapperCol="wrapperCol"
             >
+                <span slot="label">
+                    <span>文档管理秘钥</span>
+                    <why-box text="验证通过后可以对文档进行管理" position="topLeft"/>
+                </span>
                 <a-input
                     class="code-input"
                     allowClear
@@ -34,8 +37,8 @@ export default {
     name: 'DocsConfigKey',
     data () {
         return {
-            labelCol: { span: 5 },
-            wrapperCol: { span: 19 },
+            labelCol: { span: 6 },
+            wrapperCol: { span: 18 },
             visible: false,
             form: this.$form.createForm(this),
         }

@@ -49,6 +49,10 @@ Vue.component('PoweredBox', PoweredBox)
 import DrawerBox from '@/components/DrawerBox'
 Vue.component('DrawerBox', DrawerBox)
 
+// WhyBox
+import WhyBox from '@/components/WhyBox'
+Vue.component('WhyBox', WhyBox)
+
 // 路由
 import router from '@/router'
 import store from '@/util/store'

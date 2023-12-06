@@ -15,9 +15,6 @@
 <script>
     import Clipboard from 'clipboard';
     export default {
-        components: {
-
-        },
         props: {
             value: {
                 type: String,
@@ -26,6 +23,14 @@
             placement: {
                 type: String,
                 default() { return "left" }
+            },
+            preTip: {
+                type: Boolean,
+                default() {return true}
+            },
+            disabled: {
+                type: Boolean,
+                default() {return false}
             }
         },
         data() {
@@ -33,15 +38,17 @@
                 copyStatus: false,
                 copyTitle: "点击复制",
                 copyValue: ""
-            };
+            }
         },
         methods: {
             /**
              * 鼠标移上
              */
             handleMouseenter() {
-                this.copyTitle = "点击复制"
-                this.copyStatus = true
+                if (this.preTip) {
+                    this.copyTitle = "点击复制"
+                    this.copyStatus = true
+                }
             },
             /**
              * 鼠标移开
@@ -53,6 +60,7 @@
              * 点击触发复制
              */
             handleCopy() {
+                if (this.disabled) return
                 this.copyValue = this.value
                 const btnCopy = new Clipboard('.copy-box');
                 // 复制成功后执行的回调函数
