@@ -33,7 +33,7 @@ import java.util.List;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/lime_japi_docs/api/config")
+@RequestMapping("/lime_japi_docs/api/docs_config")
 public class DocsConfigController {
 
     @Resource
