@@ -1,17 +1,9 @@
 import request from '@/util/request'
 
-// 获取公共配置
-export function common() {
-  return request({
-    url: '/lime_japi_docs/api/config/common',
-    method: 'get'
-  })
-}
-
 // 获取文档列表
 export function list(params) {
   return request({
-    url: '/lime_japi_docs/api/config/list',
+    url: '/lime_japi_docs/api/docs_config/list',
     method: 'get',
     params: params
   })
@@ -20,7 +12,7 @@ export function list(params) {
 // 获取单个文档配置（简单版）
 export function getDocsConfigSimple(id) {
   return request({
-    url: '/lime_japi_docs/api/config/get_docs_config_simple',
+    url: '/lime_japi_docs/api/docs_config/get_docs_config_simple',
     method: 'get',
     params: {id}
   })
@@ -29,7 +21,7 @@ export function getDocsConfigSimple(id) {
 // 获取单个文档配置
 export function getDocsConfig(id) {
   return request({
-    url: '/lime_japi_docs/api/config/get_docs_config',
+    url: '/lime_japi_docs/api/docs_config/get_docs_config',
     method: 'get',
     params: {id}
   })
@@ -38,7 +30,7 @@ export function getDocsConfig(id) {
 // 验证文档管理秘钥是否正确
 export function checkConfigKey(docsConfigKey) {
   return request({
-    url: '/lime_japi_docs/api/config/check_config_key',
+    url: '/lime_japi_docs/api/docs_config/check_config_key',
     method: 'get',
     params: {docsConfigKey}
   })
@@ -47,7 +39,7 @@ export function checkConfigKey(docsConfigKey) {
 // 新增文档
 export function add(data) {
   return request({
-    url: '/lime_japi_docs/api/config/add',
+    url: '/lime_japi_docs/api/docs_config/add',
     method: 'post',
     data: data
   })
@@ -56,7 +48,7 @@ export function add(data) {
 // 编辑文档
 export function edit(data) {
   return request({
-    url: '/lime_japi_docs/api/config/edit',
+    url: '/lime_japi_docs/api/docs_config/edit',
     method: 'post',
     data: data
   })
@@ -65,7 +57,7 @@ export function edit(data) {
 // 删除文档
 export function del(id) {
   return request({
-    url: '/lime_japi_docs/api/config/del',
+    url: '/lime_japi_docs/api/docs_config/del',
     method: 'post',
     data: {id}
   })

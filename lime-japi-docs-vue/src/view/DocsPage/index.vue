@@ -96,12 +96,12 @@
                     width="500"
                 >
                     <template slot="title">
-                        <a-input-search :disabled="parseRunning" allowClear placeholder="请输入文档生成token" v-model="password" @pressEnter="handleParse">
+                        <a-input-search :disabled="parseRunning" allowClear placeholder="请输入文档生成秘钥" v-model="password" @pressEnter="handleParse">
                             <a-button slot="enterButton" :disabled="parseRunning" @click.native="handleParse">开始</a-button>
                         </a-input-search>
                     </template>
                     <div style="overflow-y: auto; height: 100%">
-                        <div v-if="msgList.length == 0 && !parseRunning" style="font-size: 13px">请输入文档生成token后点击“开始”生成文档……</div>
+                        <div v-if="msgList.length == 0 && !parseRunning" style="font-size: 13px">请输入文档生成秘钥后点击“开始”生成文档……</div>
                         <div v-else>
                             <p style="font-size: 13px; color: #666" :key="index" v-for="(msg, index) in msgList">{{msg}}</p>
                         </div>

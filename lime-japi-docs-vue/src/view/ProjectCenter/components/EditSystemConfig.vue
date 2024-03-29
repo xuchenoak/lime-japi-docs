@@ -41,7 +41,7 @@
                             </copy-text>
                         </span>
                         <a-textarea
-                            placeholder="请输入文档生成token"
+                            placeholder="请输入文档生成需要的秘钥"
                             :rows="3"
                             v-decorator="['apiRunKey']" />
                     </a-form-item>

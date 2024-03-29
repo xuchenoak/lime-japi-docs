@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import store from '../util/store'
 import DocsPage from '../view/DocsPage'
 import ProjectCenter from '@/view/ProjectCenter'
-import {common} from "@/api/docsConfig";
+import {common} from "@/api/sysConfig";
 
 
 Vue.use(Router)

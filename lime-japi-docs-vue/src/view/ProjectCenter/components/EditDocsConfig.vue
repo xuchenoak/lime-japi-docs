@@ -25,7 +25,7 @@
                     <a-form-item>
                         <span slot="label">
                             <span>启动时是否解析</span>
-                            <why-box text="若选“是”则每次服务启动后会自动解析一次该文档" position="topLeft"/>
+                            <why-box text="若为“是”则每次服务启动后会自动解析一次该文档" position="topLeft"/>
                         </span>
                         <a-radio-group v-decorator="['sysStartParse', { initialValue: 0, rules: [{required: true, message: ''}] }]" >
                             <a-radio :value="1">是</a-radio>
@@ -34,8 +34,8 @@
                     </a-form-item>
                     <a-form-item>
                         <span slot="label">
-                            <span>文档生成token</span>
-                            <why-box text="触发生成文档验证使用" position="topLeft"/>
+                            <span>触发文档生成需要的秘钥</span>
+                            <why-box text="触发生成文档时用于身份验证（为空则不进行验证）" position="topLeft"/>
                             <copy-text :pre-tip="false" :disabled="id == null || id === ''" placement="top" :value="getRunParseUrl()">
                                 <a style="margin-left: 10px" :disabled="id == null || id === ''">点击复制触发文档生成链接</a>
                             </copy-text>
@@ -48,7 +48,7 @@
                     <a-form-item>
                         <span slot="label">
                             <span>排序号</span>
-                            <why-box text="越大越靠前" position="topLeft"/>
+                            <why-box text="排序号越大越靠前" position="topLeft"/>
                         </span>
                         <a-input-number
                             style="width: 100%"
