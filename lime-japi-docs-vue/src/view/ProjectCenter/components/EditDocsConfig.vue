@@ -25,7 +25,7 @@
                     <a-form-item>
                         <span slot="label">
                             <span>启动时是否解析</span>
-                            <why-box text="若为“是”则每次服务启动后会自动解析一次该文档" position="topLeft"/>
+                            <why-box-text text="若为“是”则每次服务启动后会自动解析一次该文档"/>
                         </span>
                         <a-radio-group v-decorator="['sysStartParse', { initialValue: 0, rules: [{required: true, message: ''}] }]" >
                             <a-radio :value="1">是</a-radio>
@@ -35,20 +35,26 @@
                     <a-form-item>
                         <span slot="label">
                             <span>触发文档生成需要的秘钥</span>
-                            <why-box text="触发生成文档时用于身份验证（为空则不进行验证）" position="topLeft"/>
-                            <copy-text :pre-tip="false" :disabled="id == null || id === ''" placement="top" :value="getRunParseUrl()">
-                                <a style="margin-left: 10px" :disabled="id == null || id === ''">点击复制触发文档生成链接</a>
-                            </copy-text>
+                            <why-box-text text="用于触发生成文档时身份验证，为空则不进行验证"/>
                         </span>
                         <a-textarea
-                            placeholder="请输入文档生成token"
+                            placeholder="请输入触发文档生成需要的秘钥"
                             :rows="3"
                             v-decorator="['apiRunKey']" />
                     </a-form-item>
                     <a-form-item>
                         <span slot="label">
+                            <span>触发文档生成的请求地址[HTTP-GET]</span>
+                            <copy-text :pre-tip="false" :disabled="id == null || id === ''" placement="top" :value="getRunParseUrl()">
+                                <a style="margin-left: 10px" :disabled="id == null || id === ''">点击复制</a>
+                            </copy-text>
+                        </span>
+                        <a-textarea :rows="3" :value="getRunParseUrl()" :disabled="true" />
+                    </a-form-item>
+                    <a-form-item>
+                        <span slot="label">
                             <span>排序号</span>
-                            <why-box text="排序号越大越靠前" position="topLeft"/>
+                            <why-box-text text="排序号越大越靠前"/>
                         </span>
                         <a-input-number
                             style="width: 100%"
@@ -58,9 +64,11 @@
             </a-tab-pane>
             <a-tab-pane key="2" tab="源码扫描配置">
                 <a-form layout="vertical">
-                    <a-form-item
-                        label="Java源码所在目录绝对路径（必须写到java目录，多模块时填写多个）"
-                    >
+                    <a-form-item>
+                        <span slot="label">
+                            <span>Java源码所在目录绝对路径</span>
+                            <why-box-text text="路径必须填到“ **/main/java ”目录，多模块时需填写所以引用到的模块"/>
+                        </span>
                         <div :key="index" v-for="(item, index) in configItem.javaFilePaths">
                             <a-input v-model="configItem.javaFilePaths[index]" placeholder="请输入绝对路径" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
                             <a-icon style="font-size: 18px" type="minus-circle-o" @click="configItem.javaFilePaths.splice(index, 1)"/>
@@ -69,9 +77,11 @@
                             <a-icon type="plus" /> 添加
                         </a-button>
                     </a-form-item>
-                    <a-form-item
-                        label="仅扫描解析该包集合下的controller类（必须位于源码目录下的包，默认扫描所有）"
-                    >
+                    <a-form-item>
+                        <span slot="label">
+                            <span>仅扫描解析该包集合下的controller类</span>
+                            <why-box-text text="必须位于以上源码目录下的包，默认扫描所有"/>
+                        </span>
                         <div :key="index" v-for="(item, index) in configItem.filterPackages">
                             <a-input v-model="configItem.filterPackages[index]" placeholder="请输入包名" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
                             <a-icon style="font-size: 18px" type="minus-circle-o" @click="configItem.filterPackages.splice(index, 1)"/>
@@ -80,9 +90,11 @@
                             <a-icon type="plus" /> 添加
                         </a-button>
                     </a-form-item>
-                    <a-form-item
-                        label="仅扫描的controller类名集（非类全名，如UserController，优先级高于下方排除）"
-                    >
+                    <a-form-item>
+                        <span slot="label">
+                            <span>仅扫描的controller类名集</span>
+                            <why-box-text text="非类全名，如UserController，优先级高于下方的排除配置"/>
+                        </span>
                         <div :key="index" v-for="(item, index) in configItem.filterClassNames">
                             <a-input v-model="configItem.filterClassNames[index]" placeholder="请输入类名（非类全名，如UserController）" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
                             <a-icon style="font-size: 18px" type="minus-circle-o" @click="configItem.filterClassNames.splice(index, 1)"/>
@@ -91,9 +103,11 @@
                             <a-icon type="plus" /> 添加
                         </a-button>
                     </a-form-item>
-                    <a-form-item
-                        label="需要排除的controller类名集（非类全名，如UserController）"
-                    >
+                    <a-form-item>
+                        <span slot="label">
+                            <span>需要排除的controller类名集</span>
+                            <why-box-text text="非类全名，如UserController，优先级低于上方的仅扫描配置"/>
+                        </span>
                         <div :key="index" v-for="(item, index) in configItem.ignoreClassNames">
                             <a-input v-model="configItem.ignoreClassNames[index]" placeholder="请输入类名（非类全名，如UserController）" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
                             <a-icon style="font-size: 18px" type="minus-circle-o" @click="configItem.ignoreClassNames.splice(index, 1)"/>
@@ -293,11 +307,11 @@ function defaultValue(type, fieldName, fieldComment) {
 </script>
 
 <style scoped lang="less">
-/deep/ .ant-form-item-required::before {
-    position: absolute;
-    top: 2px;
-    right: -13px;
-}
+///deep/ .ant-form-item-required::before {
+//    position: absolute;
+//    top: 2px;
+//    right: -13px;
+//}
 /deep/ .ant-drawer-body {
     padding-top: 0!important;
 }

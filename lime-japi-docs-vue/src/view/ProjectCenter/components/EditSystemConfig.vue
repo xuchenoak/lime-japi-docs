@@ -1,243 +1,164 @@
 <template>
     <drawer-box
-        title="文档配置"
+        title="系统配置"
         :width="700"
         :loading="loading"
         :visible="visible"
         @close="close"
         @save="handleSave"
     >
-        <a-tabs default-active-key="1">
-            <a-tab-pane key="1" tab="基本信息">
-                <a-form :form="form" layout="vertical" >
-                    <a-form-item
-                        label="文档名称"
-                        has-feedback=""
-                    >
-                        <a-input placeholder="请输入文档名称" v-decorator="['docsName', {rules: [{required: true, message: '请输入文档名称'}]}]" />
-                    </a-form-item>
-                    <a-form-item
-                        label="版本号"
-                        has-feedback=""
-                    >
-                        <a-input placeholder="请输入版本号" v-decorator="['docsVersion', {rules: [{required: true, message: '请输入版本号'}]}]" />
-                    </a-form-item>
-                    <a-form-item>
-                        <span slot="label">
-                            <span>启动时是否解析</span>
-                            <why-box text="若选“是”则每次服务启动后会自动解析一次该文档" position="topLeft"/>
-                        </span>
-                        <a-radio-group v-decorator="['sysStartParse', { initialValue: 0, rules: [{required: true, message: ''}] }]" >
-                            <a-radio :value="1">是</a-radio>
-                            <a-radio :value="0">否</a-radio>
-                        </a-radio-group>
-                    </a-form-item>
-                    <a-form-item>
-                        <span slot="label">
-                            <span>文档生成token</span>
-                            <why-box text="触发生成文档验证使用" position="topLeft"/>
-                            <copy-text :pre-tip="false" :disabled="id == null || id === ''" placement="top" :value="getRunParseUrl()">
-                                <a style="margin-left: 10px" :disabled="id == null || id === ''">点击复制触发文档生成链接</a>
-                            </copy-text>
-                        </span>
-                        <a-textarea
-                            placeholder="请输入文档生成需要的秘钥"
-                            :rows="3"
-                            v-decorator="['apiRunKey']" />
-                    </a-form-item>
-                    <a-form-item>
-                        <span slot="label">
-                            <span>排序号</span>
-                            <why-box text="越大越靠前" position="topLeft"/>
-                        </span>
-                        <a-input-number
-                            style="width: 100%"
-                            v-decorator="['sort', { initialValue: 0 }]" />
-                    </a-form-item>
-                </a-form>
-            </a-tab-pane>
-            <a-tab-pane key="2" tab="源码扫描配置">
-                <a-form layout="vertical">
-                    <a-form-item
-                        label="Java源码所在目录绝对路径（必须写到java目录，多模块时填写多个）"
-                    >
-                        <div :key="index" v-for="(item, index) in configItem.javaFilePaths">
-                            <a-input v-model="configItem.javaFilePaths[index]" placeholder="请输入绝对路径" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
-                            <a-icon style="font-size: 18px" type="minus-circle-o" @click="configItem.javaFilePaths.splice(index, 1)"/>
-                        </div>
-                        <a-button type="dashed" style="width: calc(100% - 30px)" @click="configItem.javaFilePaths.push('')">
-                            <a-icon type="plus" /> 添加
-                        </a-button>
-                    </a-form-item>
-                    <a-form-item
-                        label="仅扫描解析该包集合下的controller类（必须位于源码目录下的包，默认扫描所有）"
-                    >
-                        <div :key="index" v-for="(item, index) in configItem.filterPackages">
-                            <a-input v-model="configItem.filterPackages[index]" placeholder="请输入包名" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
-                            <a-icon style="font-size: 18px" type="minus-circle-o" @click="configItem.filterPackages.splice(index, 1)"/>
-                        </div>
-                        <a-button type="dashed" style="width: calc(100% - 30px)" @click="configItem.filterPackages.push('')">
-                            <a-icon type="plus" /> 添加
-                        </a-button>
-                    </a-form-item>
-                    <a-form-item
-                        label="仅扫描的controller类名集（非类全名，如UserController，优先级高于下方排除）"
-                    >
-                        <div :key="index" v-for="(item, index) in configItem.filterClassNames">
-                            <a-input v-model="configItem.filterClassNames[index]" placeholder="请输入类名（非类全名，如UserController）" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
-                            <a-icon style="font-size: 18px" type="minus-circle-o" @click="configItem.filterClassNames.splice(index, 1)"/>
-                        </div>
-                        <a-button type="dashed" style="width: calc(100% - 30px)" @click="configItem.filterClassNames.push('')">
-                            <a-icon type="plus" /> 添加
-                        </a-button>
-                    </a-form-item>
-                    <a-form-item
-                        label="需要排除的controller类名集（非类全名，如UserController）"
-                    >
-                        <div :key="index" v-for="(item, index) in configItem.ignoreClassNames">
-                            <a-input v-model="configItem.ignoreClassNames[index]" placeholder="请输入类名（非类全名，如UserController）" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
-                            <a-icon style="font-size: 18px" type="minus-circle-o" @click="configItem.ignoreClassNames.splice(index, 1)"/>
-                        </div>
-                        <a-button type="dashed" style="width: calc(100% - 30px)" @click="configItem.ignoreClassNames.push('')">
-                            <a-icon type="plus" /> 添加
-                        </a-button>
-                    </a-form-item>
-                </a-form>
-            </a-tab-pane>
-            <a-tab-pane key="3" tab="参数验证描述注入">
-                <code-editor
-                    :value="configItem.paramValidFunc"
-                    @input="(e)=>{configItem.paramValidFunc = e}"
-                    :sub-height="280"
-                    language="javascript"
-                ></code-editor>
-            </a-tab-pane>
-            <a-tab-pane key="4" tab="字段默认值注入">
-                <code-editor
-                    v-model="configItem.paramDefaultValueFunc"
-                    :sub-height="280"
-                    language="javascript"
-                ></code-editor>
-            </a-tab-pane>
-        </a-tabs>
+        <a-form :form="form" layout="vertical" style="padding-top: 20px">
+            <a-form-item
+                has-feedback=""
+            >
+                <span slot="label">
+                    <span>系统名称</span>
+                    <why-box-text text="用于文档中心显示（默认显示“接口文档中心”）"/>
+                </span>
+                <a-input placeholder="请输入系统名称" v-decorator="['sysName', {rules: [{required: true, message: '请输入系统名称'}]}]" />
+            </a-form-item>
+            <a-form-item>
+                <span slot="label">
+                    <span class="pre-rule-item">系统LOGO</span>
+                    <why-box-text text="点击可重新上传更换，图片比例：13:4"/>
+                </span>
+                <a-upload
+                    class="avatar-uploader-high"
+                    :show-upload-list="false"
+                    accept="image/png"
+                    list-type="picture-card"
+                    :custom-request="handleUploadLogo"
+                    :before-upload="beforeUploadLogo"
+                >
+                    <img :src="configItem.logoUrl ? configItem.logoUrl : img" width="390px" height="120px" />
+                </a-upload>
+            </a-form-item>
+            <a-form-item
+                has-feedback=""
+            >
+                <span slot="label">
+                    <span>系统标语</span>
+                    <why-box-text text="用于文档首页显示"/>
+                </span>
+                <a-input placeholder="请输入系统标语" v-decorator="['sysSlogan', {rules: [{required: true, message: '请输入系统标语'}]}]" />
+            </a-form-item>
+            <a-form-item
+                has-feedback=""
+            >
+                <span slot="label">
+                    <span>系统管理秘钥</span>
+                    <why-box-text text="用于管理文档时验证系统管理员身份"/>
+                </span>
+                <a-input placeholder="请输入文档管理秘钥" v-decorator="['docsConfigKey', {rules: [{required: true, message: '请输入文档管理秘钥'}]}]" />
+            </a-form-item>
+            <a-form-item
+                has-feedback=""
+            >
+                <span slot="label">
+                    <span>文档中心邀请码</span>
+                    <why-box-text text="设置后访问系统主页会提示输入该邀请码，否则无法查看文档"/>
+                </span>
+                <a-input placeholder="请输入文档中心邀请码" v-decorator="['docsViewKey', {rules: [{required: true, message: '请输入文档中心邀请码'}]}]" />
+            </a-form-item>
+        </a-form>
     </drawer-box>
 </template>
 
 <script>
+import img from "@/assets/images/lime-logo.png"
+// eslint-disable-next-line no-unused-vars
+const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+}
 import {add, edit, getDocsConfig} from '@/api/docsConfig'
 export default {
     name: "EditDocsConfig",
     data() {
         return {
-            id: null,
+            img,
             visible: false,
             loading: false,
             labelCol: { span: 4 },
             wrapperCol: { span: 20 },
             form: this.$form.createForm(this),
             configItem: {
-                docsName: '',
-                docsVersion: '',
-                sysStartParse: 0,
-                apiRunKey: '',
-                sort: 0,
-                javaFilePaths: [],
-                filterPackages: [],
-                filterClassNames: [],
-                ignoreClassNames: [],
-                paramValidFunc: defaultParamValidFuc,
-                paramDefaultValueFunc: defaultParamDefaultValueFunc,
+                sysName: '',
+                logoUrl: '',
+                sysSlogan: '',
+                docsConfigKey: '',
+                docsViewKey: ''
             },
         }
     },
     methods: {
-        open(id) {
+        open() {
             this.visible = true
-            this.id = id
-            if (id) {
-                this.loading = true
-                getDocsConfig(id).then(res => {
-                    if (res['data']) {
-                        const data = res['data']
-                        this.configItem = {
-                            docsName: data.docsName,
-                            docsVersion: data.docsVersion,
-                            sysStartParse: data.sysStartParse,
-                            apiRunKey: data.apiRunKey,
-                            javaFilePaths: data.javaFilePaths || [],
-                            filterPackages: data.filterPackages || [],
-                            filterClassNames: data.filterClassNames || [],
-                            ignoreClassNames: data.ignoreClassNames || [],
-                            paramValidFunc: data.paramValidFunc,
-                            paramDefaultValueFunc: data.paramDefaultValueFunc,
-                            sort: data.sort
-                        }
-                        this.$nextTick(()=> {
-                            this.form.setFieldsValue({
-                                docsName: data.docsName,
-                                docsVersion: data.docsVersion,
-                                sysStartParse: data.sysStartParse,
-                                apiRunKey: data.apiRunKey,
-                                sort: data.sort
-                            })
-                        })
-                    }
-                }).finally(()=> {
-                    this.loading = false
-                })
+            // this.loading = true
+            // getDocsConfig().then(res => {
+            //     if (res['data']) {
+            //         const data = res['data']
+            const item = {
+                sysName: '接口文档中心',
+                logoUrl: '',
+                sysSlogan: '这是一个简单的Java接口文档',
+                docsConfigKey: '',
+                docsViewKey: ''
             }
+            this.configItem = item
+            this.$nextTick(()=> {
+                this.form.setFieldsValue({
+                    sysName: item.sysName,
+                    logoUrl: item.logoUrl,
+                    sysSlogan: item.sysSlogan,
+                    docsConfigKey: item.docsConfigKey,
+                    docsViewKey: item.docsViewKey
+                })
+            })
+            //     }
+            // }).finally(()=> {
+            //     this.loading = false
+            // })
         },
         handleSave() {
             this.form.validateFields((errors, values)=> {
                 if (!errors) {
-                    values['javaFilePaths'] = this.configItem.javaFilePaths.filter(item => !!item.trim())
-                    values['filterPackages'] = this.configItem.filterPackages.filter(item => !!item.trim())
-                    values['filterClassNames'] = this.configItem.filterClassNames.filter(item => !!item.trim())
-                    values['ignoreClassNames'] = this.configItem.ignoreClassNames.filter(item => !!item.trim())
-                    values['paramValidFunc'] = this.configItem.paramValidFunc
-                    values['paramDefaultValueFunc'] = this.configItem.paramDefaultValueFunc
-                    this.loading = true
-                    if (!this.id) {
-                        add(values).then(()=> {
-                            this.$message.success('新增成功')
-                            this.$emit('ok')
-                            this.close()
-                        }).finally(()=> {
-                            this.loading = false
-                        })
-                    } else {
-                        values['id'] = this.id
-                        edit(values).then(()=> {
-                            this.$message.success('保存成功')
-                            this.$emit('ok')
-                            this.close()
-                        }).finally(()=> {
-                            this.loading = false
-                        })
-                    }
+                    values['logoUrl'] = this.configItem.logoUrl
+                    console.log("values", values)
                 }
             })
         },
         close() {
             this.form.resetFields()
             this.configItem = {
-                docsName: '',
-                docsVersion: '',
-                sysStartParse: 0,
-                apiRunKey: '',
-                sort: 0,
-                javaFilePaths: [],
-                filterPackages: [],
-                filterClassNames: [],
-                ignoreClassNames: [],
-                paramValidFunc: defaultParamValidFuc,
-                paramDefaultValueFunc: defaultParamDefaultValueFunc,
+                sysName: '',
+                logoUrl: '',
+                sysSlogan: '',
+                docsConfigKey: '',
+                docsViewKey: ''
             }
             this.visible = false
         },
         getRunParseUrl() {
             const apiRunKey = this.form.getFieldValue("apiRunKey") || ""
             return `${window.location.origin}/lime_japi_docs/api/docs/run_docs_parse?docsConfigId=${this.id}&password=${apiRunKey}`
+        },
+        handleUploadLogo({file}) {
+            getBase64(file, imageUrl => {
+                this.configItem.logoUrl = imageUrl;
+            });
+        },
+        beforeUploadLogo(file) {
+            const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+            if (!isJpgOrPng) {
+                this.$notification.warn({message: '仅支持png格式'});
+            }
+            const isLt2M = file.size / 1024 / 1024 < 2;
+            if (!isLt2M) {
+                this.$notification.warn({message: '文件大小仅支持2MB以内'});
+            }
+            return isJpgOrPng && isLt2M;
         }
     }
 }
@@ -293,12 +214,23 @@ function defaultValue(type, fieldName, fieldComment) {
 </script>
 
 <style scoped lang="less">
-/deep/ .ant-form-item-required::before {
-    position: absolute;
-    top: 2px;
-    right: -13px;
-}
+///deep/ .ant-form-item-required::before {
+//    position: absolute;
+//    top: 2px;
+//    right: -13px;
+//}
 /deep/ .ant-drawer-body {
     padding-top: 0!important;
+}
+/deep/ .avatar-uploader-high > .ant-upload {
+    width: 390px!important;
+    height: 120px!important;;
+}
+/deep/ .ant-upload.ant-upload-select-picture-card {
+    margin: 0;
+}
+.ant-upload-select-picture-card .ant-upload-text {
+    margin-top: 8px;
+    color: #666;
 }
 </style>

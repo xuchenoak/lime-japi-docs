@@ -53,6 +53,10 @@ Vue.component('DrawerBox', DrawerBox)
 import WhyBox from '@/components/WhyBox'
 Vue.component('WhyBox', WhyBox)
 
+// WhyBoxText
+import WhyBoxText from '@/components/WhyBoxText'
+Vue.component('WhyBoxText', WhyBoxText)
+
 // 路由
 import router from '@/router'
 import store from '@/util/store'

@@ -15,7 +15,7 @@
                         <div class="user-box" @click="handleDocsConfigKey">
                             <a-icon class="user-icon" :type="isAdmin ? 'user' : 'usergroup-add'" />
                         </div>
-                        <div class="user-box" v-if="isAdmin" @click="handleDocsConfigKey">
+                        <div class="user-box" v-if="isAdmin" @click="$refs['edit_system_config'].open()">
                             <a-icon class="user-icon" type="setting" />
                         </div>
                         <div class="header-btn" v-if="isAdmin">
@@ -66,15 +66,17 @@
         <powered-box style="position:fixed; bottom: 0; background-color: #F3F5F7"/>
         <docs-config-key ref="docs_config_key" @save="handleSaveDocsConfigKey"/>
         <edit-docs-config ref="edit_docs_config" @ok="listDocs" />
+        <edit-system-config ref="edit_system_config"/>
     </loading>
 </template>
 
 <script>
 import DocsConfigKey from "./components/DocsConfigKey.vue"
 import EditDocsConfig from "./components/EditDocsConfig.vue"
+import EditSystemConfig from "./components/EditSystemConfig.vue"
 import {checkConfigKey, list, del} from "@/api/docsConfig"
 export default {
-    components: { DocsConfigKey, EditDocsConfig },
+    components: { DocsConfigKey, EditDocsConfig,EditSystemConfig },
     name: "index",
     data() {
         return {
