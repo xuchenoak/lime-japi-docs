@@ -1,6 +1,6 @@
 <template>
     <a-modal
-        title="验证文档管理秘钥"
+        title="验证系统管理秘钥"
         :width="600"
         :visible="visible"
         okText="验证"
@@ -10,20 +10,17 @@
         :afterClose="handleClose"
         :destroyOnClose="true"
     >
-        <a-form :form="form">
-            <a-form-item
-                :labelCol="labelCol"
-                :wrapperCol="wrapperCol"
-            >
+        <a-form :form="form" layout="vertical">
+            <a-form-item>
                 <span slot="label">
-                    <span>文档管理秘钥</span>
-                    <why-box text="验证通过后可以对文档进行管理" position="topLeft"/>
+                    <span>系统管理秘钥</span>
+                    <why-box-text text="验证通过后可以调整系统配置和管理文档"/>
                 </span>
                 <a-input
                     class="code-input"
                     allowClear
                     @pressEnter="handleSave"
-                    placeholder="请输入文档管理秘钥"
+                    placeholder="请输入系统管理秘钥"
                     v-decorator="['docsConfigKey']"
                 />
             </a-form-item>

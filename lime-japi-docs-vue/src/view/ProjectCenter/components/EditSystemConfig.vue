@@ -49,7 +49,7 @@
                     <span>系统管理秘钥</span>
                     <why-box-text text="用于管理文档时验证系统管理员身份"/>
                 </span>
-                <a-input placeholder="请输入文档管理秘钥" v-decorator="['docsConfigKey', {rules: [{required: true, message: '请输入文档管理秘钥'}]}]" />
+                <a-input placeholder="请输入系统管理秘钥" v-decorator="['docsConfigKey', {rules: [{required: true, message: '请输入系统管理秘钥'}]}]" />
             </a-form-item>
             <a-form-item
                 has-feedback=""

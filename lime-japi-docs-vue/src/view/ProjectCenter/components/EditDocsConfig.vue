@@ -66,7 +66,7 @@
                 <a-form layout="vertical">
                     <a-form-item>
                         <span slot="label">
-                            <span>Java源码所在目录绝对路径</span>
+                            <span class="pre-rule-item">Java源码所在目录绝对路径</span>
                             <why-box-text text="路径必须填到“ **/main/java ”目录，多模块时需填写所以引用到的模块"/>
                         </span>
                         <div :key="index" v-for="(item, index) in configItem.javaFilePaths">
@@ -205,6 +205,10 @@ export default {
             this.form.validateFields((errors, values)=> {
                 if (!errors) {
                     values['javaFilePaths'] = this.configItem.javaFilePaths.filter(item => !!item.trim())
+                    if (values['javaFilePaths'].length < 1) {
+                        this.$message.warn('请先配置源码扫码配置：Java源码所在目录绝对路径')
+                        return
+                    }
                     values['filterPackages'] = this.configItem.filterPackages.filter(item => !!item.trim())
                     values['filterClassNames'] = this.configItem.filterClassNames.filter(item => !!item.trim())
                     values['ignoreClassNames'] = this.configItem.ignoreClassNames.filter(item => !!item.trim())
