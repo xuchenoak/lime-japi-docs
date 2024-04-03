@@ -46,19 +46,25 @@
                 has-feedback=""
             >
                 <span slot="label">
-                    <span>系统管理秘钥</span>
-                    <why-box-text text="用于管理文档时验证系统管理员身份"/>
+                    <span>文档中心邀请码</span>
+                    <why-box-text text="设置后访问系统主页会提示输入该邀请码，否则无法查看文档"/>
                 </span>
-                <a-input placeholder="请输入系统管理秘钥" v-decorator="['docsConfigKey', {rules: [{required: true, message: '请输入系统管理秘钥'}]}]" />
+                <a-input placeholder="请输入文档中心邀请码" v-decorator="['docsViewKey', {rules: [{required: true, message: '请输入文档中心邀请码'}]}]" />
             </a-form-item>
             <a-form-item
                 has-feedback=""
             >
                 <span slot="label">
-                    <span>文档中心邀请码</span>
-                    <why-box-text text="设置后访问系统主页会提示输入该邀请码，否则无法查看文档"/>
+                    <span>管理员账号</span>
+                    <why-box-text text="用于管理文档时登录"/>
                 </span>
-                <a-input placeholder="请输入文档中心邀请码" v-decorator="['docsViewKey', {rules: [{required: true, message: '请输入文档中心邀请码'}]}]" />
+                <a-input placeholder="请输入管理员账号" v-decorator="['adminAccount', {rules: [{required: true, message: '请输入管理员账号'}]}]" />
+            </a-form-item>
+            <a-form-item
+                label="管理员密码"
+                has-feedback=""
+            >
+                <a-input placeholder="请输入管理员密码" v-decorator="['adminPassword', {rules: [{required: true, message: '请输入管理员密码'}]}]" />
             </a-form-item>
         </a-form>
     </drawer-box>

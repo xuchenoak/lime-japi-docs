@@ -1,16 +1,16 @@
 <template>
     <a-modal
-        title="验证系统管理秘钥"
+        title="登录"
         :width="600"
         :visible="visible"
-        okText="验证"
+        okText="确定"
         cancelText="取消"
         @ok="handleSave"
         @cancel="handleCancel"
         :afterClose="handleClose"
         :destroyOnClose="true"
     >
-        <a-form :form="form" layout="vertical">
+        <a-form :form="form">
             <a-form-item>
                 <span slot="label">
                     <span>系统管理秘钥</span>
@@ -23,6 +23,19 @@
                     placeholder="请输入系统管理秘钥"
                     v-decorator="['docsConfigKey']"
                 />
+
+            </a-form-item>
+            <a-form-item
+                label="账号"
+                has-feedback=""
+            >
+                <a-input placeholder="请输入账号" v-decorator="['adminAccount', {rules: [{required: true, message: '请输入账号'}]}]" />
+            </a-form-item>
+            <a-form-item
+                label="密码"
+                has-feedback=""
+            >
+                <a-input placeholder="请输入密码" v-decorator="['adminPassword', {rules: [{required: true, message: '请输入密码'}]}]" />
             </a-form-item>
         </a-form>
     </a-modal>
