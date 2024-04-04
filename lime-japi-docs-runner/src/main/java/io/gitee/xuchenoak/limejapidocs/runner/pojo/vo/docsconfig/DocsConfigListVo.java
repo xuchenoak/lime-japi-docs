@@ -1,4 +1,4 @@
-package io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo;
+package io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

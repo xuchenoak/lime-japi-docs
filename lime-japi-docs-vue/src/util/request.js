@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {message} from "ant-design-vue"
+import {get} from "@/api/storage/loginStorage";
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 // 创建axios实例
@@ -12,7 +13,9 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(config => {
     // 接口验证参数
-    config.headers['Dck'] = localStorage.getItem("docs_config_key") || ''
+    const login = get()
+    config.headers['Uacc'] = login.account
+    config.headers['Upas'] = login.password
     return config
 }, error => {
     console.log(error)

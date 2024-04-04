@@ -1,28 +1,22 @@
 package io.gitee.xuchenoak.limejapidocs.runner.controller;
 
-import cn.hutool.core.io.IoUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.common.bean.AjaxResult;
 import io.gitee.xuchenoak.limejapidocs.runner.common.config.DocsParserConfig;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfigrf.DocsConfigAddRf;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfigrf.DocsConfigEditRf;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfigrf.DocsConfigIdRf;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.CommonConfigVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigKeyCheckResultVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigListVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigAddRf;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigEditRf;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigIdRf;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig.DocsConfigListVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig.DocsConfigVo;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.util.IdUtils;
 import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,16 +81,6 @@ public class DocsConfigController {
     }
 
     /**
-     * 验证文档管理秘钥是否正确
-     * @param docsConfigKey 文档管理秘钥
-     * @return
-     */
-    @GetMapping("/check_config_key")
-    public AjaxResult<DocsConfigKeyCheckResultVo> checkConfigKey(String docsConfigKey) {
-        return AjaxResult.success(new DocsConfigKeyCheckResultVo(docsConfigKey, docsParserConfig.checkDocsConfigKey(docsConfigKey)));
-    }
-
-    /**
      * 新增文档
      * @param rf
      * @return
@@ -124,36 +108,6 @@ public class DocsConfigController {
     public AjaxResult del(@Validated @RequestBody DocsConfigIdRf rf) {
         docsConfigService.del(IdUtils.decryptIdOrExc(rf.getId()));
         return AjaxResult.success();
-    }
-
-    /**
-     * 验证logo文件是否存在
-     * @return
-     */
-    @GetMapping("/common")
-    public AjaxResult<CommonConfigVo> common() {
-        Boolean logoExist;
-        try {
-            ClassPathResource resource = new ClassPathResource("logo.png");
-            logoExist = resource.exists();
-        } catch (Exception e) {
-            logoExist = false;
-        }
-        return AjaxResult.success(new CommonConfigVo(docsParserConfig.getSlogan(), logoExist));
-    }
-
-    /**
-     * 获取logo图标
-     * @return
-     */
-    @GetMapping("/logo")
-    public void logo(HttpServletResponse response) {
-        ClassPathResource resource = new ClassPathResource("logo.png");
-        try (InputStream inputStream = resource.getInputStream()){
-            IoUtil.copy(inputStream, response.getOutputStream());
-        } catch (Exception e) {
-            log.error("获取logo文件异常", e);
-        }
     }
 
 }

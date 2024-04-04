@@ -1,4 +1,4 @@
-package io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo;
+package io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs;
 
 import io.gitee.xuchenoak.limejapidocs.parser.parsendoe.FieldInfo;
 import lombok.AllArgsConstructor;

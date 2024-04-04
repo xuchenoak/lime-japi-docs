@@ -9,10 +9,10 @@ import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsControllerData;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsParseLog;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfigrf.DocsConfigAddRf;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfigrf.DocsConfigEditRf;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigListVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfigvo.DocsConfigVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigAddRf;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigEditRf;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig.DocsConfigListVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig.DocsConfigVo;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsControllerDataService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsParseLogService;
@@ -29,8 +29,7 @@ import java.util.Optional;
 /**
  * 文档配置业务实现
  *
- * @author: xuchenoak
- * @create: 2022-06-06 8:19
+ * @author xuchenoak
  **/
 @Service
 public class DocsConfigServiceImpl implements DocsConfigService {

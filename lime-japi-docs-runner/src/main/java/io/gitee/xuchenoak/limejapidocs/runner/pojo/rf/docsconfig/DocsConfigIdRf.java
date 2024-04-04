@@ -1,4 +1,4 @@
-package io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfigrf;
+package io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

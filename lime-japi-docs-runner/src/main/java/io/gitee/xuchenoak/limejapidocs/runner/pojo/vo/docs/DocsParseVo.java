@@ -1,20 +1,18 @@
-package io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo;
+package io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
- * 接口文档解析消息输出对象
+ * 接口文档解析输出对象
  *
  * @author xuchenoak
  **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DocsParseMsgVo {
+public class DocsParseVo {
 
     /** 正在解析 */
     private boolean running;
@@ -22,7 +20,7 @@ public class DocsParseMsgVo {
     /** 生成时间戳（毫秒） */
     private Long parseTimestamp;
 
-    /** 消息集 */
-    private List<String> msgList;
+    /** 消息 */
+    private String msg;
 
 }

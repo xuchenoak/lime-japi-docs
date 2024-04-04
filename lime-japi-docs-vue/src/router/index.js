@@ -27,12 +27,8 @@ const router = new Router({
 
 // 路由前置事件
 router.beforeEach((to, from, next) => {
-    if (!store.getters.refresh) {
-        // store.commit("setLoading", true)
-        common().then(res => {
-            store.commit("setCommonConfig", res["data"])
-        }).finally(()=> {
-            // store.commit("setLoading", false)
+    if (!store.getters.sysConfig.refresh) {
+        store.dispatch("common").finally(()=> {
             next()
         })
     } else {

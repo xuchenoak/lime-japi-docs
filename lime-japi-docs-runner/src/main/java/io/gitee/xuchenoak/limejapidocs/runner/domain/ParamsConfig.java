@@ -7,16 +7,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
- * 系统配置
+ * 参数配置
  *
  * @author xuchenoak
  **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "sys_config")
-public class SysConfig {
+@TableName(value = "params_config")
+public class ParamsConfig {
 
     /** Id */
     @TableId(value = "id", type = IdType.AUTO)
@@ -27,5 +29,11 @@ public class SysConfig {
 
     /** 配置值 */
     private String value;
+
+    /** 创建时间 */
+    private Date createTime;
+
+    /** 修改时间 */
+    private Date updateTime;
 
 }

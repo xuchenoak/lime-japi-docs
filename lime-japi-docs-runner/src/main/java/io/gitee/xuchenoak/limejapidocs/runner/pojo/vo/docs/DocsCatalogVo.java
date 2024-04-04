@@ -1,4 +1,4 @@
-package io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo;
+package io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

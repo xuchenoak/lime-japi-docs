@@ -7,10 +7,10 @@ import io.gitee.xuchenoak.limejapidocs.parser.util.ListUtil;
 import io.gitee.xuchenoak.limejapidocs.parser.util.StringUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsCatalogVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsInterfaceVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsParseMsgVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsParseVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsCatalogVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsInterfaceVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseMsgVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseVo;
 import io.gitee.xuchenoak.limejapidocs.runner.runner.DocsParseService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsControllerDataService;
@@ -31,8 +31,7 @@ import java.util.stream.Collectors;
 /**
  * 接口文档业务实现
  *
- * @author: xuchenoak
- * @create: 2022-06-06 8:20
+ * @author xuchenoak
  **/
 @Service
 public class DocsServiceImpl implements DocsService {

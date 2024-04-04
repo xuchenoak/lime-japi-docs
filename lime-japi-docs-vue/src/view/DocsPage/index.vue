@@ -174,7 +174,7 @@ export default {
 
         // 初始化
         init() {
-            this.slogan = this.$store.getters.slogan || "这是一个简单的Java接口文档"
+            this.slogan = this.$store.getters.sysConfig.sysSlogan
             let docsConfigId = this.$route.params['id']
             if (!docsConfigId || Number(docsConfigId) < 1) {
                 this.docsNotFound = true

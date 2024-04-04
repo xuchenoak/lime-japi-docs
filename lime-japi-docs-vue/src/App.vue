@@ -1,17 +1,24 @@
 <template>
     <div id="app">
-        <loading :loading="loading">
-            <router-view/>
-        </loading>
+        <a-config-provider :locale="zh_CN">
+            <loading :loading="loading">
+                <router-view/>
+            </loading>
+        </a-config-provider>
     </div>
 </template>
 
 <script>
 
 import {mapState} from "vuex";
-
+import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN';
 export default {
     name: 'App',
+    data() {
+        return {
+            zh_CN,
+        }
+    },
     computed: {
         ...mapState(["loading"]),
     }

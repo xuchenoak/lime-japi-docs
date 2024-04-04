@@ -1,17 +1,16 @@
 package io.gitee.xuchenoak.limejapidocs.runner.service.inter;
 
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsCatalogVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsInterfaceVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsParseMsgVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsParseVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsCatalogVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsInterfaceVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseMsgVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseVo;
 
 import java.util.List;
 
 /**
  * 接口文档业务接口
  *
- * @author: xuchenoak
- * @create: 2022-06-06 8:19
+ * @author xuchenoak
  **/
 public interface DocsService {
 

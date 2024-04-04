@@ -1,4 +1,4 @@
-package io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfigrf;
+package io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig;
 
 import io.gitee.xuchenoak.limejapidocs.runner.common.enums.TrueOrFalseEnum;
 import io.gitee.xuchenoak.limejapidocs.runner.common.validatron.CollectionValid;
@@ -18,11 +18,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DocsConfigEditRf {
-
-    /** Id */
-    @NotBlank(message = "Id不能为空")
-    private String id;
+public class DocsConfigAddRf {
 
     /** 文档名称 */
     @NotBlank(message = "文档名称不能为空")

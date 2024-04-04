@@ -30,7 +30,7 @@
                     :custom-request="handleUploadLogo"
                     :before-upload="beforeUploadLogo"
                 >
-                    <img :src="configItem.logoUrl ? configItem.logoUrl : img" width="390px" height="120px" />
+                    <img :src="logoUrl ? logoUrl : img" width="390px" height="120px" />
                 </a-upload>
             </a-form-item>
             <a-form-item
@@ -58,13 +58,13 @@
                     <span>管理员账号</span>
                     <why-box-text text="用于管理文档时登录"/>
                 </span>
-                <a-input placeholder="请输入管理员账号" v-decorator="['adminAccount', {rules: [{required: true, message: '请输入管理员账号'}]}]" />
+                <a-input placeholder="请输入管理员账号" v-decorator="['account', {rules: [{required: true, message: '请输入管理员账号'}]}]" />
             </a-form-item>
             <a-form-item
                 label="管理员密码"
                 has-feedback=""
             >
-                <a-input placeholder="请输入管理员密码" v-decorator="['adminPassword', {rules: [{required: true, message: '请输入管理员密码'}]}]" />
+                <a-input type="password" placeholder="请输入管理员密码" v-decorator="['password', {rules: [{required: true, message: '请输入管理员密码'}]}]" />
             </a-form-item>
         </a-form>
     </drawer-box>
@@ -72,13 +72,12 @@
 
 <script>
 import img from "@/assets/images/lime-logo.png"
-// eslint-disable-next-line no-unused-vars
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
     reader.readAsDataURL(img);
 }
-import {add, edit, getDocsConfig} from '@/api/docsConfig'
+import {getSysConfig, saveSysConfig} from '@/api/sysConfig'
 export default {
     name: "EditDocsConfig",
     data() {
@@ -89,61 +88,48 @@ export default {
             labelCol: { span: 4 },
             wrapperCol: { span: 20 },
             form: this.$form.createForm(this),
-            configItem: {
-                sysName: '',
-                logoUrl: '',
-                sysSlogan: '',
-                docsConfigKey: '',
-                docsViewKey: ''
-            },
+            logoUrl: '',
         }
     },
     methods: {
         open() {
             this.visible = true
-            // this.loading = true
-            // getDocsConfig().then(res => {
-            //     if (res['data']) {
-            //         const data = res['data']
-            const item = {
-                sysName: '接口文档中心',
-                logoUrl: '',
-                sysSlogan: '这是一个简单的Java接口文档',
-                docsConfigKey: '',
-                docsViewKey: ''
-            }
-            this.configItem = item
-            this.$nextTick(()=> {
-                this.form.setFieldsValue({
-                    sysName: item.sysName,
-                    logoUrl: item.logoUrl,
-                    sysSlogan: item.sysSlogan,
-                    docsConfigKey: item.docsConfigKey,
-                    docsViewKey: item.docsViewKey
-                })
+            this.loading = true
+            getSysConfig().then(res => {
+                if (res['data']) {
+                    const data = res['data']
+                    this.logoUrl = data.logoUrl
+                    this.$nextTick(()=> {
+                        this.form.setFieldsValue({
+                            sysName: data.sysName || '接口文档中心',
+                            sysSlogan: data.sysSlogan || '这是一个简单的Java接口文档',
+                            docsViewKey: data.docsViewKey || '',
+                            account: data.account || '',
+                            password: data.password || ''
+                        })
+                    })
+                }
+            }).finally(()=> {
+                this.loading = false
             })
-            //     }
-            // }).finally(()=> {
-            //     this.loading = false
-            // })
         },
         handleSave() {
             this.form.validateFields((errors, values)=> {
                 if (!errors) {
-                    values['logoUrl'] = this.configItem.logoUrl
+                    values['logoUrl'] = this.logoUrl
                     console.log("values", values)
+                    this.loading = true
+                    saveSysConfig(values).then(() => {
+                        this.close()
+                    }).finally(() => {
+                        this.loading = false
+                    })
                 }
             })
         },
         close() {
             this.form.resetFields()
-            this.configItem = {
-                sysName: '',
-                logoUrl: '',
-                sysSlogan: '',
-                docsConfigKey: '',
-                docsViewKey: ''
-            }
+            this.logoUrl = ''
             this.visible = false
         },
         getRunParseUrl() {
@@ -152,7 +138,7 @@ export default {
         },
         handleUploadLogo({file}) {
             getBase64(file, imageUrl => {
-                this.configItem.logoUrl = imageUrl;
+                this.logoUrl = imageUrl;
             });
         },
         beforeUploadLogo(file) {

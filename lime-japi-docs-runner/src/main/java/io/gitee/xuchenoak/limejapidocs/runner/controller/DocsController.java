@@ -2,10 +2,10 @@ package io.gitee.xuchenoak.limejapidocs.runner.controller;
 
 import io.gitee.xuchenoak.limejapidocs.parser.util.StringUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.common.bean.AjaxResult;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsCatalogVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsInterfaceVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsParseMsgVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsvo.DocsParseVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsCatalogVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsInterfaceVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseMsgVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseVo;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsService;
 import io.gitee.xuchenoak.limejapidocs.runner.util.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;

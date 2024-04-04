@@ -12,13 +12,23 @@
                 </a-col>
                 <a-col :span="12" style="text-align: right">
                     <a-space align="center" size="middle" class="header-func-box">
-                        <div class="user-box" @click="handleDocsConfigKey">
-                            <a-icon class="user-icon" :type="isAdmin ? 'user' : 'usergroup-add'" />
+                        <div v-if="!isLogin" class="user-box" @click="$refs['docs_config_login'].init()">
+                            <a-icon class="user-icon" :type="isLogin ? 'user' : 'usergroup-add'" />
                         </div>
-                        <div class="user-box" v-if="isAdmin" @click="$refs['edit_system_config'].open()">
+                        <a-dropdown v-else>
+                            <div class="user-box">
+                                <a-icon class="user-icon" :type="isLogin ? 'user' : 'usergroup-add'" />
+                            </div>
+                            <a-menu slot="overlay">
+                                <a-menu-item>
+                                    <a href="javascript:;" @click="handleDocsConfigLogout">退出登录</a>
+                                </a-menu-item>
+                            </a-menu>
+                        </a-dropdown>
+                        <div class="user-box" v-if="isLogin" @click="$refs['edit_system_config'].open()">
                             <a-icon class="user-icon" type="setting" />
                         </div>
-                        <div class="header-btn" v-if="isAdmin">
+                        <div class="header-btn" v-if="isLogin">
                             <a-button type="primary" icon="plus-square" @click="$refs['edit_docs_config'].open()">新增</a-button>
                         </div>
                         <div style="height: 80px"></div>
@@ -35,10 +45,10 @@
                     :data-source="dataList"
                 >
                     <a-list-item slot="renderItem" slot-scope="item, index" style="height: 100px">
-                        <a slot="actions" v-if="isAdmin" @click="$refs['edit_docs_config'].open(item.id)">设置</a>
+                        <a slot="actions" v-if="isLogin" @click="$refs['edit_docs_config'].open(item.id)">设置</a>
                         <a-popconfirm
                             slot="actions"
-                            v-if="isAdmin"
+                            v-if="isLogin"
                             title="确认删除？"
                             ok-text="确认"
                             cancel-text="取消"
@@ -64,19 +74,21 @@
             </div>
         </div>
         <powered-box style="position:fixed; bottom: 0; background-color: #F3F5F7"/>
-        <docs-config-key ref="docs_config_key" @save="handleSaveDocsConfigKey"/>
+        <docs-config-login ref="docs_config_login"/>
         <edit-docs-config ref="edit_docs_config" @ok="listDocs" />
         <edit-system-config ref="edit_system_config"/>
     </loading>
 </template>
 
 <script>
-import DocsConfigKey from "./components/DocsConfigKey.vue"
+import DocsConfigLogin from "./components/DocsConfigLogin.vue"
 import EditDocsConfig from "./components/EditDocsConfig.vue"
 import EditSystemConfig from "./components/EditSystemConfig.vue"
-import {checkConfigKey, list, del} from "@/api/docsConfig"
+import {list, del} from "@/api/docsConfig"
+import {logout} from "@/api/storage/loginStorage"
+import store from "@/util/store";
 export default {
-    components: { DocsConfigKey, EditDocsConfig,EditSystemConfig },
+    components: { DocsConfigLogin, EditDocsConfig,EditSystemConfig },
     name: "index",
     data() {
         return {
@@ -87,7 +99,7 @@ export default {
                 initInfoShow: true,
                 interfaceShow: false,
             },
-            isAdmin: false,
+            isLogin: false,
             queryParams: {
                 viewKey: "",
                 views: ""
@@ -98,27 +110,19 @@ export default {
     created() {
         this.init()
     },
-
+    watch: {
+        '$store.getters.sysConfig.hasLogin'() {
+            this.isLogin = this.$store.getters.sysConfig.hasLogin
+        }
+    },
     methods: {
 
         // 初始化
         init() {
             sessionStorage.setItem("root", this.$route.fullPath || "/")
+            this.isLogin = this.$store.getters.sysConfig.hasLogin
             this.queryParams.viewKey = this.$route.query["viewKey"] || ""
             this.queryParams.views = this.$route.query["views"] || ""
-            this.checkDocsConfigKey()
-        },
-
-        // 验证文档管理秘钥
-        checkDocsConfigKey() {
-            const docsConfigKey = localStorage.getItem("docs_config_key")
-            this.loading = true
-            checkConfigKey(docsConfigKey).then(res => {
-                this.isAdmin = res['data'] && res['data']['checkResult']
-                this.listDocs()
-            }).catch(()=> {
-                this.loading = false
-            })
         },
 
         // 查看文档
@@ -128,15 +132,17 @@ export default {
             })
         },
 
-        // 验证管理员秘钥
-        handleDocsConfigKey() {
-            this.$refs['docs_config_key'].init()
-        },
-
-        // 文档管理秘钥验证成功
-        handleSaveDocsConfigKey(docsConfigKey) {
-            localStorage.setItem("docs_config_key", docsConfigKey)
-            this.checkDocsConfigKey()
+        // 登出
+        handleDocsConfigLogout() {
+            this.$confirm({
+                title: '您确定退出系统管理？',
+                onOk: () => {
+                    logout().then(res => {
+                        this.$message.success("登出成功")
+                    })
+                },
+                onCancel() {},
+            })
         },
 
         // 获取文档列表

@@ -28,7 +28,7 @@ export default {
         }
     },
     mounted() {
-        this.url = this.$store.getters.logoExist ? "/lime_japi_docs/api/config/logo" : img
+        this.url = this.$store.getters.sysConfig.logoUrl || img
     },
     computed: {
         realWidth() {
