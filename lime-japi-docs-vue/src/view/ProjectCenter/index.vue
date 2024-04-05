@@ -6,7 +6,7 @@
                     <a-space align="center" size="small">
                         <lime-logo :height="65" :open-click="true"/>
                         <div style="height: 80px; line-height: 80px;">
-                            <span style="padding: 3px 15px; border-left: 1px solid #aaa; font-weight: 300">接口文档中心</span>
+                            <span style="padding: 3px 15px; border-left: 1px solid #aaa; font-weight: 300">{{sysName}}</span>
                         </div>
                     </a-space>
                 </a-col>
@@ -37,7 +37,7 @@
             </a-row>
         </div>
         <div class="project-list-bg">
-            <div class="project-list-box" :style="dataList && dataList.length > 0 ? '' : 'min-height: 200px'">
+            <div v-if="canView || isLogin" class="project-list-box" :style="dataList && dataList.length > 0 ? '' : 'min-height: 200px'">
                 <a-list
                     v-if="dataList && dataList.length > 0"
                     :loading="loading"
@@ -72,6 +72,9 @@
                 </a-list>
                 <empty-box v-else />
             </div>
+            <div v-else class="project-list-box" >
+                <a-input-search placeholder="input search text" enter-button @search="()=>{}" />
+            </div>
         </div>
         <powered-box style="position:fixed; bottom: 0; background-color: #F3F5F7"/>
         <docs-config-login ref="docs_config_login"/>
@@ -86,7 +89,6 @@ import EditDocsConfig from "./components/EditDocsConfig.vue"
 import EditSystemConfig from "./components/EditSystemConfig.vue"
 import {list, del} from "@/api/docsConfig"
 import {logout} from "@/api/storage/loginStorage"
-import store from "@/util/store";
 export default {
     components: { DocsConfigLogin, EditDocsConfig,EditSystemConfig },
     name: "index",
@@ -100,10 +102,9 @@ export default {
                 interfaceShow: false,
             },
             isLogin: false,
-            queryParams: {
-                viewKey: "",
-                views: ""
-            },
+            canView: false,
+            sysName: '',
+            viewKey: '',
             dataList: []
         };
     },
@@ -113,6 +114,9 @@ export default {
     watch: {
         '$store.getters.sysConfig.hasLogin'() {
             this.isLogin = this.$store.getters.sysConfig.hasLogin
+        },
+        '$store.getters.sysConfig.sysName'() {
+            this.sysName = this.$store.getters.sysConfig.sysName
         }
     },
     methods: {
@@ -121,8 +125,14 @@ export default {
         init() {
             sessionStorage.setItem("root", this.$route.fullPath || "/")
             this.isLogin = this.$store.getters.sysConfig.hasLogin
-            this.queryParams.viewKey = this.$route.query["viewKey"] || ""
-            this.queryParams.views = this.$route.query["views"] || ""
+            this.sysName = this.$store.getters.sysConfig.sysName
+            const viewKey = this.$route.params['viewKey'] || ''
+            if (viewKey == null || viewKey == undefined || viewKey.trim().length < 1) {
+                this.canView = false
+                return
+            }
+            this.canView = true
+            this.viewKey = viewKey
         },
 
         // 查看文档
@@ -135,7 +145,7 @@ export default {
         // 登出
         handleDocsConfigLogout() {
             this.$confirm({
-                title: '您确定退出系统管理？',
+                title: '确定退出登录？',
                 onOk: () => {
                     logout().then(() => {
                         this.$message.success("登出成功")
@@ -148,7 +158,7 @@ export default {
         // 获取文档列表
         listDocs() {
             this.loading = true
-            list(this.queryParams).then(res => {
+            list({viewKey: this.viewKey}).then(res => {
                 if (res['data']) {
                     this.dataList = res['data']
                 }
@@ -246,5 +256,8 @@ export default {
     }
 }
 
+.project-view-key-bg {
+    padding: 110px 0 50px 0;
+}
 
 </style>

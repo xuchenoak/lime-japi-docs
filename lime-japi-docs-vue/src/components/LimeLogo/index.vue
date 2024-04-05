@@ -27,6 +27,11 @@ export default {
             url: img
         }
     },
+    watch: {
+        '$store.getters.sysConfig.logoUrl'() {
+            this.url = this.$store.getters.sysConfig.logoUrl || img
+        }
+    },
     mounted() {
         this.url = this.$store.getters.sysConfig.logoUrl || img
     },

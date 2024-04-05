@@ -21,7 +21,7 @@
                 label="密码"
                 has-feedback=""
             >
-                <a-input type="password" placeholder="请输入密码" v-decorator="['password', {rules: [{required: true, message: '请输入密码'}]}]" />
+                <a-input type="password" autocomplete="off" placeholder="请输入密码" v-decorator="['password', {rules: [{required: true, message: '请输入密码'}]}]" />
             </a-form-item>
         </a-form>
     </a-modal>

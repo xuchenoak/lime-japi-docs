@@ -67,7 +67,7 @@
                     <span>管理员密码</span>
                     <why-box-text text="用于系统管理身份认证"/>
                 </span>
-                <a-input type="password" placeholder="请输入管理员密码" v-decorator="['password', {rules: [{required: true, message: '请输入管理员密码'}]}]" />
+                <a-input type="password" autocomplete="off" placeholder="请输入管理员密码" v-decorator="['password', {rules: [{required: true, message: '请输入管理员密码'}]}]" />
             </a-form-item>
         </a-form>
     </drawer-box>
@@ -81,6 +81,7 @@ const getBase64 = (img, callback) => {
     reader.readAsDataURL(img);
 }
 import {getSysConfig, saveSysConfig} from '@/api/sysConfig'
+import store from "@/util/store";
 export default {
     name: "EditDocsConfig",
     data() {
@@ -122,7 +123,9 @@ export default {
                     values['logoUrl'] = this.logoUrl
                     this.loading = true
                     saveSysConfig(values).then(() => {
-                        this.close()
+                        store.dispatch("common").finally(()=> {
+                            this.close()
+                        })
                     }).finally(() => {
                         this.loading = false
                     })
