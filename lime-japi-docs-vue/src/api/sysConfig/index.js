@@ -8,6 +8,15 @@ export function common() {
   })
 }
 
+// 系统初始化
+export function sysInit(data) {
+  return request({
+    url: '/lime_japi_docs/api/sys_config/sys_init',
+    method: 'post',
+    data: data
+  })
+}
+
 // 保存系统配置
 export function saveSysConfig(data) {
   return request({

@@ -7,6 +7,7 @@ import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig.CommonConfigVo;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.sysconfig.SysConfigVo;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ParamsConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.SysConfigService;
+import io.gitee.xuchenoak.limejapidocs.runner.util.BeanUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -87,18 +88,14 @@ public class SysConfigServiceImpl implements SysConfigService {
      */
     @Override
     public SysConfigVo getSysConfig() {
-        SysConfig bean = paramsConfigService.getParamCache(SYS_CONFIG_KEY, SysConfig.class);
-        if (bean != null) {
-            return new SysConfigVo(
-                    bean.getSysName(),
-                    bean.getLogoUrl(),
-                    bean.getSysSlogan(),
-                    bean.getDocsViewKey(),
-                    bean.getAccount(),
-                    bean.getPassword()
-            );
-        }
-        return new SysConfigVo();
+        return BeanUtil.getBeanOrDoing(paramsConfigService.getParamCache(SYS_CONFIG_KEY, SysConfig.class), bean -> new SysConfigVo(
+                bean.getSysName(),
+                bean.getLogoUrl(),
+                bean.getSysSlogan(),
+                bean.getDocsViewKey(),
+                bean.getAccount(),
+                bean.getPassword()
+        ));
     }
 
 }

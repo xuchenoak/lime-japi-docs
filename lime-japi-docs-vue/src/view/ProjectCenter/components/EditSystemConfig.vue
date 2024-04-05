@@ -56,14 +56,17 @@
             >
                 <span slot="label">
                     <span>管理员账号</span>
-                    <why-box-text text="用于管理文档时登录"/>
+                    <why-box-text text="用于系统管理身份认证"/>
                 </span>
                 <a-input placeholder="请输入管理员账号" v-decorator="['account', {rules: [{required: true, message: '请输入管理员账号'}]}]" />
             </a-form-item>
             <a-form-item
-                label="管理员密码"
                 has-feedback=""
             >
+                <span slot="label">
+                    <span>管理员密码</span>
+                    <why-box-text text="用于系统管理身份认证"/>
+                </span>
                 <a-input type="password" placeholder="请输入管理员密码" v-decorator="['password', {rules: [{required: true, message: '请输入管理员密码'}]}]" />
             </a-form-item>
         </a-form>
@@ -117,7 +120,6 @@ export default {
             this.form.validateFields((errors, values)=> {
                 if (!errors) {
                     values['logoUrl'] = this.logoUrl
-                    console.log("values", values)
                     this.loading = true
                     saveSysConfig(values).then(() => {
                         this.close()
@@ -155,54 +157,6 @@ export default {
     }
 }
 
-const defaultParamValidFuc = `
-/**
- * 参数验证描述注入回调函数（请勿修改函数名！！！）
- * @param annotationNames 参数的（多个）注解名称数组
- * @param fieldName 参数字段名称
- * @param fieldComment 参数字段注释
- * @return 注入的参数验证描述
- */
-function valid(annotationNames, fieldName, fieldComment) {
-  if(annotationNames.includes('NotNull')) {
-    return '对象非空';
-  }
-  if(annotationNames.includes('NotBlank')) {
-    return '字符串非空';
-  }
-  return '';
-}
-`
-const defaultParamDefaultValueFunc = `
-/**
- * 字段默认值注入回调函数（请勿修改函数名！！！）
- * @param type 字段类型（Java类型，基本数据类型->包装类）
- * @param fieldName 参数字段名称
- * @param fieldComment 参数字段注释
- * @return 注入的默认值
- */
-function defaultValue(type, fieldName, fieldComment) {
-  if (type == 'String') {
-    // 返回字符串的话双引号需要自己拼接
-    return '"字符串"';
-  }
-  if (type == 'Date') {
-    return '"2023-10-29 19:16:00"';
-  }
-  if (type == 'Boolean') {
-    return true;
-  }
-  if (['Integer', 'BigInteger', 'Long'].includes(type)) {
-    return 0;
-  }
-  if (['Double', 'Float', 'BigDecimal'].includes(type)) {
-    return 0.1;
-  }
-  return '';
-}
-`
-
-
 </script>
 
 <style scoped lang="less">
@@ -216,7 +170,7 @@ function defaultValue(type, fieldName, fieldComment) {
 }
 /deep/ .avatar-uploader-high > .ant-upload {
     width: 390px!important;
-    height: 120px!important;;
+    height: 120px!important;
 }
 /deep/ .ant-upload.ant-upload-select-picture-card {
     margin: 0;

@@ -59,7 +59,11 @@ public class ParamsConfigService extends EntityBaseService<SysConfigMapper, Para
             return null;
         }
         try {
-            return JSONUtil.toBean(getParamCache(key), c);
+            String str = getParamCache(key);
+            if (StrUtil.isBlank(str)) {
+                return null;
+            }
+            return JSONUtil.toBean(str, c);
         } catch (Exception e) {
             log.error("对象转换异常", e);
             return null;
@@ -78,7 +82,11 @@ public class ParamsConfigService extends EntityBaseService<SysConfigMapper, Para
             return null;
         }
         try {
-            return JSONUtil.toList(getParamCache(key), c);
+            String str = getParamCache(key);
+            if (StrUtil.isBlank(str)) {
+                return null;
+            }
+            return JSONUtil.toList(str, c);
         } catch (Exception e) {
             log.error("对象转换异常", e);
             return null;

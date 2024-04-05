@@ -1,6 +1,7 @@
 package io.gitee.xuchenoak.limejapidocs.runner.controller;
 
 import io.gitee.xuchenoak.limejapidocs.runner.common.bean.AjaxResult;
+import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.sysconfig.SysConfigRf;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig.CommonConfigVo;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.sysconfig.SysConfigVo;
@@ -38,6 +39,20 @@ public class SysConfigController {
     }
 
     /**
+     * 系统初始化
+     * @param rf
+     */
+    @PostMapping("/sys_init")
+    public AjaxResult sysInit(@Validated @RequestBody SysConfigRf rf) {
+        SysConfigVo sysConfig = sysConfigService.getSysConfig();
+        if (sysConfig != null) {
+            CusExc.e("系统已初始化");
+        }
+        sysConfigService.saveSysConfig(rf);
+        return AjaxResult.success();
+    }
+
+    /**
      * 保存系统配置
      * @param rf
      */
@@ -53,7 +68,7 @@ public class SysConfigController {
      */
     @GetMapping("/get_sys_config")
     public AjaxResult<SysConfigVo> getSysConfig() {
-        return AjaxResult.success(sysConfigService.getSysConfig());
+        return AjaxResult.success(Optional.ofNullable(sysConfigService.getSysConfig()).orElse(new SysConfigVo()));
     }
 
 }

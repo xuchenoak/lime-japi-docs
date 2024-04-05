@@ -40,7 +40,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/lime_japi_docs/api/docs_config/list",
                         "/lime_japi_docs/api/docs_config/get_docs_config_simple",
-                        "/lime_japi_docs/api/sys_config/common"
+                        "/lime_japi_docs/api/sys_config/common",
+                        "/lime_japi_docs/api/sys_config/sys_init"
                 );
     }
 

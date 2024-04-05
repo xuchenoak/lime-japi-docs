@@ -137,7 +137,7 @@ export default {
             this.$confirm({
                 title: '您确定退出系统管理？',
                 onOk: () => {
-                    logout().then(res => {
+                    logout().then(() => {
                         this.$message.success("登出成功")
                     })
                 },
