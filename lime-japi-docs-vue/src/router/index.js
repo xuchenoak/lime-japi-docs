@@ -4,14 +4,15 @@ import store from '@/util/store'
 import DocsPage from '@/view/DocsPage'
 import ProjectCenter from '@/view/ProjectCenter'
 import SysInit from '@/view/SysInit'
+import NotFoundPage from '@/components/NotFoundPage'
 
 
 Vue.use(Router)
 
 const constantRoutes = [
     {
-        path: '/',
-        component: ProjectCenter,
+        path: '/404',
+        component: NotFoundPage,
     },
     {
         path: '/init',
@@ -20,6 +21,14 @@ const constantRoutes = [
     {
         path: '/docs/:id',
         component: DocsPage,
+    },
+    {
+        path: '/',
+        component: ProjectCenter,
+    },
+    {
+        path: '/:viewKey',
+        component: ProjectCenter,
     },
 ]
 
@@ -35,6 +44,7 @@ router.beforeEach((to, from, next) => {
         store.dispatch("common").then(res => {
             // 若没有初始化则跳转初始化页面
             if (to.path !== '/init' && !res['data'].hasInit) {
+                console.log("to init")
                 next({ path: '/init' });
             }
             // 若已经初始化再访问初始化页面则跳转主页面

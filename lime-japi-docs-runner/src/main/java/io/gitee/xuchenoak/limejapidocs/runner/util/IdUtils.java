@@ -2,8 +2,11 @@ package io.gitee.xuchenoak.limejapidocs.runner.util;
 
 
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.sun.org.apache.regexp.internal.RE;
+import io.gitee.xuchenoak.limejapidocs.runner.common.enums.ResCodeEnum;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
 
 /**
@@ -51,7 +54,7 @@ public class IdUtils {
     public static Long decryptIdOrExc(String id) {
         Long res = decryptId(id);
         if (res == null) {
-            CusExc.e("Id：{} 不存在", id);
+            CusExc.e(ResCodeEnum.NotFound, StrUtil.format("Id：{} 不存在", id));
         }
         return res;
     }

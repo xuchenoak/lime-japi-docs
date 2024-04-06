@@ -182,7 +182,6 @@ export default {
             }
             this.docsConfigId = docsConfigId
             this.getDocsConfig()
-            this.refreshParseMsg()
         },
 
         // 获取文档配置
@@ -195,6 +194,7 @@ export default {
                     this.docsConfig = res.data
                 }
                 this.getCreateTimeList()
+                this.refreshParseMsg()
             }).catch(()=> {
                 this.loading = false
             })

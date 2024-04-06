@@ -28,9 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new HandlerInterceptor() {
             @Override
             public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-                String account = Optional.ofNullable(request.getHeader("Uacc")).orElse("");
-                String password = Optional.ofNullable(request.getHeader("Upas")).orElse("");
-                if (!sysConfigService.isLogin(account, password)) {
+                if (!sysConfigService.isLogin(request)) {
                     CusExc.e("无权访问此接口");
                 }
                 return true;
@@ -40,6 +38,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/lime_japi_docs/api/docs_config/list",
                         "/lime_japi_docs/api/docs_config/get_docs_config_simple",
+                        "/lime_japi_docs/api/docs_config/check_view_key",
                         "/lime_japi_docs/api/sys_config/common",
                         "/lime_japi_docs/api/sys_config/sys_init"
                 );

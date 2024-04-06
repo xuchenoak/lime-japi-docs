@@ -14,6 +14,8 @@ public enum ResCodeEnum {
 
     ParamError(501, "参数错误"),
 
+    NotFound(404, "找不到页面"),
+
     ;
 
     /** 标识 */

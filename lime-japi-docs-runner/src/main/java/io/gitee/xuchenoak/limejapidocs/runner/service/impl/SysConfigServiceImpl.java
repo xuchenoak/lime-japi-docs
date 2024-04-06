@@ -1,5 +1,6 @@
 package io.gitee.xuchenoak.limejapidocs.runner.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.bean.SysConfig;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.sysconfig.SysConfigRf;
@@ -12,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 /**
  * 系统配置业务实现
@@ -29,12 +32,11 @@ public class SysConfigServiceImpl implements SysConfigService {
 
     /**
      * 获取公共配置
-     * @param account 账号
-     * @param password 密码
+     * @param request
      * @return
      */
     @Override
-    public CommonConfigVo getCommonConfig(String account, String password) {
+    public CommonConfigVo getCommonConfig(HttpServletRequest request) {
         CommonConfigVo vo = new CommonConfigVo();
         SysConfigVo sysConfig = getSysConfig();
         if (sysConfig != null) {
@@ -42,7 +44,7 @@ public class SysConfigServiceImpl implements SysConfigService {
             vo.setSysSlogan(sysConfig.getSysSlogan());
             vo.setLogoUrl(sysConfig.getLogoUrl());
             vo.setHasInit(true);
-            vo.setHasLogin(sysConfig.getAccount().equals(account) && sysConfig.getPassword().equals(password));
+            vo.setHasLogin(isLogin(request, sysConfig));
         } else {
             vo.setHasInit(false);
             vo.setHasLogin(false);
@@ -52,17 +54,65 @@ public class SysConfigServiceImpl implements SysConfigService {
 
     /**
      * 验证是否登录
-     * @param account 账号
-     * @param password 密码
+     * @param request
      * @return
      */
     @Override
-    public boolean isLogin(String account, String password) {
+    public boolean isLogin(HttpServletRequest request) {
+        return isLogin(request, getSysConfig());
+    }
+
+    /**
+     * 验证是否登录或文档中心邀请码是否正确
+     * @param request
+     * @param viewKey 邀请码
+     * @return
+     */
+    @Override
+    public boolean isLoginOrViewKey(HttpServletRequest request, String viewKey) {
         SysConfigVo sysConfig = getSysConfig();
-        if (sysConfig != null) {
-            return sysConfig.getAccount().equals(account) && sysConfig.getPassword().equals(password);
+        if (sysConfig == null) {
+            return false;
         }
-        return false;
+        if (isLogin(request, sysConfig)) {
+            return true;
+        }
+        if (StrUtil.isBlank(viewKey)) {
+            return false;
+        }
+        return viewKey.equals(sysConfig.getDocsViewKey());
+    }
+
+    /**
+     * 验证文档中心邀请码是否正确
+     * @param viewKey 邀请码
+     * @return
+     */
+    @Override
+    public boolean checkViewKey(String viewKey) {
+        if (StrUtil.isBlank(viewKey)) {
+            return false;
+        }
+        SysConfigVo sysConfig = getSysConfig();
+        if (sysConfig == null) {
+            return false;
+        }
+        return viewKey.equals(sysConfig.getDocsViewKey());
+    }
+
+    /**
+     * 验证是否登录
+     * @param request
+     * @param sysConfig
+     * @return
+     */
+    public boolean isLogin(HttpServletRequest request, SysConfigVo sysConfig) {
+        if (sysConfig == null) {
+            return false;
+        }
+        String account = Optional.ofNullable(request.getHeader("Uacc")).orElse("");
+        String password = Optional.ofNullable(request.getHeader("Upas")).orElse("");
+        return sysConfig.getAccount().equals(account) && sysConfig.getPassword().equals(password);
     }
 
     /**

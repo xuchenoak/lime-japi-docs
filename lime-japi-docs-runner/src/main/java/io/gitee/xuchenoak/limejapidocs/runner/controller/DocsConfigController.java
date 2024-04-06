@@ -1,13 +1,17 @@
 package io.gitee.xuchenoak.limejapidocs.runner.controller;
 
+import cn.hutool.core.util.StrUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.common.bean.AjaxResult;
 import io.gitee.xuchenoak.limejapidocs.runner.common.config.DocsParserConfig;
+import io.gitee.xuchenoak.limejapidocs.runner.common.enums.ResCodeEnum;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigAddRf;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigEditRf;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigIdRf;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig.DocsConfigListVo;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig.DocsConfigVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.sysconfig.SysConfigVo;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsConfigService;
+import io.gitee.xuchenoak.limejapidocs.runner.service.inter.SysConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.util.IdUtils;
 import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,30 +39,32 @@ public class DocsConfigController {
     private DocsConfigService docsConfigService;
 
     @Resource
-    private DocsParserConfig docsParserConfig;
+    private SysConfigService sysConfigService;
 
     /**
      * 获取文档列表
+     * @param viewKey 邀请码（管理员登录后不需要邀请码）
      * @param docsName 文档名称（模糊搜索）
      * @return
      */
     @GetMapping("/list")
     public AjaxResult<List<DocsConfigListVo>> list(String viewKey,
-                                                   @RequestParam("views") List<String> views,
                                                    String docsName,
                                                    HttpServletRequest request) {
-        List<Long> ids = null;
-        if (!docsParserConfig.checkDocsConfigKey(request) && !docsParserConfig.checkDocsViewKey(viewKey)) {
-            // 查看秘钥验证不通过则降级为查询指定文档（若也未传指定文档Id则返回空）
-            if (ListUtils.isBlank(views)) {
-                return AjaxResult.success(new ArrayList<>());
-            }
-            ids = new ArrayList<>();
-            for (String view : views) {
-                ids.add(IdUtils.decryptIdOrExc(view));
-            }
+        if (!sysConfigService.isLoginOrViewKey(request, viewKey)) {
+            return AjaxResult.error(ResCodeEnum.NotFound.getCode(), ResCodeEnum.NotFound.getMsg());
         }
-        return AjaxResult.success(docsConfigService.list(docsName, ids));
+        return AjaxResult.success(docsConfigService.list(docsName, null));
+    }
+
+    /**
+     * 验证邀请码
+     * @param viewKey 邀请码
+     * @return
+     */
+    @GetMapping("/check_view_key")
+    public AjaxResult<Boolean> list(String viewKey) {
+        return AjaxResult.success(sysConfigService.checkViewKey(viewKey));
     }
 
     /**

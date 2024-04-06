@@ -9,6 +9,15 @@ export function list(params) {
   })
 }
 
+// 验证邀请码
+export function checkViewKey(viewKey) {
+  return request({
+    url: '/lime_japi_docs/api/docs_config/check_view_key',
+    method: 'get',
+    params: {viewKey}
+  })
+}
+
 // 获取单个文档配置（简单版）
 export function getDocsConfigSimple(id) {
   return request({

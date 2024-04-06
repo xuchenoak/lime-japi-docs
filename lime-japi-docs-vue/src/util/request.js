@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {message} from "ant-design-vue"
 import {get} from "@/api/storage/loginStorage";
+import router from "@/router";
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 // 创建axios实例
@@ -25,10 +26,13 @@ service.interceptors.request.use(config => {
 // 响应拦截器
 service.interceptors.response.use(res => {
         // 未设置状态码则默认成功状态
-        const code = res.data.code || 200;
+        const code = res.data.code || 404
+        if (code === 404) {
+            router.push({path: '/404'})
+            return Promise.reject('error')
+        }
         // 获取错误信息
         if (code !== 200) {
-            console.log(res, "失败")
             if (res.data.msg) message.error(res.data.msg)
             return Promise.reject('error')
         } else {

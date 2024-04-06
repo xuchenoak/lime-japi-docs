@@ -36,8 +36,8 @@
                 </a-col>
             </a-row>
         </div>
-        <div class="project-list-bg">
-            <div v-if="canView || isLogin" class="project-list-box" :style="dataList && dataList.length > 0 ? '' : 'min-height: 200px'">
+        <div v-if="canView" class="project-list-bg">
+            <div class="project-list-box" :style="dataList && dataList.length > 0 ? '' : 'min-height: 200px'">
                 <a-list
                     v-if="dataList && dataList.length > 0"
                     :loading="loading"
@@ -72,8 +72,10 @@
                 </a-list>
                 <empty-box v-else />
             </div>
-            <div v-else class="project-list-box" >
-                <a-input-search placeholder="input search text" enter-button @search="()=>{}" />
+        </div>
+        <div v-else class="project-view-key-bg" >
+            <div class="project-view-key-box">
+                <a-input-search placeholder="请输入邀请码" enter-button="确定" @search="handleViewKey" v-model="viewKey" style="width: 400px" />
             </div>
         </div>
         <powered-box style="position:fixed; bottom: 0; background-color: #F3F5F7"/>
@@ -87,7 +89,7 @@
 import DocsConfigLogin from "./components/DocsConfigLogin.vue"
 import EditDocsConfig from "./components/EditDocsConfig.vue"
 import EditSystemConfig from "./components/EditSystemConfig.vue"
-import {list, del} from "@/api/docsConfig"
+import {list, del, checkViewKey} from "@/api/docsConfig"
 import {logout} from "@/api/storage/loginStorage"
 export default {
     components: { DocsConfigLogin, EditDocsConfig,EditSystemConfig },
@@ -113,7 +115,18 @@ export default {
     },
     watch: {
         '$store.getters.sysConfig.hasLogin'() {
-            this.isLogin = this.$store.getters.sysConfig.hasLogin
+            // 未登录且有邀请码，则需要验证邀请码是否有效
+            if (!this.$store.getters.sysConfig.hasLogin && this.viewKey) {
+                checkViewKey(this.viewKey).then(res => {
+                    if (!res['data']) {
+                        this.$router.push({path: '/'})
+                    }
+                }).finally(() => {
+                    this.init()
+                })
+            } else {
+                this.init()
+            }
         },
         '$store.getters.sysConfig.sysName'() {
             this.sysName = this.$store.getters.sysConfig.sysName
@@ -122,17 +135,21 @@ export default {
     methods: {
 
         // 初始化
-        init() {
+        async init() {
             sessionStorage.setItem("root", this.$route.fullPath || "/")
             this.isLogin = this.$store.getters.sysConfig.hasLogin
             this.sysName = this.$store.getters.sysConfig.sysName
             const viewKey = this.$route.params['viewKey'] || ''
             if (viewKey == null || viewKey == undefined || viewKey.trim().length < 1) {
-                this.canView = false
-                return
+                this.canView = this.isLogin || false
+                this.viewKey = ''
+            } else {
+                this.canView = true
+                this.viewKey = viewKey
             }
-            this.canView = true
-            this.viewKey = viewKey
+            if (this.canView) {
+                this.listDocs()
+            }
         },
 
         // 查看文档
@@ -177,6 +194,22 @@ export default {
             }).finally(()=> {
                 this.loading = false
             })
+        },
+
+        // 设置邀请码
+        handleViewKey() {
+            const viewKey = this.viewKey
+            if (viewKey && viewKey.trim()) {
+                checkViewKey(viewKey).then(res => {
+                    if (!res['data']) {
+                        this.$message.warning("邀请码无效")
+                    } else {
+                        // window.location.href = '/' + viewKey.trim()
+                        this.$router.push({path: '/' + viewKey.trim()})
+                        this.init()
+                    }
+                })
+            }
         },
 
         // 获取序号
@@ -257,7 +290,13 @@ export default {
 }
 
 .project-view-key-bg {
-    padding: 110px 0 50px 0;
+    height: 100vh;
+    .project-view-key-box {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
 
 </style>

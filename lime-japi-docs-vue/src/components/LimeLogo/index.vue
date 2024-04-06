@@ -1,11 +1,10 @@
 <template>
     <div class="box-bg"
          @click="handleLogo"
-         :style="'--width:' + realWidth + 'px; --height:' + realHeight + 'px; background: url(' + url + ') no-repeat'"/>
+         :style="style"/>
 </template>
 
 <script>
-import img from "@/assets/images/lime-logo.png"
 export default {
     name: "index",
     props: {
@@ -20,20 +19,24 @@ export default {
         openClick: {
             type: Boolean,
             default() {return false}
-        }
+        },
     },
     data() {
         return {
-            url: img
+            style: {
+                "--width": this.realWidth + 'px',
+                "--height": this.realHeight + 'px',
+                background: ''
+            }
         }
     },
     watch: {
         '$store.getters.sysConfig.logoUrl'() {
-            this.url = this.$store.getters.sysConfig.logoUrl || img
+            this.refreshStyle()
         }
     },
     mounted() {
-        this.url = this.$store.getters.sysConfig.logoUrl || img
+        this.refreshStyle()
     },
     computed: {
         realWidth() {
@@ -60,6 +63,14 @@ export default {
             if (this.openClick) {
                 window.location.reload()
             }
+        },
+        refreshStyle() {
+            const url = this.$store.getters.sysConfig.logoUrl || ''
+            if (url) {
+                this.style['background'] = 'url(' + url + ') no-repeat'
+            }
+            this.style['--width'] = this.realWidth + 'px'
+            this.style['--height'] = this.realHeight + 'px'
         }
     }
 }

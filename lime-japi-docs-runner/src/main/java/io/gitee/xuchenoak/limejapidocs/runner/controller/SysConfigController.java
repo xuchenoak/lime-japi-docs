@@ -33,9 +33,7 @@ public class SysConfigController {
      */
     @GetMapping("/common")
     public AjaxResult<CommonConfigVo> common(HttpServletRequest request) {
-        String account = Optional.ofNullable(request.getHeader("Uacc")).orElse("");
-        String password = Optional.ofNullable(request.getHeader("Upas")).orElse("");
-        return AjaxResult.success(sysConfigService.getCommonConfig(account, password));
+        return AjaxResult.success(sysConfigService.getCommonConfig(request));
     }
 
     /**
