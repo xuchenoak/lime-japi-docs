@@ -167,7 +167,7 @@ export default {
     methods: {
         open(id) {
             this.visible = true
-            this.id = id
+            this.id = id || ''
             if (id) {
                 this.loading = true
                 getDocsConfig(id).then(res => {
