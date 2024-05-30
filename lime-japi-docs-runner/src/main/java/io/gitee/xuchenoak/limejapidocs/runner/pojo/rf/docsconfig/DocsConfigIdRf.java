@@ -16,7 +16,9 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class DocsConfigIdRf {
 
-    /** Id */
+    /**
+     * Id
+     */
     @NotBlank(message = "Id不能为空")
     private String id;
 

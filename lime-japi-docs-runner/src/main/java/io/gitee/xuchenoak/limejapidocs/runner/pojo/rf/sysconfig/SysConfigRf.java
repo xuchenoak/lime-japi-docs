@@ -17,26 +17,38 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class SysConfigRf implements Serializable {
 
-    /** 文档中心名称 */
+    /**
+     * 文档中心名称
+     */
     @NotBlank(message = "文档中心名称不能为空")
     private String sysName;
 
-    /** 系统LOGO */
+    /**
+     * 系统LOGO
+     */
     private String logoUrl;
 
-    /** 系统标语 */
+    /**
+     * 系统标语
+     */
     @NotBlank(message = "系统标语不能为空")
     private String sysSlogan;
 
-    /** 文档中心邀请码 */
+    /**
+     * 文档中心邀请码
+     */
     @NotBlank(message = "文档中心邀请码不能为空")
     private String docsViewKey;
 
-    /** 管理员账号 */
+    /**
+     * 管理员账号
+     */
     @NotBlank(message = "管理员账号不能为空")
     private String account;
 
-    /** 管理员密码 */
+    /**
+     * 管理员密码
+     */
     @NotBlank(message = "管理员密码不能为空")
     private String password;
 

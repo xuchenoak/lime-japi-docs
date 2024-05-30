@@ -16,14 +16,16 @@ public interface DocsConfigService {
 
     /**
      * 获取文档列表
+     *
      * @param docsName 文档名称
-     * @param ids Ids
+     * @param ids      Ids
      * @return
      */
     List<DocsConfigListVo> list(String docsName, List<Long> ids);
 
     /**
      * 获取单个文档配置（简单版）
+     *
      * @param id
      * @return
      */
@@ -31,6 +33,7 @@ public interface DocsConfigService {
 
     /**
      * 获取单个文档配置
+     *
      * @param id
      * @return
      */
@@ -38,6 +41,7 @@ public interface DocsConfigService {
 
     /**
      * 新增文档
+     *
      * @param rf
      * @return
      */
@@ -45,6 +49,7 @@ public interface DocsConfigService {
 
     /**
      * 编辑文档
+     *
      * @param rf
      * @return
      */
@@ -52,6 +57,7 @@ public interface DocsConfigService {
 
     /**
      * 删除文档
+     *
      * @param id
      */
     void del(Long id);

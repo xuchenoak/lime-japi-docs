@@ -10,7 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 /**
  * web配置
@@ -26,15 +25,15 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new HandlerInterceptor() {
-            @Override
-            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-                if (!sysConfigService.isLogin(request)) {
-                    CusExc.e("无权访问此接口");
-                }
-                return true;
-            }
+                    @Override
+                    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+                        if (!sysConfigService.isLogin(request)) {
+                            CusExc.e("无权访问此接口");
+                        }
+                        return true;
+                    }
 
-        }).addPathPatterns("/lime_japi_docs/api/docs_config/**", "/lime_japi_docs/api/sys_config/**")
+                }).addPathPatterns("/lime_japi_docs/api/docs_config/**", "/lime_japi_docs/api/sys_config/**")
                 .excludePathPatterns(
                         "/lime_japi_docs/api/docs_config/list",
                         "/lime_japi_docs/api/docs_config/get_docs_config_simple",

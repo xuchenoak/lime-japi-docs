@@ -10,11 +10,11 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy=IsCNValidator.class)
+@Constraint(validatedBy = IsCNValidator.class)
 public @interface IsCN {
 
 
-    String message() default"内容输入错误,只允许输入中文或字母和,";
+    String message() default "内容输入错误,只允许输入中文或字母和,";
 
     Class<?>[] groups() default {};
 

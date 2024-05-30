@@ -35,15 +35,15 @@ public class EntityBaseService<M extends BaseMapper<T>, T> extends ServiceImpl<M
         return t;
     }
 
-    public <V>V add(T t, Class<V> c) {
+    public <V> V add(T t, Class<V> c) {
         return BeanUtil.toBean(add(t), c);
     }
 
-    public <R>T addBean(R t) {
+    public <R> T addBean(R t) {
         return add(BeanUtil.toBean(t, entityType));
     }
 
-    public <V, R>V addBean(R t, Class<V> c) {
+    public <V, R> V addBean(R t, Class<V> c) {
         return add(BeanUtil.toBean(t, entityType), c);
     }
 
@@ -57,12 +57,12 @@ public class EntityBaseService<M extends BaseMapper<T>, T> extends ServiceImpl<M
         if (ListUtils.isBlank(ts)) {
             return;
         }
-        if (!saveBatch(ts)){
+        if (!saveBatch(ts)) {
             CusExc.e("批量新增失败");
         }
     }
 
-    public <R>void addBatchBean(Collection<R> ts) {
+    public <R> void addBatchBean(Collection<R> ts) {
         addBatch(BeanUtil.copyToList(ts, entityType));
     }
 
@@ -73,15 +73,15 @@ public class EntityBaseService<M extends BaseMapper<T>, T> extends ServiceImpl<M
         return t;
     }
 
-    public <V>V edit(T t, Class<V> c) {
+    public <V> V edit(T t, Class<V> c) {
         return BeanUtil.toBean(edit(t), c);
     }
 
-    public <R>T editBean(R t) {
+    public <R> T editBean(R t) {
         return edit(BeanUtil.toBean(t, entityType));
     }
 
-    public <V, R>V editBean(R t, Class<V> c) {
+    public <V, R> V editBean(R t, Class<V> c) {
         return edit(BeanUtil.toBean(t, entityType), c);
     }
 
@@ -95,12 +95,12 @@ public class EntityBaseService<M extends BaseMapper<T>, T> extends ServiceImpl<M
         if (ListUtils.isBlank(ts)) {
             return;
         }
-        if (!updateBatchById(ts)){
+        if (!updateBatchById(ts)) {
             CusExc.e("批量更新失败");
         }
     }
 
-    public <R>void editBatchBean(Collection<R> ts) {
+    public <R> void editBatchBean(Collection<R> ts) {
         editBatch(BeanUtil.copyToList(ts, entityType));
     }
 
@@ -119,7 +119,7 @@ public class EntityBaseService<M extends BaseMapper<T>, T> extends ServiceImpl<M
     }
 
     public void delBatchIfCount(Collection<T> ts) {
-        if (ListUtils.isBlank(ts)){
+        if (ListUtils.isBlank(ts)) {
             return;
         }
         if (!removeBatchByIds(ts)) {
@@ -127,11 +127,11 @@ public class EntityBaseService<M extends BaseMapper<T>, T> extends ServiceImpl<M
         }
     }
 
-    public <R>R getById(Serializable id, Class<R> c) {
+    public <R> R getById(Serializable id, Class<R> c) {
         return BeanUtil.getBeanOrDoing(getById(id), bean -> BeanUtil.toBean(bean, c));
     }
 
-    public <R>R getById(Serializable id, Function<T, R> f) {
+    public <R> R getById(Serializable id, Function<T, R> f) {
         return BeanUtil.getBeanOrDoing(getById(id), f);
     }
 
@@ -153,20 +153,20 @@ public class EntityBaseService<M extends BaseMapper<T>, T> extends ServiceImpl<M
         return BeanUtil.toBean(getOne(f, v), c);
     }
 
-    public <R>List<R> list(Class<R> c) {
+    public <R> List<R> list(Class<R> c) {
         return ListUtils.listOrDoing(list(), list -> BeanUtil.copyToList(list, c));
     }
 
-    public <R>List<R> list(Class<R> c, Function<List<T>, List<R>> f) {
+    public <R> List<R> list(Class<R> c, Function<List<T>, List<R>> f) {
         return ListUtils.listOrDoing(list(), f);
     }
 
-    public <R>List<R> list(Wrapper<T> q, Class<R> c) {
+    public <R> List<R> list(Wrapper<T> q, Class<R> c) {
         return ListUtils.listOrDoing(list(q), list -> BeanUtil.copyToList(list, c));
     }
 
-    public <K,V> Map<K,V> getMap(Function<T, K> f1, Function<T, V> f2) {
-        Map<K,V> map = new HashMap<>();
+    public <K, V> Map<K, V> getMap(Function<T, K> f1, Function<T, V> f2) {
+        Map<K, V> map = new HashMap<>();
         List<T> list = list();
         if (ListUtils.isNotBlank(list)) {
             for (T t : list) {
@@ -176,8 +176,8 @@ public class EntityBaseService<M extends BaseMapper<T>, T> extends ServiceImpl<M
         return map;
     }
 
-    public <K,V> Map<K,V> getMap(Wrapper<T> q, Function<T, K> f1, Function<T, V> f2) {
-        Map<K,V> map = new HashMap<>();
+    public <K, V> Map<K, V> getMap(Wrapper<T> q, Function<T, K> f1, Function<T, V> f2) {
+        Map<K, V> map = new HashMap<>();
         List<T> list = list(q);
         if (ListUtils.isNotBlank(list)) {
             for (T t : list) {

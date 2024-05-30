@@ -4,31 +4,26 @@ import io.gitee.xuchenoak.limejapidocs.runner.common.enums.ResCodeEnum;
 
 /**
  * 响应数据对象
+ *
  * @author xuchenoak
  * @create 2022-07-21 20:22
  */
 public class AjaxResult<T> {
 
-    /** 状态码 */
+    /**
+     * 状态码
+     */
     private int code;
 
-    /** 信息 */
+    /**
+     * 信息
+     */
     private String msg;
 
-    /** 数据 */
+    /**
+     * 数据
+     */
     private T data;
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public T getData() {
-        return data;
-    }
 
     private AjaxResult() {
     }
@@ -40,7 +35,7 @@ public class AjaxResult<T> {
 
     private AjaxResult(int code, String msg, T data) {
         this.code = code;
-        this.msg =  msg;
+        this.msg = msg;
         this.data = data;
     }
 
@@ -51,7 +46,6 @@ public class AjaxResult<T> {
     public static <T> AjaxResult success(T data) {
         return AjaxResult.success("操作成功", data);
     }
-
 
     public static AjaxResult success(String msg) {
         return AjaxResult.success(msg, null);
@@ -75,6 +69,18 @@ public class AjaxResult<T> {
 
     public static <T> AjaxResult error(ResCodeEnum e, T data) {
         return new AjaxResult(e.getCode(), e.getMsg(), data);
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public T getData() {
+        return data;
     }
 
 

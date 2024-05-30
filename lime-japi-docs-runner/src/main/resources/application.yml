@@ -8,8 +8,8 @@ spring:
     schema: classpath:db/schema.sql
     initialization-mode: always
     url: jdbc:h2:file:./data/data;MODE=MYSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
-    username:
-    password:
+    username: admin
+    password: admin666
   h2:
     console:
       #开启web console功能
@@ -27,11 +27,3 @@ logging:
 #  configuration:
 #    # sql日志
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-docs-parser:
-  # 标语
-  slogan:
-  # 文档管理秘钥
-  docsConfigKey: 123456
-  # 文档查看秘钥：不设置则所有人都可访问所有文档，若设置了需通过该秘钥才可访问所有文档（具体实现见文档配置列表查询接口）
-  docsViewKey: 123456

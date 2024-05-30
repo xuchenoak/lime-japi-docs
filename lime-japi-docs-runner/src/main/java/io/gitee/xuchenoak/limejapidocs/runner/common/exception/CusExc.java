@@ -8,27 +8,6 @@ import io.gitee.xuchenoak.limejapidocs.runner.common.enums.ResCodeEnum;
  */
 public class CusExc extends RuntimeException {
     private static final long serialVersionUID = 1L;
-
-    public static void e() {
-        throw new CusExc();
-    }
-    public static void e(String msg) {
-        throw new CusExc(msg);
-    }
-    public static void e(String template, Object... v) {
-        e(StrUtil.format(template, v));
-    }
-
-    public static void e(ResCodeEnum resCodeEnum) {
-        throw new CusExc(resCodeEnum.getCode(), resCodeEnum.getMsg());
-    }
-    public static void e(ResCodeEnum resCodeEnum, String msg) {
-        throw new CusExc(resCodeEnum.getCode(), msg);
-    }
-    public static void e(ResCodeEnum resCodeEnum, String msg, Throwable cause) {
-        throw new CusExc(resCodeEnum.getCode(), msg, cause);
-    }
-
     private int code;
     private String msg;
 
@@ -54,6 +33,30 @@ public class CusExc extends RuntimeException {
         super(msg, cause);
         this.code = code;
         this.msg = msg;
+    }
+
+    public static void e() {
+        throw new CusExc();
+    }
+
+    public static void e(String msg) {
+        throw new CusExc(msg);
+    }
+
+    public static void e(String template, Object... v) {
+        e(StrUtil.format(template, v));
+    }
+
+    public static void e(ResCodeEnum resCodeEnum) {
+        throw new CusExc(resCodeEnum.getCode(), resCodeEnum.getMsg());
+    }
+
+    public static void e(ResCodeEnum resCodeEnum, String msg) {
+        throw new CusExc(resCodeEnum.getCode(), msg);
+    }
+
+    public static void e(ResCodeEnum resCodeEnum, String msg, Throwable cause) {
+        throw new CusExc(resCodeEnum.getCode(), msg, cause);
     }
 
     public int getCode() {

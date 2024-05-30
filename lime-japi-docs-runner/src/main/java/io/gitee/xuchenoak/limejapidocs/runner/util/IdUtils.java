@@ -5,7 +5,6 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.sun.org.apache.regexp.internal.RE;
 import io.gitee.xuchenoak.limejapidocs.runner.common.enums.ResCodeEnum;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
 
@@ -22,6 +21,7 @@ public class IdUtils {
 
     /**
      * 加密Id
+     *
      * @param id
      * @return
      */
@@ -31,6 +31,7 @@ public class IdUtils {
 
     /**
      * 解密Id
+     *
      * @param id
      * @return
      */
@@ -48,6 +49,7 @@ public class IdUtils {
 
     /**
      * 解密Id
+     *
      * @param id
      * @return
      */
@@ -61,6 +63,7 @@ public class IdUtils {
 
     /**
      * 解密Id
+     *
      * @param id
      * @return
      */

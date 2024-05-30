@@ -20,6 +20,7 @@ import java.util.List;
 
 /**
  * 接口文档业务接口
+ *
  * @author xuchenoak
  **/
 @Validated
@@ -32,6 +33,7 @@ public class DocsController {
 
     /**
      * 获取生成时间集
+     *
      * @param docsConfigId 文档配置Id
      * @return
      */
@@ -42,8 +44,9 @@ public class DocsController {
 
     /**
      * 获取接口文档目录
+     *
      * @param createTime 生成时间
-     * @param likeStr 搜索关键字
+     * @param likeStr    搜索关键字
      * @return
      */
     @GetMapping("/list_catalog")
@@ -59,13 +62,14 @@ public class DocsController {
 
     /**
      * 获取接口文档列表
-     * @param createTime 生成时间
-     * @param controllerId controller标识
-     * @param hasComment 是否有注释
-     * @param hasType 是否有类型
-     * @param hasValid 是否有验证
+     *
+     * @param createTime      生成时间
+     * @param controllerId    controller标识
+     * @param hasComment      是否有注释
+     * @param hasType         是否有类型
+     * @param hasValid        是否有验证
      * @param addDefaultValue 是否有默认值
-     * @param likeStr 搜索关键字
+     * @param likeStr         搜索关键字
      * @return
      */
     @GetMapping("/list_interface")
@@ -88,8 +92,9 @@ public class DocsController {
 
     /**
      * 执行文档解析
+     *
      * @param docsConfigId 文档配置Id
-     * @param password 解析秘钥
+     * @param password     解析秘钥
      * @return
      */
     @GetMapping("/run_docs_parse")
@@ -99,7 +104,8 @@ public class DocsController {
 
     /**
      * 获取解析消息
-     * @param docsConfigId 文档配置Id
+     *
+     * @param docsConfigId   文档配置Id
      * @param parseTimestamp 解析时间戳
      * @return
      */

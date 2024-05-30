@@ -18,47 +18,75 @@ import java.util.List;
 @NoArgsConstructor
 public class DocsConfigVo {
 
-    /** Id */
+    /**
+     * Id
+     */
     private String id;
 
-    /** 文档名称 */
+    /**
+     * 文档名称
+     */
     private String docsName;
 
-    /** 文档版本号 */
+    /**
+     * 文档版本号
+     */
     private String docsVersion;
 
-    /** 系统启动时是否解析 0-否 1-是 */
+    /**
+     * 系统启动时是否解析 0-否 1-是
+     */
     private Integer sysStartParse;
 
-    /** 执行解析秘钥 */
+    /**
+     * 执行解析秘钥
+     */
     private String apiRunKey;
 
-    /** java文件所在目录绝对路径（必须写到java目录，多模块时填写多个） */
+    /**
+     * java文件所在目录绝对路径（必须写到java目录，多模块时填写多个）
+     */
     private List<String> javaFilePaths;
 
-    /** 仅扫描解析该包集合下的controller类（必须位于javaFilePaths下，若不配置默认扫描javaFilePaths下所有） */
+    /**
+     * 仅扫描解析该包集合下的controller类（必须位于javaFilePaths下，若不配置默认扫描javaFilePaths下所有）
+     */
     private List<String> filterPackages;
 
-    /** 仅扫描的controller类名集（非类全名） */
+    /**
+     * 仅扫描的controller类名集（非类全名）
+     */
     private List<String> filterClassNames;
 
-    /** 需要排除的controller类名集（非类全名） */
+    /**
+     * 需要排除的controller类名集（非类全名）
+     */
     private List<String> ignoreClassNames;
 
-    /** 参数验证函数 */
+    /**
+     * 参数验证函数
+     */
     private String paramValidFunc;
 
-    /** 参数默认值函数 */
+    /**
+     * 参数默认值函数
+     */
     private String paramDefaultValueFunc;
 
-    /** 排序号 */
+    /**
+     * 排序号
+     */
     private Integer sort;
 
-    /** 创建时间 */
+    /**
+     * 创建时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    /** 更新时间 */
+    /**
+     * 更新时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 

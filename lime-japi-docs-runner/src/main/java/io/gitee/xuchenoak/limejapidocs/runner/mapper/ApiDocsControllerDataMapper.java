@@ -17,7 +17,7 @@ import java.util.List;
 @Mapper
 public interface ApiDocsControllerDataMapper extends BaseMapper<ApiDocsControllerData> {
 
-    @Select("select distinct create_time from api_docs_controller_data where docs_config_id = #{docsConfigId} order by create_time desc limit 10")
+    @Select("select distinct create_time from api_docs_controller_data where docs_config_id = #{docsConfigId} order by create_time desc limit 5")
     List<String> listCreateTime(@Param("docsConfigId") Long docsConfigId);
 
 }

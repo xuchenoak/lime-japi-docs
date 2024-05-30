@@ -33,6 +33,7 @@ public class DocsParseService {
 
     /**
      * 异步执行解析
+     *
      * @param docsConfig
      */
     @Async
@@ -42,6 +43,7 @@ public class DocsParseService {
 
     /**
      * 执行解析
+     *
      * @param docsConfig
      */
     public void runParse(ApiDocsConfig docsConfig) {

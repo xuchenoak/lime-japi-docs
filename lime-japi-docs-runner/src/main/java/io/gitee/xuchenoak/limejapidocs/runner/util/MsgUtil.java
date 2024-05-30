@@ -14,6 +14,7 @@ import java.util.Map;
 public class MsgUtil {
     private static final Map<Long, Boolean> parseStatusMap = new HashMap<>();
     private static final Map<Long, DateTime> parseTimeMap = new HashMap<>();
+
     public static void statusParseRun(Long docsConfigId) {
         DateTime parseTime = DateUtil.parse(DateUtil.date().toString("yyyy-MM-dd HH:mm:ss").concat(".000"));
         parseStatusMap.put(docsConfigId, true);

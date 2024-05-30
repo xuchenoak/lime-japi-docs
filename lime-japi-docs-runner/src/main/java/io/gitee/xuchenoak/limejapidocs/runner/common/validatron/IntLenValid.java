@@ -24,10 +24,14 @@ public @interface IntLenValid {
 
     Class<? extends Payload>[] payload() default {};
 
-    /** 最小值 */
+    /**
+     * 最小值
+     */
     int min() default 0;
 
-    /** 最大值 */
+    /**
+     * 最大值
+     */
     int max() default 0;
 
 }

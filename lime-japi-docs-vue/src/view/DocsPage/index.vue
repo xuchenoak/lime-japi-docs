@@ -248,16 +248,16 @@ export default {
         },
 
         // 触发点击目录
-        handleMenuItem({key, item}) {
+        handleMenuItem(key, name) {
             this.checkedInterface.controllerId = key
-            this.checkedInterface.controllerName = item.value.name
+            this.checkedInterface.controllerName = name
             let likeStr = null
             if (this.searchConfig.type == 'interface') {
                 likeStr = this.searchConfig.value
             }
             if (key) {
                 this.show.interfaceShow = true
-                this.$refs['interface'].init(this.createTime, key, item.value.name, likeStr)
+                this.$refs['interface'].init(this.createTime, key, name, likeStr)
             }
             this.show.initInfoShow = false
         },

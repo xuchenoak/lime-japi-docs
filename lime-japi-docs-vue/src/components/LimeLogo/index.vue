@@ -65,10 +65,8 @@ export default {
             }
         },
         refreshStyle() {
-            const url = this.$store.getters.sysConfig.logoUrl || ''
-            if (url) {
-                this.style['background'] = 'url(' + url + ') no-repeat'
-            }
+            const url = this.$store.getters.sysConfig.logoUrl || '/lime-logo.png'
+            this.style['background'] = 'url(' + url + ') no-repeat'
             this.style['--width'] = this.realWidth + 'px'
             this.style['--height'] = this.realHeight + 'px'
         }
@@ -80,7 +78,7 @@ export default {
 .box-bg {
     height: var(--height);
     width: var(--width);
-    background: url("~@/assets/images/lime-logo.png") no-repeat;
+    background: url("/lime-logo.png") no-repeat;
     background-size: var(--width) var(--height)!important;
     cursor: pointer;
 }

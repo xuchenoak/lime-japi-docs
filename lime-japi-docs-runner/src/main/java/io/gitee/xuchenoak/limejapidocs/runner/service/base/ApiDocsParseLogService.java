@@ -23,8 +23,9 @@ public class ApiDocsParseLogService extends EntityBaseService<ApiDocsParseLogMap
 
     /**
      * 添加消息
+     *
      * @param docsConfigId 文档配置Id
-     * @param msg 消息内容
+     * @param msg          消息内容
      */
     public void addMsg(Long docsConfigId, String msg) {
         msg = StrUtil.format("[{}]  {}", DateUtil.date().toString("yyyy-MM-dd HH:mm:ss"), msg);
@@ -33,7 +34,8 @@ public class ApiDocsParseLogService extends EntityBaseService<ApiDocsParseLogMap
 
     /**
      * 获取消息内容
-     * @param docsConfigId 文档配置Id
+     *
+     * @param docsConfigId   文档配置Id
      * @param parseTimestamp 解析时间戳
      * @return
      */

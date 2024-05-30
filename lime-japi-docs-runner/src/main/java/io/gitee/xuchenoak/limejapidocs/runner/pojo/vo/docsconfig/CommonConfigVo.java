@@ -14,19 +14,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommonConfigVo {
 
-    /** 系统名称 */
+    /**
+     * 系统名称
+     */
     private String sysName;
 
-    /** 系统标语 */
+    /**
+     * 系统标语
+     */
     private String sysSlogan;
 
-    /** logo地址 */
+    /**
+     * logo地址
+     */
     private String logoUrl;
 
-    /** 是否已登录 */
+    /**
+     * 是否已登录
+     */
     private Boolean hasLogin;
 
-    /** 是否已初始化 */
+    /**
+     * 是否已初始化
+     */
     private Boolean hasInit;
 
 }

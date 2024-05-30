@@ -14,10 +14,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DocsConfigKeyCheckResultVo {
 
-    /** 文档管理秘钥 */
+    /**
+     * 文档管理秘钥
+     */
     private String docsConfigKey;
 
-    /** 秘钥是否正确 */
+    /**
+     * 秘钥是否正确
+     */
     private Boolean checkResult;
 
 }

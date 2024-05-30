@@ -21,32 +21,50 @@ import java.util.Date;
 @TableName("api_docs_controller_data")
 public class ApiDocsControllerData {
 
-    /** 自增Id */
-    @TableId(value = "id", type= IdType.AUTO)
+    /**
+     * 自增Id
+     */
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /** 文档配置Id */
+    /**
+     * 文档配置Id
+     */
     private Long docsConfigId;
 
-    /** controller唯一标识 */
+    /**
+     * controller唯一标识
+     */
     private String controllerId;
 
-    /** controller类全名 */
+    /**
+     * controller类全名
+     */
     private String controllerFullName;
 
-    /** controller名称注释 */
+    /**
+     * controller名称注释
+     */
     private String comment;
 
-    /** 请求前缀 */
+    /**
+     * 请求前缀
+     */
     private String baseUriList;
 
-    /** 接口方法集 */
+    /**
+     * 接口方法集
+     */
     private String interfaceDataList;
 
-    /** 排序 */
+    /**
+     * 排序
+     */
     private Integer sort;
 
-    /** 生成时间 */
+    /**
+     * 生成时间
+     */
     private Date createTime;
 
     public ApiDocsControllerData(Long docsConfigId, String controllerId, String controllerFullName, String comment, String baseUriList, String interfaceDataList, Integer sort, Date createTime) {

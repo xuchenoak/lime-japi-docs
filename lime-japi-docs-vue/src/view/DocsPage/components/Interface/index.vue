@@ -20,7 +20,7 @@
                                             <span style="padding: 0px 5px">
                                               {{getInterfaceIndex(index)}}
                                             </span>
-                                                <span class="diy-cursor" :id="inter.interfaceId">{{inter.interfaceName}}</span>
+                                                <span class="diy-cursor" :id="'_' + inter.interfaceId">{{inter.interfaceName}}</span>
                                             </copy-text>
                                         </h2>
                                     </template>
@@ -156,10 +156,10 @@
                             </a-space>
                         </div>
                         <a-anchor :offsetTop="200" style="min-width: 1px" :getContainer="getContainer">
-                            <a-anchor-link :href="'#' + item.interfaceId"
+                            <a-anchor-link v-for="(item, index) in interfaceList"
+                                           :href="'#_' + item.interfaceId"
                                            :key="getInterfaceIndex(index)"
-                                           :title="getInterfaceIndex(index) + ' ' + item.interfaceName"
-                                           v-for="(item, index) in interfaceList"/>
+                                           :title="getInterfaceIndex(index) + ' ' + item.interfaceName"/>
                         </a-anchor>
                     </div>
                 </a-col>
@@ -252,6 +252,7 @@ export default {
                     this.checkBoxShow = true
                     this.$nextTick(()=> {
                         this.getContainer().scrollTop = 0
+                        this.scrollToAnchor()
                     })
                     return
                 }
@@ -259,6 +260,23 @@ export default {
             }).finally(()=> {
                 this.loading = false
             })
+        },
+
+        // 滚动到锚点
+        scrollToAnchor() {
+            // 获取URL中的锚点
+            const hash = this.$route.hash;
+            // 如果存在锚点
+            if (hash) {
+                // 获取对应锚点的DOM元素
+                const anchorElement = document.querySelector(hash);
+                // 如果找到了对应的元素
+                if (anchorElement) {
+                    // 滚动到该元素位置
+                    anchorElement.scrollIntoView({ behavior: 'auto', block: 'start', inline: 'nearest' });
+                    this.getContainer().scrollBy(0, -200);
+                }
+            }
         },
 
         // 表单参数是否可见

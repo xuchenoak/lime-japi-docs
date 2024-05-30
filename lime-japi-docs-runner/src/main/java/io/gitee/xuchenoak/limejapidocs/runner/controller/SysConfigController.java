@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 /**
- * 文档配置业务接口
+ * 系统配置业务接口
+ *
  * @author xuchenoak
  **/
 @Slf4j
@@ -29,6 +30,7 @@ public class SysConfigController {
 
     /**
      * 获取公共配置
+     *
      * @return
      */
     @GetMapping("/common")
@@ -38,6 +40,7 @@ public class SysConfigController {
 
     /**
      * 系统初始化
+     *
      * @param rf
      */
     @PostMapping("/sys_init")
@@ -52,6 +55,7 @@ public class SysConfigController {
 
     /**
      * 保存系统配置
+     *
      * @param rf
      */
     @PostMapping("/save_sys_config")
@@ -62,6 +66,7 @@ public class SysConfigController {
 
     /**
      * 获取系统配置
+     *
      * @return
      */
     @GetMapping("/get_sys_config")

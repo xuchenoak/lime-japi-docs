@@ -12,31 +12,15 @@ public enum TrueOrFalseEnum implements EnumValidator.EnumConverter<Integer> {
 
     ;
 
+    private int value;
+    private String msg;
     TrueOrFalseEnum(int value, String msg) {
         this.value = value;
         this.msg = msg;
     }
 
-    private int value;
-    private String msg;
-
-
-    @Override
-    public Integer value() {
-        return value;
-    }
-
-    @Override
-    public String msg() {
-        return msg;
-    }
-
     public static int getResolve(int status) {
         return status == TRUE.value ? FALSE.value : TRUE.value;
-    }
-
-    public boolean getBool() {
-        return value == 1;
     }
 
     public static String getMsgByValue(Integer value) {
@@ -49,5 +33,19 @@ public enum TrueOrFalseEnum implements EnumValidator.EnumConverter<Integer> {
             }
         }
         return null;
+    }
+
+    @Override
+    public Integer value() {
+        return value;
+    }
+
+    @Override
+    public String msg() {
+        return msg;
+    }
+
+    public boolean getBool() {
+        return value == 1;
     }
 }

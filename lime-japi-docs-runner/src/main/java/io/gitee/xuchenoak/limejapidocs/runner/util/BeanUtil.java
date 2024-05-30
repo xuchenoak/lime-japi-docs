@@ -7,7 +7,7 @@ import java.util.function.Function;
  **/
 public class BeanUtil extends cn.hutool.core.bean.BeanUtil {
 
-    public static <T,R> R getBeanOrDoing(T bean, Function<T, R> f) {
+    public static <T, R> R getBeanOrDoing(T bean, Function<T, R> f) {
         if (bean != null) {
             return f.apply(bean);
         }

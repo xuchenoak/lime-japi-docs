@@ -32,6 +32,7 @@ public class SysConfigServiceImpl implements SysConfigService {
 
     /**
      * 获取公共配置
+     *
      * @param request
      * @return
      */
@@ -54,6 +55,7 @@ public class SysConfigServiceImpl implements SysConfigService {
 
     /**
      * 验证是否登录
+     *
      * @param request
      * @return
      */
@@ -64,6 +66,7 @@ public class SysConfigServiceImpl implements SysConfigService {
 
     /**
      * 验证是否登录或文档中心邀请码是否正确
+     *
      * @param request
      * @param viewKey 邀请码
      * @return
@@ -85,6 +88,7 @@ public class SysConfigServiceImpl implements SysConfigService {
 
     /**
      * 验证文档中心邀请码是否正确
+     *
      * @param viewKey 邀请码
      * @return
      */
@@ -102,6 +106,7 @@ public class SysConfigServiceImpl implements SysConfigService {
 
     /**
      * 验证是否登录
+     *
      * @param request
      * @param sysConfig
      * @return
@@ -117,6 +122,7 @@ public class SysConfigServiceImpl implements SysConfigService {
 
     /**
      * 保存系统配置
+     *
      * @param rf
      */
     @Override
@@ -134,6 +140,7 @@ public class SysConfigServiceImpl implements SysConfigService {
 
     /**
      * 获取系统配置
+     *
      * @return
      */
     @Override

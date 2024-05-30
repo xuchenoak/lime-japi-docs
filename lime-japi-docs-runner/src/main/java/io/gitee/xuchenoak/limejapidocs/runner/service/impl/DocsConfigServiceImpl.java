@@ -45,8 +45,9 @@ public class DocsConfigServiceImpl implements DocsConfigService {
 
     /**
      * 获取文档列表
+     *
      * @param docsName 文档名称
-     * @param ids Ids
+     * @param ids      Ids
      * @return
      */
     @Override
@@ -67,6 +68,7 @@ public class DocsConfigServiceImpl implements DocsConfigService {
 
     /**
      * 获取单个文档配置（简单版）
+     *
      * @param id
      * @return
      */
@@ -88,6 +90,7 @@ public class DocsConfigServiceImpl implements DocsConfigService {
 
     /**
      * 获取单个文档配置
+     *
      * @param id
      * @return
      */
@@ -117,6 +120,7 @@ public class DocsConfigServiceImpl implements DocsConfigService {
 
     /**
      * 新增文档
+     *
      * @param rf
      * @return
      */
@@ -144,6 +148,7 @@ public class DocsConfigServiceImpl implements DocsConfigService {
 
     /**
      * 编辑文档
+     *
      * @param rf
      * @return
      */
@@ -173,6 +178,7 @@ public class DocsConfigServiceImpl implements DocsConfigService {
 
     /**
      * 删除文档
+     *
      * @param id
      */
     @Transactional(rollbackFor = Exception.class)

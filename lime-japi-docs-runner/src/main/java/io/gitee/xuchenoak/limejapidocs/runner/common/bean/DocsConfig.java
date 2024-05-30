@@ -15,10 +15,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DocsConfig {
 
-    /** 文档名称 */
+    /**
+     * 文档名称
+     */
     private String docName = "XX项目接口文档";
 
-    /** 文档版本 */
+    /**
+     * 文档版本
+     */
     private String docVersion = "V1.0";
 
 }

@@ -15,13 +15,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DocsCatalogVo {
 
-    /** 目录标识 */
+    /**
+     * 目录标识
+     */
     private String id;
 
-    /** 目录名称 */
+    /**
+     * 目录名称
+     */
     private String name;
 
-    /** 排序 */
+    /**
+     * 排序
+     */
     private Integer sort;
 
 }

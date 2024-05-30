@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 /**
  * 启动类
  *
- * @author: xuchenoak
+ * @author xuchenoak
  **/
 @EnableAsync
 @SpringBootApplication

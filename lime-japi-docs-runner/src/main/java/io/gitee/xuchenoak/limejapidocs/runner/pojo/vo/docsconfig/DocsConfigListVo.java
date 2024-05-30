@@ -17,23 +17,35 @@ import java.util.Date;
 @NoArgsConstructor
 public class DocsConfigListVo {
 
-    /** Id */
+    /**
+     * Id
+     */
     private String id;
 
-    /** 文档名称 */
+    /**
+     * 文档名称
+     */
     private String docsName;
 
-    /** 文档版本号 */
+    /**
+     * 文档版本号
+     */
     private String docsVersion;
 
-    /** 排序号 */
+    /**
+     * 排序号
+     */
     private Integer sort;
 
-    /** 创建时间 */
+    /**
+     * 创建时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    /** 更新时间 */
+    /**
+     * 更新时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 

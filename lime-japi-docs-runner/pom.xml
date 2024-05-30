@@ -10,6 +10,10 @@
         <relativePath/>
     </parent>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <groupId>io.gitee.xuchenoak</groupId>
     <artifactId>lime-japi-docs-runner</artifactId>
     <version>1.1.1</version>
@@ -58,7 +62,17 @@
         <dependency>
             <groupId>io.gitee.xuchenoak</groupId>
             <artifactId>lime-japi-docs-parser</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>cn.hutool</groupId>
+                    <artifactId>hutool-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>cn.hutool</groupId>
+                    <artifactId>hutool-crypto</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

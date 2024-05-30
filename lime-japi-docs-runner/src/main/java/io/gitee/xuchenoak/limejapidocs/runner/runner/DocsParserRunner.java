@@ -18,8 +18,7 @@ import java.util.List;
 /**
  * 启动接口解析
  *
- * @author: xuchenoak
- * @create: 2022-07-16 0:21
+ * @author xuchenoak
  **/
 @Component
 public class DocsParserRunner implements ApplicationRunner {

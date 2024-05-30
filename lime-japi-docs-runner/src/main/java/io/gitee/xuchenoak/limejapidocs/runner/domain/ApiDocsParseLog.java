@@ -19,20 +19,30 @@ import lombok.NoArgsConstructor;
 @TableName("api_docs_parse_log")
 public class ApiDocsParseLog {
 
-    /** 自增Id */
-    @TableId(value = "id", type= IdType.AUTO)
+    /**
+     * 自增Id
+     */
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /** 文档配置Id */
+    /**
+     * 文档配置Id
+     */
     private Long docsConfigId;
 
-    /** 生成时间戳（毫秒） */
+    /**
+     * 生成时间戳（毫秒）
+     */
     private Long parseTimestamp;
 
-    /** 日志消息 */
+    /**
+     * 日志消息
+     */
     private String logMsg;
 
-    /** 创建时间戳（毫秒） */
+    /**
+     * 创建时间戳（毫秒）
+     */
     private Long createTimestamp;
 
     public ApiDocsParseLog(Long docsConfigId, Long parseTimestamp, String logMsg, Long createTimestamp) {

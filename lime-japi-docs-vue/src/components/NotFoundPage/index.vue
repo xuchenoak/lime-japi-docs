@@ -9,7 +9,7 @@
                 <div class="empty-box-title">404</div>
                 <div class="empty-box-not-found">PAGE NOT FOUND</div>
                 <div class="empty-box-btn">
-                    <a-button @click="backToRoot" type="primary">返回主页</a-button>
+                    <a-button @click="backToRoot" type="primary">返回首页</a-button>
                 </div>
             </div>
         </div>

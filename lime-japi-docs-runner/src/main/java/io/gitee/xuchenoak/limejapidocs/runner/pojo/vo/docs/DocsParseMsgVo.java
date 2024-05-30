@@ -16,13 +16,19 @@ import java.util.List;
 @NoArgsConstructor
 public class DocsParseMsgVo {
 
-    /** 正在解析 */
+    /**
+     * 正在解析
+     */
     private boolean running;
 
-    /** 生成时间戳（毫秒） */
+    /**
+     * 生成时间戳（毫秒）
+     */
     private Long parseTimestamp;
 
-    /** 消息集 */
+    /**
+     * 消息集
+     */
     private List<String> msgList;
 
 }

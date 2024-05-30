@@ -22,6 +22,7 @@ public class ParamsConfigService extends EntityBaseService<SysConfigMapper, Para
 
     /**
      * 获取系统参数缓存标识
+     *
      * @param key
      * @return
      */
@@ -31,6 +32,7 @@ public class ParamsConfigService extends EntityBaseService<SysConfigMapper, Para
 
     /**
      * 获取参数
+     *
      * @param key
      * @return
      */
@@ -49,10 +51,11 @@ public class ParamsConfigService extends EntityBaseService<SysConfigMapper, Para
 
     /**
      * 获取参数对象
+     *
      * @param key
      * @param c
-     * @return
      * @param <T>
+     * @return
      */
     public <T> T getParamCache(String key, Class<T> c) {
         if (StrUtil.isBlank(key) || c == null) {
@@ -72,10 +75,11 @@ public class ParamsConfigService extends EntityBaseService<SysConfigMapper, Para
 
     /**
      * 获取参数对象列表
+     *
      * @param key
      * @param c
-     * @return
      * @param <T>
+     * @return
      */
     public <T> List<T> getParamsCache(String key, Class<T> c) {
         if (StrUtil.isBlank(key) || c == null) {
@@ -95,6 +99,7 @@ public class ParamsConfigService extends EntityBaseService<SysConfigMapper, Para
 
     /**
      * 添加或修改配置
+     *
      * @param key
      * @param value
      */

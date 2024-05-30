@@ -5,7 +5,9 @@ import javax.validation.ConstraintValidatorContext;
 
 public class EnumValidator implements ConstraintValidator<EnumValid, Object> {
 
-    /** 枚举对象数组 */
+    /**
+     * 枚举对象数组
+     */
     private EnumConverter[] constants;
 
     @Override
@@ -60,12 +62,14 @@ public class EnumValidator implements ConstraintValidator<EnumValid, Object> {
 
         /**
          * 值
+         *
          * @return
          */
         T value();
 
         /**
          * 值描述
+         *
          * @return
          */
         String msg();

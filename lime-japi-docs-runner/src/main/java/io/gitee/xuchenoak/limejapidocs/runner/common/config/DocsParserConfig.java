@@ -18,13 +18,19 @@ import javax.servlet.http.HttpServletRequest;
 @ConfigurationProperties(prefix = "docs-parser")
 public class DocsParserConfig {
 
-    /** 标语 */
+    /**
+     * 标语
+     */
     private String slogan;
 
-    /** 文档管理秘钥 */
+    /**
+     * 文档管理秘钥
+     */
     private String docsConfigKey;
 
-    /** 文档查看秘钥：不设置则所有人都可访问所有文档，若设置了需通过该秘钥才可访问所有文档（具体实现见文档配置列表查询接口） */
+    /**
+     * 文档查看秘钥：不设置则所有人都可访问所有文档，若设置了需通过该秘钥才可访问所有文档（具体实现见文档配置列表查询接口）
+     */
     private String docsViewKey;
 
     public boolean checkDocsConfigKey(String docsConfigKey) {

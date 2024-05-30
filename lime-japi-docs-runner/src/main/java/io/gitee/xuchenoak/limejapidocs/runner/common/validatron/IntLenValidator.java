@@ -5,10 +5,14 @@ import javax.validation.ConstraintValidatorContext;
 
 public class IntLenValidator implements ConstraintValidator<IntLenValid, Integer> {
 
-    /** 最小值 */
+    /**
+     * 最小值
+     */
     private int min;
 
-    /** 最大值 */
+    /**
+     * 最大值
+     */
     private int max;
 
     @Override

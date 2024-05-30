@@ -35,7 +35,7 @@ public class CacheUtil {
         return timedCache.get(k);
     }
 
-    public static <T>T getBean(String k, Class<T> c) {
+    public static <T> T getBean(String k, Class<T> c) {
         try {
             return JSONUtil.toBean(timedCache.get(k), c);
         } catch (Exception e) {

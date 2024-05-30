@@ -44,8 +44,8 @@
                             <a-form-item>
                                 <span slot="label">
                                     <span class="pre-rule-item">系统LOGO</span>
-                                        <why-box-text text="点击可重新上传更换，图片比例：13:4"/>
-                                    </span>
+                                    <why-box-text text="点击可重新上传更换，图片比例：13:4"/>
+                                </span>
                                 <a-upload
                                     class="avatar-uploader-high"
                                     :show-upload-list="false"
@@ -54,8 +54,9 @@
                                     :custom-request="handleUploadLogo"
                                     :before-upload="beforeUploadLogo"
                                 >
-                                    <img :src="logoUrl ? logoUrl : img" width="390px" height="120px" />
+                                    <img :src="logoUrl ? logoUrl : '/lime-logo.png'" width="390px" height="120px" />
                                 </a-upload>
+                                <a v-if="logoUrl" @click="logoUrl = null">点击恢复默认</a>
                             </a-form-item>
                         </a-col>
                         <a-col class="gutter-row" :span="12">
@@ -105,7 +106,6 @@
 </template>
 
 <script>
-import img from "@/assets/images/lime-logo.png"
 import {sysInit} from "@/api/sysConfig";
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
@@ -117,7 +117,6 @@ export default {
     name: "index",
     data() {
         return {
-            img,
             loading: false,
             form: this.$form.createForm(this),
             logoUrl: '',
@@ -140,7 +139,6 @@ export default {
             this.form.validateFields((errors, values)=> {
                 if (!errors) {
                     values['logoUrl'] = this.logoUrl
-                    console.log("values", values)
                     this.loading = true
                     sysInit(values).then(() => {
                         this.$router.push({path: '/'})

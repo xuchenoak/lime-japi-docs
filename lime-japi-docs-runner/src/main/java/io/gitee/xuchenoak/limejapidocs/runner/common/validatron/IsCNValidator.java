@@ -6,10 +6,10 @@ import java.util.regex.Pattern;
 
 public class IsCNValidator implements ConstraintValidator<IsCN, String> {
 
-    private String message;
-
     String regex = "^[a-z0-9A-Z\u4e00-\u9fa5\uff0c]+$";
+    private String message;
     private Pattern moneyPattern = Pattern.compile(regex);
+
     @Override
     public void initialize(IsCN constraintAnnotation) {
         //获取注解上的值，可以做一写取注解上的值做一下判断

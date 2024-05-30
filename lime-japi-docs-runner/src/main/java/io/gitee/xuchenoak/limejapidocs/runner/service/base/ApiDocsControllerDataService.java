@@ -1,5 +1,7 @@
 package io.gitee.xuchenoak.limejapidocs.runner.service.base;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.gitee.xuchenoak.limejapidocs.parser.bean.ControllerData;
@@ -24,6 +26,7 @@ public class ApiDocsControllerDataService extends EntityBaseService<ApiDocsContr
 
     /**
      * 获取所有接口数据
+     *
      * @param createTime 生成时间
      * @return
      */
@@ -49,6 +52,7 @@ public class ApiDocsControllerDataService extends EntityBaseService<ApiDocsContr
 
     /**
      * 获取单个Controller接口数据
+     *
      * @param controllerId
      * @return
      */
@@ -62,7 +66,8 @@ public class ApiDocsControllerDataService extends EntityBaseService<ApiDocsContr
 
     /**
      * 保存Controller接口数据
-     * @param docsConfigId 文档配置Id
+     *
+     * @param docsConfigId       文档配置Id
      * @param controllerDataList
      */
     public void saveControllerData(Long docsConfigId, List<ControllerData> controllerDataList) {
@@ -79,6 +84,7 @@ public class ApiDocsControllerDataService extends EntityBaseService<ApiDocsContr
 
     /**
      * 对象转换
+     *
      * @param data
      * @return
      */
@@ -103,14 +109,26 @@ public class ApiDocsControllerDataService extends EntityBaseService<ApiDocsContr
 
     /**
      * 对象转换
+     *
      * @param docsConfigId
      * @param data
      * @return
      */
     private ApiDocsControllerData toApiDocsControllerData(Long docsConfigId, ControllerData data) {
+        String controllerId = SecureUtil.md5(data.getControllerFullName());
+        if (ListUtils.isNotBlank(data.getInterfaceDataList())) {
+            for (InterfaceData interfaceData : data.getInterfaceDataList()) {
+                interfaceData.setControllerId(controllerId);
+                interfaceData.setInterfaceId(SecureUtil.md5(StrUtil.format(
+                        "{}.{}.{}",
+                        controllerId,
+                        JSONUtil.toJsonStr(interfaceData.getRequestTypeList()),
+                        JSONUtil.toJsonStr(interfaceData.getUriList()))));
+            }
+        }
         return new ApiDocsControllerData(
                 docsConfigId,
-                data.getControllerId(),
+                controllerId,
                 data.getControllerFullName(),
                 data.getComment(),
                 JSONUtil.toJsonStr(data.getBaseUriList()),

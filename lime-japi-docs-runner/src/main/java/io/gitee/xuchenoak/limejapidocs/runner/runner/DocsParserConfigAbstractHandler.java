@@ -30,6 +30,7 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
 
     /**
      * 获取开始解析时间
+     *
      * @return
      */
     @Override
@@ -39,6 +40,7 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
 
     /**
      * 获取解析全局配置
+     *
      * @return
      */
     @Override
@@ -74,6 +76,7 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
 
     /**
      * 参数验证注入
+     *
      * @param annotationNodeList
      * @param fieldInfo
      */
@@ -91,13 +94,15 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
             if (value != null) {
                 valid = value.toString();
             }
-        } catch (Exception e) {} finally {
+        } catch (Exception e) {
+        } finally {
             fieldInfo.setValidation(valid);
         }
     }
 
     /**
      * 参数默认值注入
+     *
      * @param annotationNodeList
      * @param fieldInfo
      */
@@ -114,7 +119,8 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
             if (value != null) {
                 valid = value.toString();
             }
-        } catch (Exception e) {} finally {
+        } catch (Exception e) {
+        } finally {
             fieldInfo.setDefaultValue(valid);
         }
     }

@@ -30,8 +30,9 @@
                     :custom-request="handleUploadLogo"
                     :before-upload="beforeUploadLogo"
                 >
-                    <img :src="logoUrl ? logoUrl : img" width="390px" height="120px" />
+                    <img :src="logoUrl ? logoUrl : '/lime-logo.png'" width="390px" height="120px" />
                 </a-upload>
+                <a v-if="logoUrl" @click="logoUrl = null">点击恢复默认</a>
             </a-form-item>
             <a-form-item
                 has-feedback=""
@@ -74,7 +75,6 @@
 </template>
 
 <script>
-import img from "@/assets/images/lime-logo.png"
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -86,7 +86,6 @@ export default {
     name: "EditDocsConfig",
     data() {
         return {
-            img,
             visible: false,
             loading: false,
             labelCol: { span: 4 },

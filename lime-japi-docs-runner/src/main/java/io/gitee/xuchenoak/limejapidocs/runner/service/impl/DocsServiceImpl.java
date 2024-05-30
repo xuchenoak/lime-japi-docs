@@ -1,5 +1,8 @@
 package io.gitee.xuchenoak.limejapidocs.runner.service.impl;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.gitee.xuchenoak.limejapidocs.parser.bean.ControllerData;
 import io.gitee.xuchenoak.limejapidocs.parser.bean.InterfaceData;
 import io.gitee.xuchenoak.limejapidocs.parser.parsendoe.FieldDataNode;
@@ -7,6 +10,8 @@ import io.gitee.xuchenoak.limejapidocs.parser.util.ListUtil;
 import io.gitee.xuchenoak.limejapidocs.parser.util.StringUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
+import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsControllerData;
+import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsParseLog;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsCatalogVo;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsInterfaceVo;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseMsgVo;
@@ -52,19 +57,33 @@ public class DocsServiceImpl implements DocsService {
 
     /**
      * 获取生成时间集
+     *
      * @param docsConfigId 文档配置Id
      * @return
      */
     @Override
     public List<String> getCreateTimes(Long docsConfigId) {
-        return ListUtils.listOrEmpty(apiDocsControllerDataService.getBaseMapper().listCreateTime(docsConfigId));
+        List<String> createTimeList = ListUtils.listOrEmpty(apiDocsControllerDataService.getBaseMapper().listCreateTime(docsConfigId));
+        try {
+            if (createTimeList.size() > 0) {
+                DateTime beforeTime = DateUtil.parse(createTimeList.get(createTimeList.size() - 1));
+                apiDocsControllerDataService.remove(new LambdaQueryWrapper<ApiDocsControllerData>()
+                        .lt(ApiDocsControllerData::getCreateTime, beforeTime));
+                apiDocsParseLogService.remove(new LambdaQueryWrapper<ApiDocsParseLog>()
+                        .lt(ApiDocsParseLog::getCreateTimestamp, beforeTime.getTime()));
+            }
+        } catch (Exception e) {
+            logger.error("清除旧数据异常", e);
+        }
+        return createTimeList;
     }
 
     /**
      * 获取接口文档目录
+     *
      * @param docsConfigId 文档配置Id
-     * @param createTime 生成时间
-     * @param likeStr 搜索关键字
+     * @param createTime   生成时间
+     * @param likeStr      搜索关键字
      * @return
      */
     @Override
@@ -100,13 +119,14 @@ public class DocsServiceImpl implements DocsService {
 
     /**
      * 获取接口文档列表
-     * @param createTime 生成时间
-     * @param controllerId controller标识
-     * @param hasComment 是否有注释
-     * @param hasType 是否有类型
-     * @param hasValid 是否有验证
+     *
+     * @param createTime      生成时间
+     * @param controllerId    controller标识
+     * @param hasComment      是否有注释
+     * @param hasType         是否有类型
+     * @param hasValid        是否有验证
      * @param addDefaultValue 是否有默认值
-     * @param likeStr 搜索关键字
+     * @param likeStr         搜索关键字
      * @return
      */
     @Override
@@ -153,8 +173,9 @@ public class DocsServiceImpl implements DocsService {
 
     /**
      * 执行文档解析
+     *
      * @param docsConfigId 文档配置Id
-     * @param password 解析秘钥
+     * @param password     解析秘钥
      */
     @Override
     public DocsParseVo runDocsParse(Long docsConfigId, String password) {
@@ -178,7 +199,8 @@ public class DocsServiceImpl implements DocsService {
 
     /**
      * 获取解析消息
-     * @param docsConfigId 文档配置Id
+     *
+     * @param docsConfigId   文档配置Id
      * @param parseTimestamp 解析时间戳
      * @return
      */
@@ -194,11 +216,12 @@ public class DocsServiceImpl implements DocsService {
 
     /**
      * 构造json字符串
+     *
      * @param docsInterfaceVo 接口输出对象
-     * @param interfaceData 接口数据
-     * @param hasComment 是否有注释
-     * @param hasType 是否有类型
-     * @param hasValid 是否有验证
+     * @param interfaceData   接口数据
+     * @param hasComment      是否有注释
+     * @param hasType         是否有类型
+     * @param hasValid        是否有验证
      * @param addDefaultValue 是否有默认值
      * @return
      */

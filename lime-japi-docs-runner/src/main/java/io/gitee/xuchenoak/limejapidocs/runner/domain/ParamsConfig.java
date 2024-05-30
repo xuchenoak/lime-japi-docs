@@ -20,20 +20,30 @@ import java.util.Date;
 @TableName(value = "params_config")
 public class ParamsConfig {
 
-    /** Id */
+    /**
+     * Id
+     */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /** 配置标识 */
+    /**
+     * 配置标识
+     */
     private String key;
 
-    /** 配置值 */
+    /**
+     * 配置值
+     */
     private String value;
 
-    /** 创建时间 */
+    /**
+     * 创建时间
+     */
     private Date createTime;
 
-    /** 修改时间 */
+    /**
+     * 修改时间
+     */
     private Date updateTime;
 
 }

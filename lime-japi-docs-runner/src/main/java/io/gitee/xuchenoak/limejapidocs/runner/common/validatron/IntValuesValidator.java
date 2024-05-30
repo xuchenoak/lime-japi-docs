@@ -5,7 +5,9 @@ import javax.validation.ConstraintValidatorContext;
 
 public class IntValuesValidator implements ConstraintValidator<IntValuesValid, Integer> {
 
-    /** 验证值数组 */
+    /**
+     * 验证值数组
+     */
     private int[] values;
 
     @Override

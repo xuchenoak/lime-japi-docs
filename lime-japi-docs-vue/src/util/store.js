@@ -20,7 +20,7 @@ const store = new Vuex.Store({
     mutations: {
         setSysConfig(state, val) {
             state.sysConfig = {
-                refresh: true,
+                refresh: val['hasInit'],
                 hasInit: val['hasInit'],
                 hasLogin: val['hasLogin'],
                 sysName: val['sysName'] || '接口文档中心',

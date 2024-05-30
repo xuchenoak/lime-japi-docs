@@ -16,22 +16,34 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class SysConfig implements Serializable {
 
-    /** 文档中心名称 */
+    /**
+     * 文档中心名称
+     */
     private String sysName;
 
-    /** 系统LOGO */
+    /**
+     * 系统LOGO
+     */
     private String logoUrl;
 
-    /** 系统标语 */
+    /**
+     * 系统标语
+     */
     private String sysSlogan;
 
-    /** 文档中心邀请码 */
+    /**
+     * 文档中心邀请码
+     */
     private String docsViewKey;
 
-    /** 管理员账号 */
+    /**
+     * 管理员账号
+     */
     private String account;
 
-    /** 管理员密码 */
+    /**
+     * 管理员密码
+     */
     private String password;
 
 }

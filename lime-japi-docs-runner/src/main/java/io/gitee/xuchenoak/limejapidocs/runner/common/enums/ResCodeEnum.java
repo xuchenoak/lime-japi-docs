@@ -18,10 +18,14 @@ public enum ResCodeEnum {
 
     ;
 
-    /** 标识 */
+    /**
+     * 标识
+     */
     private int code;
 
-    /** 描述 */
+    /**
+     * 描述
+     */
     private String msg;
 
     ResCodeEnum(int key, String msg) {

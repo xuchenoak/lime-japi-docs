@@ -5,7 +5,8 @@
                 v-if="docsCatalogList && docsCatalogList.length > 0"
                 class="menu-container"
                 mode="inline"
-                @click="handleMenuItem"
+                :defaultSelectedKeys="defaultSelectedKeys"
+                @click="({key, item}) => handleMenuItem(key, item.value.name)"
             >
                 <a-menu-item :key="item.id" :value="item" v-for="item in docsCatalogList">
                     {{item.name}}
@@ -32,6 +33,7 @@ export default {
                 // 搜索关键字
                 likeStr: ''
             },
+            defaultSelectedKeys: []
         }
     },
     methods: {
@@ -52,9 +54,19 @@ export default {
         getCatalogList() {
             this.docsCatalogList = []
             this.loading = true
+            const currentMenuItemKey = localStorage.getItem("currentMenuItemKey")
             listCatalog(this.cataLogParams).then(res => {
                 if (res.code === 200) {
                     this.docsCatalogList = res.data
+                    if (currentMenuItemKey) {
+                        for (let item of this.docsCatalogList) {
+                            if (item.id === currentMenuItemKey) {
+                                this.defaultSelectedKeys = [currentMenuItemKey]
+                                this.handleMenuItem(currentMenuItemKey, item.name)
+                                break;
+                            }
+                        }
+                    }
                 }
             }).finally(()=> {
                 this.loading = false
@@ -62,8 +74,9 @@ export default {
         },
 
         // 触发点击目录
-        handleMenuItem(args) {
-            this.$emit("handleMenuItem", args)
+        handleMenuItem(key, name) {
+            localStorage.setItem("currentMenuItemKey", key)
+            this.$emit("handleMenuItem", key, name)
         },
     }
 }

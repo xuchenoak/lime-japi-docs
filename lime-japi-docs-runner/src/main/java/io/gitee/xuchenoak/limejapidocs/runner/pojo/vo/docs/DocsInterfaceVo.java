@@ -18,49 +18,79 @@ import java.util.List;
 @NoArgsConstructor
 public class DocsInterfaceVo {
 
-    /** 接口唯一标识 */
+    /**
+     * 接口唯一标识
+     */
     private String interfaceId;
 
-    /** controller唯一标识 */
+    /**
+     * controller唯一标识
+     */
     private String controllerId;
 
-    /** 接口名称 */
+    /**
+     * 接口名称
+     */
     private String interfaceName;
 
-    /** 接口方法类全名 */
+    /**
+     * 接口方法类全名
+     */
     private String interfaceFullName;
 
-    /** 请求地址 */
+    /**
+     * 请求地址
+     */
     private List<String> uriList;
 
-    /** 请求方式 */
+    /**
+     * 请求方式
+     */
     private List<String> requestTypeList;
 
-    /** 请求参数类型 */
+    /**
+     * 请求参数类型
+     */
     private String requestContentType;
 
-    /** 请求参数字段数据（表单） */
+    /**
+     * 请求参数字段数据（表单）
+     */
     private List<FieldInfo> formData;
 
-    /** 请求参数字段数据（json） */
+    /**
+     * 请求参数字段数据（json）
+     */
     private String formDataJson;
 
-    /** 请求参数字段数据（js object） */
+    /**
+     * 请求参数字段数据（js object）
+     */
     private String formDataJsObj;
 
-    /** 请求参数字段数据（json） */
+    /**
+     * 请求参数字段数据（json）
+     */
     private String bodyData;
 
-    /** 请求参数字段数据（js object） */
+    /**
+     * 请求参数字段数据（js object）
+     */
     private String bodyDataJsObj;
 
-    /** 响应信息字段数据（json） */
+    /**
+     * 响应信息字段数据（json）
+     */
     private String resData;
 
-    /** 响应信息字段数据（js object） */
+    /**
+     * 响应信息字段数据（js object）
+     */
     private String resDataJsObj;
 
-    /** 排序 */
+    /**
+     * 排序
+     */
     private Integer sort;
 
     public DocsInterfaceVo(String interfaceId, String controllerId, String interfaceName, String interfaceFullName, List<String> uriList, List<String> requestTypeList, String requestContentType, List<FieldInfo> formData, Integer sort) {

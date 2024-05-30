@@ -14,13 +14,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DocsParseVo {
 
-    /** 正在解析 */
+    /**
+     * 正在解析
+     */
     private boolean running;
 
-    /** 生成时间戳（毫秒） */
+    /**
+     * 生成时间戳（毫秒）
+     */
     private Long parseTimestamp;
 
-    /** 消息 */
+    /**
+     * 消息
+     */
     private String msg;
 
 }

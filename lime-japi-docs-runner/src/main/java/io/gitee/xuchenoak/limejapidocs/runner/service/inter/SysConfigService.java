@@ -15,6 +15,7 @@ public interface SysConfigService {
 
     /**
      * 获取公共配置
+     *
      * @param request
      * @return
      */
@@ -22,6 +23,7 @@ public interface SysConfigService {
 
     /**
      * 验证是否登录
+     *
      * @param request
      * @return
      */
@@ -29,6 +31,7 @@ public interface SysConfigService {
 
     /**
      * 验证是否登录或文档中心邀请码是否正确
+     *
      * @param request
      * @param viewKey 邀请码
      * @return
@@ -37,6 +40,7 @@ public interface SysConfigService {
 
     /**
      * 验证文档中心邀请码是否正确
+     *
      * @param viewKey 邀请码
      * @return
      */
@@ -44,12 +48,14 @@ public interface SysConfigService {
 
     /**
      * 保存系统配置
+     *
      * @param rf
      */
     void saveSysConfig(SysConfigRf rf);
 
     /**
      * 获取系统配置
+     *
      * @return
      */
     SysConfigVo getSysConfig();
