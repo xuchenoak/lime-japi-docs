@@ -68,8 +68,10 @@ public class DocsServiceImpl implements DocsService {
             if (createTimeList.size() > 0) {
                 DateTime beforeTime = DateUtil.parse(createTimeList.get(createTimeList.size() - 1));
                 apiDocsControllerDataService.remove(new LambdaQueryWrapper<ApiDocsControllerData>()
+                        .eq(ApiDocsControllerData::getDocsConfigId, docsConfigId)
                         .lt(ApiDocsControllerData::getCreateTime, beforeTime));
                 apiDocsParseLogService.remove(new LambdaQueryWrapper<ApiDocsParseLog>()
+                        .eq(ApiDocsParseLog::getDocsConfigId, docsConfigId)
                         .lt(ApiDocsParseLog::getCreateTimestamp, beforeTime.getTime()));
             }
         } catch (Exception e) {

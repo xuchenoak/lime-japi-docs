@@ -14,6 +14,8 @@ spring:
     console:
       #开启web console功能
       enabled: true
+      settings:
+        web-allow-others: true
 
 logging:
   level:

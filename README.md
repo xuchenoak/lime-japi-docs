@@ -12,7 +12,7 @@ lime-japi-docs是一个简单的Java接口文档生成工具，可以解析Java�
 
 ## 2 下载
 
-下载地址：[点击下载](https://gitee.com/xuchenoak/lime-japi-docs/releases/download/v1.0.1/lime-japi-docs-runner-1.0.1.zip)
+下载地址：[点击下载](https://gitee.com/xuchenoak/lime-japi-docs/releases)
 
 体验地址：[点击跳转](http://ljd.xuchenoak.com)
 
