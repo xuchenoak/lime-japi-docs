@@ -1,12 +1,10 @@
 # lime-japi-docs
 
-
-
-![](https://gitee.com/xuchenoak/lime-japi-docs/raw/master/logo.jpg)
+![输入图片说明](v-images/logo.jpg)
 
 ## 1 简介
 
-lime-japi-docs是一个简单的Java接口文档生成工具，可以解析Java源码及其注释生成Controller接口文档，支持在网页端查看和一键生成文档。若只想解析获取Controller源码接口数据，可在项目中引入解析工具lime-japi-docs-parser（项目开源至 https://gitee.com/xuchenoak/lime-japi-docs-parser ）进行解析即可。
+lime-japi-docs是一个简单的Java接口文档生成工具，通过解析Java源码及其注释生成Controller接口文档，可在网页端管理、生成和浏览文档。项目打包为独立可执行jar包，对解析的源码零侵入，直接运行后在网页上进行初始化和配置即可。若只想解析获取Controller源码接口数据，只需要在自己项目中引入核心解析包「[lime-japi-docs-parser](https://gitee.com/xuchenoak/lime-japi-docs-parser)」进行解析即可，核心包已开源并上传至maven中央仓库。
 
 运行环境：JDK1.8+
 
@@ -14,7 +12,10 @@ lime-japi-docs是一个简单的Java接口文档生成工具，可以解析Java�
 
 下载地址：[点击下载](https://gitee.com/xuchenoak/lime-japi-docs/releases)
 
-体验地址：[点击跳转](http://ljd.xuchenoak.com)
+体验地址：[点击跳转](https://ljd.xuchenoak.com)
+
+> 邀请码：666    管理登录账/密：admin/123456
+
 
 ## 3 使用
 
