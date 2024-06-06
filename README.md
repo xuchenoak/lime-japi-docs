@@ -4,33 +4,43 @@
 
 ## 1 简介
 
-lime-japi-docs是一个简单的Java接口文档生成工具，通过解析Java源码及其注释生成Controller接口文档，可在网页端管理、生成和浏览文档。项目打包为独立可执行jar包，对解析的源码零侵入，直接运行后在网页上进行初始化和配置即可。若只想解析获取Controller源码接口数据，只需要在自己项目中引入核心解析包「[lime-japi-docs-parser](https://gitee.com/xuchenoak/lime-japi-docs-parser)」进行解析即可，核心包已开源并上传至maven中央仓库。
+lime-japi-docs是一个简单的Java接口文档生成工具，通过解析Java源码及其注释生成Controller接口文档，可在网页端管理、生成和浏览文档。项目打包为独立可执行jar包，对解析的源码零侵入，直接运行后在网页上进行初始化和配置即可。若只想解析获取Controller源码接口数据，只需要在自己项目中引入核心解析包「<a href="https://gitee.com/xuchenoak/lime-japi-docs-parser" target="_blank">lime-japi-docs-parser</a>」进行解析即可，核心包已开源并上传至maven中央仓库。
 
 运行环境：JDK1.8+
 
 ## 2 下载
 
-下载地址：[点击下载](https://gitee.com/xuchenoak/lime-japi-docs/releases)
+- 下载地址：<a href="https://gitee.com/xuchenoak/lime-japi-docs/releases" target="_blank">点击下载</a>
 
-体验地址：[点击跳转](https://ljd.xuchenoak.com)
 
-> 邀请码：666  管理登录账/密：admin/123456
+- 体验地址：<a href="https://ljd.xuchenoak.com" target="_blank">在线体验</a>
 
-页面截图：
+    邀请码：666  管理登录账/密：admin/123456
 
-| ![输入图片说明](v-images/01.init.png) | ![输入图片说明](v-images/02.visit_code.png) |
-|---|---|
-| ![输入图片说明](v-images/03.no_docs_and_no_login.png) | ![输入图片说明](v-images/04.login.png) |
-| ![输入图片说明](v-images/05.login_suc.png) | ![输入图片说明](v-images/06.sys_config.png) |
-| ![输入图片说明](v-images/07.add_doc.png) | ![输入图片说明](v-images/08.add_doc_path.png) |
-| ![输入图片说明](v-images/09.add_doc_suc.png) | ![输入图片说明](v-images/10.parse_doc.png) |
-| ![输入图片说明](v-images/11.parse_doc_suc.png) | ![输入图片说明](v-images/12.doc_get.png) |
-| ![输入图片说明](v-images/13.doc_post.png) | ![输入图片说明](v-images/14.res_json.png) |
-| ![输入图片说明](v-images/15.res_jsobj.png) | ![输入图片说明](v-images/16.parse_version.png) |
+
+- 页面截图：
+
+| ![输入图片说明](v-images/01.init.png)                 | ![输入图片说明](v-images/02.visit_code.png)             |
+|-------------------------------------------------|---------------------------------------------------|
+| ![输入图片说明](v-images/03.no_docs_and_no_login.png) | ![输入图片说明](v-images/04.login.png)                  |
+| ![输入图片说明](v-images/05.login_suc.png)            | ![输入图片说明](v-images/06.sys_config.png)             |
+| ![输入图片说明](v-images/07.add_doc.png)              | ![输入图片说明](v-images/08.add_doc_path.png)           |
+| ![输入图片说明](v-images/08.01.param_valid.png)       | ![输入图片说明](v-images/08.02.field_default_value.png) |
+| ![输入图片说明](v-images/09.add_doc_suc.png)          | ![输入图片说明](v-images/10.parse_doc.png)              |
+| ![输入图片说明](v-images/11.parse_doc_suc.png)        | ![输入图片说明](v-images/12.doc_get.png)                |
+| ![输入图片说明](v-images/13.doc_post.png)             | ![输入图片说明](v-images/14.res_json.png)               |
+| ![输入图片说明](v-images/15.res_jsobj.png)            | ![输入图片说明](v-images/16.parse_version.png)          |
 
 ## 3 使用
 
-### 3.1 源码注释实例（正常的java注释即可）
+### 3.1 运行服务
+
+进入「<a href="https://gitee.com/xuchenoak/lime-japi-docs/releases" target="_blank">下载</a>」页面下载最新版本的zip包，然后将压缩包解压，在java环境下`java -jar lime-japi-docs-版本号.jar`直接运行目录下的jar包，启动后访问 http://127.0.0.1:3001 即可进行初始化并开始配置生成文档了！
+1. 建议下载最新版本的`lime-japi-docs-1.1.1.zip`，上一个版本比较粗糙，感兴趣的话需要找到对应版本标签里的`README.md`；
+2. jar包目录下贴心提供了`restart.cmd`（重启）和`stop.cmd`（关闭）服务的脚本，默认端口3001，如果使用其它端口启动记得脚本里也改一下；
+3. jar包目录下会生成数据库文件`./data/data.mv.db`（所有配置都在数据库里，数据库删除了就要重新配置和生成文档了）和日志文件`./data/log`（想看日志自己查）。
+
+### 3.2 源码注释示例（就是最最普通的java注释啦）
 
 1. Controller及接口方法注释示例：
 
@@ -62,7 +72,7 @@ public class UserController {
     * @return
     */
    @PostMapping("/add")
-   public AjaxResult<UserVo> add(UserAddRf rf) {
+   public AjaxResult<UserVo> add(@Validated @RequestBody UserAddRf rf) {
       // ……
       return AjaxResult.suc();
    }
@@ -74,7 +84,7 @@ public class UserController {
 
 2. 接口方法入参类注释示例：
 
-   目前参数验证仅支持注解：@NotBlank（返回“字符非空”）、@NotNull（返回“对象非空”）、@Size（返回注解message的值）
+   参数验证注释可通过文档配置的回调对如 `@NotBlank`、`@NotNull`等注解进自定义注释。
 
 ```java
 /**
@@ -126,51 +136,38 @@ public class UserVo {
 }
 ```
 
-### 3.2 运行服务
-
-1. 下载压缩包解压后打开`application.yml`配置`docs-parser`下的`javaFilePaths`（Java源码路径）
-
-   注：（1）启动端口默认3001，若修改请务必将`restart.cmd`和`stop.cmd`内一并修改；
-
-   ​		（2）数据库默认生成到jar包目录`./data/data.mv.db`，日志目录默认jar包目录`./data/log`；
-
-   ​		（3）以上两项配置可按需调整，文档配置如下（根据注释描述按需配置即可）。
-
-```yml
-docs-parser:
-   # 文档名称
-   docsName: XX接口文档
-   # 文档版本
-   version: V1.0
-   # 启动时是否解析 true/false
-   sysStartParse: false
-   # java文件所在目录绝对路径（必须写到java目录，多个用英文逗号分隔）
-   javaFilePaths: D:/test-project/src/main/java
-   # 仅扫描解析该包集合下的controller类（必须位于javaFilePaths下，若不配置默认扫描javaFilePaths下所有，多个用英文逗号分隔）
-   filterPackages: com.test
-   # 仅扫描的controller类名集（非类全名，多个用英文逗号分隔）
-   filterClassNames:
-   # 需要排除的controller类名集（非类全名，多个用英文逗号分隔）
-   ignoreClassNames:
-   # 执行解析秘钥（在页面端请求解析接口需要携带该执行解析秘钥）
-   apiRunKey: 123456
-```
-2. 配置好后运行`restart.cmd`启动后访问 http://127.0.0.1:3001 即可查看接口文档（若启动端口调整后需要访问对应端口）。
-
 ## 4 答疑
 ### 4.1 启动有问题怎么办？
-可以在日志目录（默认jar包目录`./data/log`）查看启动日志报错，若发现未知异常可以咨询ME！
+在日志目录`./data/log`查看看一下日志报错吧！相信你看得懂的。如果有需要也可以call我！
 
-### 4.2 我不需要文档，只想要接口数据怎么获取？
-
-若只想解析获取Controller源码接口数据，可在项目中引入解析工具lime-japi-docs-parser进行解析即可，项目已开源至：https://gitee.com/xuchenoak/lime-japi-docs-parser
+### 4.2 我不需要文档，只想要得到接口数据？
+- 方式一：在这个服务页面中生成文档后通过页面接口获取json再进行解析； 
+- 方式二：在你的项目中引用项目的核心解析包`lime-japi-docs-parser`（包有上传到maven中央仓库，直接引用就好），然后用这个包提供的工具解析，项目已开源至：https://gitee.com/xuchenoak/lime-japi-docs-parser （跳转过去看具体的使用说明，也多多支持这个包，蟹蟹）。
 
 ## 5 更新记录
 
-- 2023-03-26 V1.0.1发布
+- 2023-03-26 V1.0.1发布（这是一个小粗糙版本）
+   - 启动一个服务仅支持解析一个项目生成单文档；
+   - 文档配置需要在`application.yml`中进行配置；
+   - 功能和页面都比较单一。
+
+
+- 2024-06-06 V1.1.1更新
+   - 启动一个服务可以配置多个项目生成多份文档；
+   - 系统和文档配置都放在了页面上，简化为一个jar包，直接启动即可；
+   - 支持从初始化开始可自定义系统名称、logo、slogan等；
+   - 支持配置文档字段校验和默认值注释回调；
+   - 修复了核心解析包的几个小bug。
+
 ## 6 最后&致谢
 
-1. 本项目的灵感源于`@YeDaxia`的项目 [JApiDocs](https://github.com/YeDaxia/JApiDocs)，它是一个可以解析Java源码并生成接口文档（支持生成html静态页或markdown等）的工具；
-2. 本项目解析Java源码使用的是项目 [javaparser](http://javaparser.org/) 提供的解析器；
-3. 本项目使用的前端框架是`vue`，UI框架是`ant-design-vue`，代码编辑器是`vue2-ace-editor`；
-4. 特别感谢小伙伴 [@hantai喔](https://weibo.com/u/7805144171) 提供的logo设计，欢迎大家关注TA。
+- 本项目的灵感源于`@YeDaxia`的项目 <a href="https://github.com/YeDaxia/JApiDocs" target="_blank">JApiDocs</a>，它是一个可以解析Java源码并生成接口文档（支持生成html静态页或markdown等）的工具；
+
+
+- 本项目解析Java源码使用的是项目 <a href="http://javaparser.org/" target="_blank">javaparser</a> 提供的解析器；
+
+
+- 本项目使用的前端框架是`vue`，UI框架是`ant-design-vue`，代码编辑器是`vue2-ace-editor`；
+
+
+- 特别感谢小伙伴 <a href="https://weibo.com/u/7805144171" target="_blank">@hantai喔</a> 提供的logo设计，欢迎大家多多关注TA。
