@@ -14,13 +14,12 @@ lime-japi-docs是一个简单的Java接口文档生成工具，通过解析Java�
 
 体验地址：[点击跳转](https://ljd.xuchenoak.com)
 
-    邀请码：666  管理登录账/密：admin/123456
+> 邀请码：666  管理登录账/密：admin/123456
 
 页面截图：
 
 | ![输入图片说明](v-images/01.init.png) | ![输入图片说明](v-images/02.visit_code.png) |
 |---|---|
-| ![输入图片说明](v-images/03.no_docs_and_no_login.png) | ![输入图片说明](v-images/04.login.png) |
 | ![输入图片说明](v-images/03.no_docs_and_no_login.png) | ![输入图片说明](v-images/04.login.png) |
 | ![输入图片说明](v-images/05.login_suc.png) | ![输入图片说明](v-images/06.sys_config.png) |
 | ![输入图片说明](v-images/07.add_doc.png) | ![输入图片说明](v-images/08.add_doc_path.png) |
@@ -31,7 +30,7 @@ lime-japi-docs是一个简单的Java接口文档生成工具，通过解析Java�
 
 ## 3 使用
 
-### 3.1 源码注释（生成的文档示例可以从上面的体验地址查看）
+### 3.1 源码注释实例（正常的java注释即可）
 
 1. Controller及接口方法注释示例：
 
