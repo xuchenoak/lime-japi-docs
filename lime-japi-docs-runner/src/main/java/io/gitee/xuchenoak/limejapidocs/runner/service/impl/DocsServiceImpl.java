@@ -1,23 +1,33 @@
 package io.gitee.xuchenoak.limejapidocs.runner.service.impl;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.gitee.xuchenoak.limejapidocs.parser.bean.ControllerData;
 import io.gitee.xuchenoak.limejapidocs.parser.bean.InterfaceData;
 import io.gitee.xuchenoak.limejapidocs.parser.parsendoe.FieldDataNode;
 import io.gitee.xuchenoak.limejapidocs.parser.util.ListUtil;
 import io.gitee.xuchenoak.limejapidocs.parser.util.StringUtil;
-import io.gitee.xuchenoak.limejapidocs.runner.bean.DocsConfig;
-import io.gitee.xuchenoak.limejapidocs.runner.config.DocsParserConfig;
-import io.gitee.xuchenoak.limejapidocs.runner.handler.DocsParserConfigHandler;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.*;
+import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
+import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
+import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsControllerData;
+import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsParseLog;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsCatalogVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsInterfaceVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseMsgVo;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseVo;
 import io.gitee.xuchenoak.limejapidocs.runner.runner.DocsParseService;
-import io.gitee.xuchenoak.limejapidocs.runner.service.inter.ApiDocsParseLogService;
+import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsConfigService;
+import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsControllerDataService;
+import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsParseLogService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsService;
+import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;
 import io.gitee.xuchenoak.limejapidocs.runner.util.MsgUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -26,83 +36,62 @@ import java.util.stream.Collectors;
 /**
  * 接口文档业务实现
  *
- * @author: xuchenoak
- * @create: 2022-06-06 8:20
+ * @author xuchenoak
  **/
 @Service
 public class DocsServiceImpl implements DocsService {
 
     private static final Logger logger = LoggerFactory.getLogger(DocsServiceImpl.class);
 
-    @Autowired
-    private DocsParserConfigHandler docsParserConfigHandler;
-
-    @Autowired
-    private DocsParserConfig docsParserConfig;
-
-    @Autowired
+    @Resource
     private DocsParseService docsParseService;
 
-    @Autowired
+    @Resource
     private ApiDocsParseLogService apiDocsParseLogService;
 
-    /**
-     * 执行文档解析
-     * @param password 解析秘钥
-     */
-    @Override
-    public DocsParseVo runDocsParse(String password) {
-        // 验证解析秘钥
-        if (!docsParserConfig.checkedApiRun(password)) {
-            return new DocsParseVo(false, null, "生成秘钥错误！请输入正确解析秘钥再重试");
-        }
-        // 验证是否还在进行解析
-        if (MsgUtil.isParseRun()) {
-            return new DocsParseVo(true, MsgUtil.getParseTimestamp(), "正在生成");
-        }
-        // 执行解析
-        MsgUtil.statusParseRun();
-        docsParseService.runParse();
-        return new DocsParseVo(true, MsgUtil.getParseTimestamp(), "开始生成");
-    }
+    @Resource
+    private ApiDocsControllerDataService apiDocsControllerDataService;
 
-    /**
-     * 获取解析消息
-     * @param parseTimestamp 解析时间戳
-     * @return
-     */
-    @Override
-    public DocsParseMsgVo getParseMsg(Long parseTimestamp) {
-        // 验证是否还在进行解析
-        if (parseTimestamp == null) {
-            return new DocsParseMsgVo(MsgUtil.isParseRun(), MsgUtil.getParseTimestamp(), new ArrayList<>());
-        }
-        return new DocsParseMsgVo(MsgUtil.isParseRun(), parseTimestamp, apiDocsParseLogService.listMsg(parseTimestamp));
-    }
+    @Resource
+    private ApiDocsConfigService apiDocsConfigService;
 
     /**
      * 获取生成时间集
+     *
+     * @param docsConfigId 文档配置Id
      * @return
      */
     @Override
-    public List<String> getCreateTimes() {
-        List<String> set = docsParserConfigHandler.getCreateTimeList();
-        if (set == null) {
-            return new ArrayList<>();
+    public List<String> getCreateTimes(Long docsConfigId) {
+        List<String> createTimeList = ListUtils.listOrEmpty(apiDocsControllerDataService.getBaseMapper().listCreateTime(docsConfigId));
+        try {
+            if (createTimeList.size() > 0) {
+                DateTime beforeTime = DateUtil.parse(createTimeList.get(createTimeList.size() - 1));
+                apiDocsControllerDataService.remove(new LambdaQueryWrapper<ApiDocsControllerData>()
+                        .eq(ApiDocsControllerData::getDocsConfigId, docsConfigId)
+                        .lt(ApiDocsControllerData::getCreateTime, beforeTime));
+                apiDocsParseLogService.remove(new LambdaQueryWrapper<ApiDocsParseLog>()
+                        .eq(ApiDocsParseLog::getDocsConfigId, docsConfigId)
+                        .lt(ApiDocsParseLog::getCreateTimestamp, beforeTime.getTime()));
+            }
+        } catch (Exception e) {
+            logger.error("清除旧数据异常", e);
         }
-        return set;
+        return createTimeList;
     }
 
     /**
      * 获取接口文档目录
-     * @param createTime 生成时间
-     * @param likeStr 搜索关键字
+     *
+     * @param docsConfigId 文档配置Id
+     * @param createTime   生成时间
+     * @param likeStr      搜索关键字
      * @return
      */
     @Override
-    public List<DocsCatalogVo> getDocsCatalog(String createTime, String likeStr) {
+    public List<DocsCatalogVo> getDocsCatalog(Long docsConfigId, String createTime, String likeStr) {
         List<DocsCatalogVo> docsCatalogVoList = new ArrayList<>();
-        List<ControllerData> controllerDataList = docsParserConfigHandler.getControllerDataList(createTime);
+        List<ControllerData> controllerDataList = apiDocsControllerDataService.getControllerDataList(docsConfigId, createTime);
         if (ListUtil.isBlank(controllerDataList)) {
             return docsCatalogVoList;
         }
@@ -122,7 +111,7 @@ public class DocsServiceImpl implements DocsService {
                     controllerData.getComment(),
                     controllerData.getSort()));
         }
-        docsCatalogVoList = docsCatalogVoList.stream().sorted(Comparator.comparing(DocsCatalogVo::getSort)).collect(Collectors.toList());
+        docsCatalogVoList = docsCatalogVoList.stream().sorted(Comparator.comparing(DocsCatalogVo::getName)).collect(Collectors.toList());
         if (docsCatalogVoList == null) {
             logger.info("获取接口文档目录排序失败 createTime：{}", createTime);
             docsCatalogVoList = new ArrayList<>();
@@ -132,19 +121,20 @@ public class DocsServiceImpl implements DocsService {
 
     /**
      * 获取接口文档列表
-     * @param createTime 生成时间
-     * @param controllerId controller标识
-     * @param hasComment 是否有注释
-     * @param hasType 是否有类型
-     * @param hasValid 是否有验证
+     *
+     * @param createTime      生成时间
+     * @param controllerId    controller标识
+     * @param hasComment      是否有注释
+     * @param hasType         是否有类型
+     * @param hasValid        是否有验证
      * @param addDefaultValue 是否有默认值
-     * @param likeStr 搜索关键字
+     * @param likeStr         搜索关键字
      * @return
      */
     @Override
     public List<DocsInterfaceVo> getDocsInterface(String createTime, String controllerId, boolean hasComment, boolean hasType, boolean hasValid, boolean addDefaultValue, String likeStr) {
         List<DocsInterfaceVo> docsInterfaceVoList = new ArrayList<>();
-        ControllerData controllerData = docsParserConfigHandler.getControllerData(createTime, controllerId);
+        ControllerData controllerData = apiDocsControllerDataService.getControllerData(createTime, controllerId);
         if (controllerData == null) {
             return docsInterfaceVoList;
         }
@@ -184,22 +174,56 @@ public class DocsServiceImpl implements DocsService {
     }
 
     /**
-     * 获取接口文档配置
+     * 执行文档解析
+     *
+     * @param docsConfigId 文档配置Id
+     * @param password     解析秘钥
+     */
+    @Override
+    public DocsParseVo runDocsParse(Long docsConfigId, String password) {
+        ApiDocsConfig docsConfig = apiDocsConfigService.getById(docsConfigId);
+        if (docsConfig == null) {
+            CusExc.e("文档不存在");
+        }
+        // 验证解析秘钥
+        if (!docsConfig.checkedApiRun(password)) {
+            return new DocsParseVo(false, null, "生成秘钥错误！请输入正确解析秘钥再重试");
+        }
+        // 验证是否还在进行解析
+        if (MsgUtil.isParseRun(docsConfigId)) {
+            return new DocsParseVo(true, MsgUtil.getParseTimestamp(docsConfigId), "正在生成");
+        }
+        // 执行解析
+        MsgUtil.statusParseRun(docsConfigId);
+        docsParseService.runParseAsync(docsConfig);
+        return new DocsParseVo(true, MsgUtil.getParseTimestamp(docsConfigId), "开始生成");
+    }
+
+    /**
+     * 获取解析消息
+     *
+     * @param docsConfigId   文档配置Id
+     * @param parseTimestamp 解析时间戳
      * @return
      */
     @Override
-    public DocsConfigVo getDocsConfig() {
-        DocsConfig docsConfig = docsParserConfigHandler.getDocsConfig();
-        return new DocsConfigVo(docsConfig.getDocName(), docsConfig.getDocVersion());
+    public DocsParseMsgVo getParseMsg(Long docsConfigId, Long parseTimestamp) {
+        // 验证是否还在进行解析
+        if (parseTimestamp == null) {
+            return new DocsParseMsgVo(MsgUtil.isParseRun(docsConfigId), MsgUtil.getParseTimestamp(docsConfigId), new ArrayList<>());
+        }
+        return new DocsParseMsgVo(MsgUtil.isParseRun(docsConfigId), parseTimestamp,
+                apiDocsParseLogService.listMsg(docsConfigId, parseTimestamp));
     }
 
     /**
      * 构造json字符串
+     *
      * @param docsInterfaceVo 接口输出对象
-     * @param interfaceData 接口数据
-     * @param hasComment 是否有注释
-     * @param hasType 是否有类型
-     * @param hasValid 是否有验证
+     * @param interfaceData   接口数据
+     * @param hasComment      是否有注释
+     * @param hasType         是否有类型
+     * @param hasValid        是否有验证
      * @param addDefaultValue 是否有默认值
      * @return
      */

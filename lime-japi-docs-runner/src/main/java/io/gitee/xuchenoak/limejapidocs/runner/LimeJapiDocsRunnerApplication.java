@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 /**
  * 启动类
  *
- * @author: xuchenoak
+ * @author xuchenoak
  **/
 @EnableAsync
 @SpringBootApplication
@@ -21,7 +21,7 @@ public class LimeJapiDocsRunnerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(LimeJapiDocsRunnerApplication.class, args);
-        logger.info("LimeJapiDocs 启动成功！");
+        logger.info("lime-japi-docs-runner 启动成功！");
     }
 
 }

@@ -11,7 +11,7 @@ export default {
     props: {
         text: {
             type: String,
-            default() {return '数据走丢啦'}
+            default() {return '暂无数据'}
         }
     },
     data() {
@@ -26,6 +26,7 @@ export default {
     .box-bg {
         position: absolute;
         margin: 0;
+        left: 0;
         top: 50%;
         width: 100%;
         transform: translateY(-50%);

@@ -1,4 +1,10 @@
-
+@font-face {
+    font-family: "dingding";
+    font-weight: 400;
+    src: url("../fonts/MlfBDBwMyCwZ.woff2") format("woff2"),
+    url("../fonts/MlfBDBwMyCwZ.woff") format("woff");
+    font-display: swap;
+}
 .diy-cursor {
     cursor: pointer !important;
 }
@@ -58,5 +64,15 @@
 }
 *::-webkit-scrollbar-corner{
     background: rgba(0, 0, 0, 0.1);
+}
+
+.pre-rule-item::before {
+    display: inline-block;
+    margin-right: 4px;
+    color: #f5222d;
+    font-size: 14px;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: '*';
 }
 
