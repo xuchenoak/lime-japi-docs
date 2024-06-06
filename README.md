@@ -10,16 +10,24 @@ lime-japi-docs是一个简单的Java接口文档生成工具，通过解析Java�
 
 ## 2 下载
 
-1. 下载地址：[点击下载](https://gitee.com/xuchenoak/lime-japi-docs/releases)
+下载地址：[点击下载](https://gitee.com/xuchenoak/lime-japi-docs/releases)
 
-2. 体验地址：[点击跳转](https://ljd.xuchenoak.com)
+体验地址：[点击跳转](https://ljd.xuchenoak.com)
 
     邀请码：666  管理登录账/密：admin/123456
-3. 页面截图：
 
-| ![输入图片说明](v-images/01.init.png) | ![输入图片说明](v-images/01.init.png) |
+页面截图：
+
+| ![输入图片说明](v-images/01.init.png) | ![输入图片说明](v-images/02.visit_code.png) |
 |---|---|
-| ![输入图片说明](v-images/01.init.png) | ![输入图片说明](v-images/01.init.png) |
+| ![输入图片说明](v-images/03.no_docs_and_no_login.png) | ![输入图片说明](v-images/04.login.png) |
+| ![输入图片说明](v-images/03.no_docs_and_no_login.png) | ![输入图片说明](v-images/04.login.png) |
+| ![输入图片说明](v-images/05.login_suc.png) | ![输入图片说明](v-images/06.sys_config.png) |
+| ![输入图片说明](v-images/07.add_doc.png) | ![输入图片说明](v-images/08.add_doc_path.png) |
+| ![输入图片说明](v-images/09.add_doc_suc.png) | ![输入图片说明](v-images/10.parse_doc.png) |
+| ![输入图片说明](v-images/11.parse_doc_suc.png) | ![输入图片说明](v-images/12.doc_get.png) |
+| ![输入图片说明](v-images/13.doc_post.png) | ![输入图片说明](v-images/14.res_json.png) |
+| ![输入图片说明](v-images/15.res_jsobj.png) | ![输入图片说明](v-images/16.parse_version.png) |
 
 ## 3 使用
 
