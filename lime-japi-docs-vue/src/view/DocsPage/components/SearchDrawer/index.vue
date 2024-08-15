@@ -17,7 +17,7 @@
             </a-input-group>
         </template>
         <div style="min-height: 200px">
-            <div v-if="dataList.length > 0">
+            <div v-if="dataList.length > 0 || loading">
                 <div class="search-content-item" v-for="item in dataList" :key="item.controllerId">
                     <div class="item-controller diy-cursor">
                         <a-tag color="green" class="diy-cursor">C</a-tag>
