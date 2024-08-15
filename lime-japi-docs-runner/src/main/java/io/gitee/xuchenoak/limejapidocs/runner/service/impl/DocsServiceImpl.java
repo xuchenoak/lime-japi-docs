@@ -2,24 +2,19 @@ package io.gitee.xuchenoak.limejapidocs.runner.service.impl;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import io.gitee.xuchenoak.limejapidocs.parser.bean.ControllerData;
 import io.gitee.xuchenoak.limejapidocs.parser.bean.InterfaceData;
 import io.gitee.xuchenoak.limejapidocs.parser.parsendoe.FieldDataNode;
 import io.gitee.xuchenoak.limejapidocs.parser.util.ListUtil;
 import io.gitee.xuchenoak.limejapidocs.parser.util.StringUtil;
+import io.gitee.xuchenoak.limejapidocs.runner.common.enums.SearchFromEnum;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
-import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
-import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsControllerData;
-import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsParseLog;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsCatalogVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsInterfaceVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseMsgVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseVo;
+import io.gitee.xuchenoak.limejapidocs.runner.domain.*;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.*;
 import io.gitee.xuchenoak.limejapidocs.runner.runner.DocsParseService;
-import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsConfigService;
-import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsControllerDataService;
-import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsParseLogService;
+import io.gitee.xuchenoak.limejapidocs.runner.service.base.*;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsService;
 import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;
 import io.gitee.xuchenoak.limejapidocs.runner.util.MsgUtil;
@@ -28,9 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -40,8 +33,14 @@ import java.util.stream.Collectors;
  **/
 @Service
 public class DocsServiceImpl implements DocsService {
+    @Resource
+    private ApiDocsInterfaceDataSearchService apiDocsInterfaceDataSearchService;
+
 
     private static final Logger logger = LoggerFactory.getLogger(DocsServiceImpl.class);
+
+    @Resource
+    private ApiDocsInterfaceDataService apiDocsInterfaceDataService;
 
     @Resource
     private DocsParseService docsParseService;
@@ -91,19 +90,16 @@ public class DocsServiceImpl implements DocsService {
     @Override
     public List<DocsCatalogVo> getDocsCatalog(Long docsConfigId, String createTime, String likeStr) {
         List<DocsCatalogVo> docsCatalogVoList = new ArrayList<>();
-        List<ControllerData> controllerDataList = apiDocsControllerDataService.getControllerDataList(docsConfigId, createTime);
+        List<ApiDocsControllerData> controllerDataList = apiDocsControllerDataService.list(q -> q
+                .eq(ApiDocsControllerData::getDocsConfigId, docsConfigId)
+                .eq(ApiDocsControllerData::getCreateTime, createTime)
+                .like(StringUtil.isNotBlank(likeStr), ApiDocsControllerData::getComment, likeStr)
+                .orderByAsc(ApiDocsControllerData::getComment));
         if (ListUtil.isBlank(controllerDataList)) {
             return docsCatalogVoList;
         }
-        for (ControllerData controllerData : controllerDataList) {
-            List<InterfaceData> interfaceDataList = controllerData.getInterfaceDataList();
-            if (ListUtil.isBlank(interfaceDataList)) {
-                continue;
-            }
+        for (ApiDocsControllerData controllerData : controllerDataList) {
             if (StringUtil.isBlank(controllerData.getComment())) {
-                continue;
-            }
-            if (StringUtil.isNotBlank(likeStr) && !controllerData.getComment().contains(likeStr)) {
                 continue;
             }
             docsCatalogVoList.add(new DocsCatalogVo(
@@ -111,17 +107,145 @@ public class DocsServiceImpl implements DocsService {
                     controllerData.getComment(),
                     controllerData.getSort()));
         }
-        docsCatalogVoList = docsCatalogVoList.stream().sorted(Comparator.comparing(DocsCatalogVo::getName)).collect(Collectors.toList());
-        if (docsCatalogVoList == null) {
-            logger.info("获取接口文档目录排序失败 createTime：{}", createTime);
-            docsCatalogVoList = new ArrayList<>();
-        }
         return docsCatalogVoList;
+    }
+
+    /**
+     * 获取文档搜索列表
+     *
+     * @param docsConfigId   文档配置Id
+     * @param createTime     生成时间
+     * @param searchFromEnum 搜索来源
+     * @param likeStr        搜索关键字
+     * @return
+     */
+    @Override
+    public List<DocsCatalogSearchVo> listDocsSearch(Long docsConfigId, String createTime, SearchFromEnum searchFromEnum, String likeStr) {
+        // 只搜索目录
+        if (searchFromEnum.equals(SearchFromEnum.CATALOG)) {
+            return searchFromCatalog(docsConfigId, createTime, likeStr);
+        }
+        // 只搜索接口
+        if (searchFromEnum.equals(SearchFromEnum.INTERFACE)) {
+            return searchFromInterface(docsConfigId, createTime, likeStr);
+        }
+        // 搜索全部
+        if (searchFromEnum.equals(SearchFromEnum.ALL)) {
+            List<DocsCatalogSearchVo> catalogSearchVos = searchFromCatalog(docsConfigId, createTime, likeStr);
+            List<DocsCatalogSearchVo> interfaceSearchVos = searchFromInterface(docsConfigId, createTime, likeStr);
+            if (ListUtil.isBlank(catalogSearchVos)) {
+                return interfaceSearchVos;
+            }
+            if (ListUtil.isBlank(interfaceSearchVos)) {
+                return catalogSearchVos;
+            }
+            List<DocsCatalogSearchVo> voList = new ArrayList<>();
+            Set<String> interfaceSearchControllerIds = interfaceSearchVos.stream().map(DocsCatalogSearchVo::getControllerId).collect(Collectors.toSet());
+            for (DocsCatalogSearchVo catalogSearchVo : catalogSearchVos) {
+                if (!interfaceSearchControllerIds.contains(catalogSearchVo.getControllerId())) {
+                    voList.add(catalogSearchVo);
+                }
+            }
+            voList.addAll(interfaceSearchVos);
+            return voList.stream().sorted(Comparator.comparing(DocsCatalogSearchVo::getControllerComment)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    /**
+     * 根据目录搜索
+     *
+     * @param docsConfigId 文档配置Id
+     * @param createTime   生成时间
+     * @param likeStr      搜索关键字
+     * @return
+     */
+    private List<DocsCatalogSearchVo> searchFromCatalog(Long docsConfigId, String createTime, String likeStr) {
+        List<DocsCatalogSearchVo> voList = new ArrayList<>();
+        List<ApiDocsControllerData> controllerDataList = apiDocsControllerDataService.list(q -> q
+                .eq(ApiDocsControllerData::getDocsConfigId, docsConfigId)
+                .eq(ApiDocsControllerData::getCreateTime, createTime)
+                .like(ApiDocsControllerData::getComment, likeStr)
+                .orderByAsc(ApiDocsControllerData::getComment));
+        if (ListUtil.isBlank(controllerDataList)) {
+            return voList;
+        }
+        for (ApiDocsControllerData data : controllerDataList) {
+            voList.add(new DocsCatalogSearchVo(
+                    docsConfigId,
+                    data.getControllerId(),
+                    data.getComment(),
+                    data.getCreateTime(),
+                    new ArrayList<>()
+            ));
+        }
+        return voList;
+    }
+
+    /**
+     * 根据接口搜索
+     *
+     * @param docsConfigId 文档配置Id
+     * @param createTime   生成时间
+     * @param likeStr      搜索关键字
+     * @return
+     */
+    private List<DocsCatalogSearchVo> searchFromInterface(Long docsConfigId, String createTime, String likeStr) {
+        List<DocsCatalogSearchVo> voList = new ArrayList<>();
+        List<ApiDocsInterfaceDataSearch> interfaceList = apiDocsInterfaceDataSearchService.list(q -> q
+                .eq(ApiDocsInterfaceDataSearch::getDocsConfigId, docsConfigId)
+                .eq(ApiDocsInterfaceDataSearch::getControllerCreateTime, createTime)
+                .and(lq -> lq.like(ApiDocsInterfaceDataSearch::getInterfaceComment, likeStr)
+                        .or().like(ApiDocsInterfaceDataSearch::getUriList, likeStr)));
+        if (ListUtil.isBlank(interfaceList)) {
+            return voList;
+        }
+        List<ApiDocsControllerData> controllerDataList = apiDocsControllerDataService.list(q -> q
+                .eq(ApiDocsControllerData::getDocsConfigId, docsConfigId)
+                .eq(ApiDocsControllerData::getCreateTime, createTime)
+                .in(ApiDocsControllerData::getControllerId, interfaceList.stream().map(ApiDocsInterfaceDataSearch::getControllerId).collect(Collectors.toSet()))
+                .orderByAsc(ApiDocsControllerData::getComment));
+        if (ListUtil.isBlank(controllerDataList)) {
+            return voList;
+        }
+        Map<String, List<DocsInterfaceSearchVo>> controllerIdInterfaceMap = new HashMap<>();
+        for (ApiDocsInterfaceDataSearch interfaceDataSearch : interfaceList) {
+            List<DocsInterfaceSearchVo> interfaceSearchVos = controllerIdInterfaceMap.get(interfaceDataSearch.getControllerId());
+            if (interfaceSearchVos == null) {
+                interfaceSearchVos = new ArrayList<>();
+                controllerIdInterfaceMap.put(interfaceDataSearch.getControllerId(), interfaceSearchVos);
+            }
+            interfaceSearchVos.add(new DocsInterfaceSearchVo(
+                    interfaceDataSearch.getDocsConfigId(),
+                    interfaceDataSearch.getControllerId(),
+                    interfaceDataSearch.getControllerComment(),
+                    interfaceDataSearch.getControllerCreateTime(),
+                    interfaceDataSearch.getInterfaceId(),
+                    interfaceDataSearch.getInterfaceComment(),
+                    interfaceDataSearch.getUriList(),
+                    interfaceDataSearch.getRequestTypeList()
+            ));
+        }
+        for (ApiDocsControllerData controllerData : controllerDataList) {
+            List<DocsInterfaceSearchVo> interfaceSearchVos = controllerIdInterfaceMap.get(controllerData.getControllerId());
+            if (ListUtil.isBlank(interfaceSearchVos)) {
+                continue;
+            }
+            voList.add(new DocsCatalogSearchVo(
+                    docsConfigId,
+                    controllerData.getControllerId(),
+                    controllerData.getComment(),
+                    controllerData.getCreateTime(),
+                    interfaceSearchVos
+            ));
+        }
+        return voList;
     }
 
     /**
      * 获取接口文档列表
      *
+     * @param docsConfigId    文档配置Id
      * @param createTime      生成时间
      * @param controllerId    controller标识
      * @param hasComment      是否有注释
@@ -132,13 +256,23 @@ public class DocsServiceImpl implements DocsService {
      * @return
      */
     @Override
-    public List<DocsInterfaceVo> getDocsInterface(String createTime, String controllerId, boolean hasComment, boolean hasType, boolean hasValid, boolean addDefaultValue, String likeStr) {
+    public List<DocsInterfaceVo> getDocsInterface(Long docsConfigId, String createTime, String controllerId, boolean hasComment, boolean hasType, boolean hasValid, boolean addDefaultValue, String likeStr) {
         List<DocsInterfaceVo> docsInterfaceVoList = new ArrayList<>();
-        ControllerData controllerData = apiDocsControllerDataService.getControllerData(createTime, controllerId);
+        ApiDocsControllerData controllerData = apiDocsControllerDataService.getOne(q -> q
+                .eq(ApiDocsControllerData::getDocsConfigId, docsConfigId)
+                .eq(ApiDocsControllerData::getCreateTime, createTime)
+                .eq(ApiDocsControllerData::getControllerId, controllerId));
         if (controllerData == null) {
             return docsInterfaceVoList;
         }
-        List<InterfaceData> interfaceDataList = controllerData.getInterfaceDataList();
+        ApiDocsInterfaceData apiDocsInterfaceData = apiDocsInterfaceDataService.getOne(q -> q
+                .eq(ApiDocsInterfaceData::getDocsConfigId, docsConfigId)
+                .eq(ApiDocsInterfaceData::getControllerCreateTime, createTime)
+                .eq(ApiDocsInterfaceData::getControllerId, controllerId));
+        if (apiDocsInterfaceData == null || StrUtil.isBlank(apiDocsInterfaceData.getInterfaceDataList())) {
+            return docsInterfaceVoList;
+        }
+        List<InterfaceData> interfaceDataList = JSONUtil.toList(apiDocsInterfaceData.getInterfaceDataList(), InterfaceData.class);
         if (ListUtil.isBlank(interfaceDataList)) {
             return docsInterfaceVoList;
         }

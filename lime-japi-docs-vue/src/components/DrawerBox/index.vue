@@ -1,15 +1,19 @@
 <template>
     <a-drawer
-        :title="title"
         :width="width"
         :visible="visible"
+        :closable="closable"
         :destroyOnClose="true"
         @close="closeDrawer"
     >
+        <template slot="title">
+            <span v-if="title">{{title}}</span>
+            <slot v-else name="title"></slot>
+        </template>
         <loading :loading="loading">
             <slot></slot>
         </loading>
-        <div class="edit-view-btn">
+        <div v-if="hasBtn" class="edit-view-btn">
             <a-button :style="{ marginRight: '8px' }" @click="closeDrawer">取消</a-button>
             <a-button type="primary" :disabled="saveBtnDisabled" :loading="loading" @click="handleSave">保存</a-button>
         </div>
@@ -31,15 +35,23 @@ export default {
         },
         title: {
             type: String,
-            default() { return '标题' }
+            default() { return '' }
         },
         width: {
             type: Number,
             default() { return 600 }
         },
+        hasBtn: {
+            type: Boolean,
+            default() { return false }
+        },
         saveBtnDisabled: {
             type: Boolean,
             default() { return false }
+        },
+        closable: {
+            type: Boolean,
+            default() { return true }
         }
     },
     methods: {

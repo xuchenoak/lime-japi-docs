@@ -185,6 +185,7 @@ export default {
             interfaceShow: false,
             checkBoxShow: false,
             interfaceParams: {
+                docsConfigId: '',
                 createTime: '',
                 controllerId: '',
                 // 是否有注释
@@ -228,12 +229,13 @@ export default {
     methods: {
 
         // 初始化
-        init(createTime, controllerId, controllerName, likeStr) {
+        init(docsConfigId, createTime, controllerId, controllerName, likeStr) {
             this.controllerName = controllerName ? controllerName : '未知接口分组'
-            if (!createTime || !controllerId) {
+            if (!docsConfigId || !createTime || !controllerId) {
                 this.interfaceShow = false
                 return
             }
+            this.interfaceParams.docsConfigId = docsConfigId
             this.interfaceParams.createTime = createTime
             this.interfaceParams.controllerId = controllerId
             this.interfaceParams.likeStr = likeStr

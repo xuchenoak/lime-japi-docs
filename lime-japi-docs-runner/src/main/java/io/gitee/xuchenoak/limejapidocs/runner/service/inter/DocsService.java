@@ -1,9 +1,7 @@
 package io.gitee.xuchenoak.limejapidocs.runner.service.inter;
 
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsCatalogVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsInterfaceVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseMsgVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseVo;
+import io.gitee.xuchenoak.limejapidocs.runner.common.enums.SearchFromEnum;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.*;
 
 import java.util.List;
 
@@ -33,8 +31,20 @@ public interface DocsService {
     List<DocsCatalogVo> getDocsCatalog(Long docsConfigId, String createTime, String likeStr);
 
     /**
+     * 获取文档搜索列表
+     *
+     * @param docsConfigId   文档配置Id
+     * @param createTime     生成时间
+     * @param searchFromEnum 搜索来源
+     * @param likeStr        搜索关键字
+     * @return
+     */
+    List<DocsCatalogSearchVo> listDocsSearch(Long docsConfigId, String createTime, SearchFromEnum searchFromEnum, String likeStr);
+
+    /**
      * 获取接口文档列表
      *
+     * @param docsConfigId    文档配置Id
      * @param createTime      生成时间
      * @param controllerId    controller标识
      * @param hasComment      是否有注释
@@ -44,7 +54,7 @@ public interface DocsService {
      * @param likeStr         搜索关键字
      * @return
      */
-    List<DocsInterfaceVo> getDocsInterface(String createTime, String controllerId, boolean hasComment, boolean hasType, boolean hasValid, boolean addDefaultValue, String likeStr);
+    List<DocsInterfaceVo> getDocsInterface(Long docsConfigId, String createTime, String controllerId, boolean hasComment, boolean hasType, boolean hasValid, boolean addDefaultValue, String likeStr);
 
     /**
      * 执行文档解析

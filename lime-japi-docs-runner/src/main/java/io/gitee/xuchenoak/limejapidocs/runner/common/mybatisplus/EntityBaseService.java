@@ -2,6 +2,7 @@ package io.gitee.xuchenoak.limejapidocs.runner.common.mybatisplus;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -135,6 +136,10 @@ public class EntityBaseService<M extends BaseMapper<T>, T> extends ServiceImpl<M
         return BeanUtil.getBeanOrDoing(getById(id), f);
     }
 
+    public T getOne(Function<LambdaQueryWrapper<T>, Wrapper<T>> q) {
+        return getOne(q.apply(new LambdaQueryWrapper<T>()));
+    }
+
     public T getOne(SFunction<T, ?> f, Object v) {
         return getOne(new LambdaQueryWrapper<T>()
                 .eq(f, v));
@@ -165,6 +170,10 @@ public class EntityBaseService<M extends BaseMapper<T>, T> extends ServiceImpl<M
         return ListUtils.listOrDoing(list(q), list -> BeanUtil.copyToList(list, c));
     }
 
+    public List<T> list(Function<LambdaQueryWrapper<T>, Wrapper<T>> q) {
+        return list(q.apply(new LambdaQueryWrapper<T>()));
+    }
+
     public <K, V> Map<K, V> getMap(Function<T, K> f1, Function<T, V> f2) {
         Map<K, V> map = new HashMap<>();
         List<T> list = list();
@@ -185,6 +194,18 @@ public class EntityBaseService<M extends BaseMapper<T>, T> extends ServiceImpl<M
             }
         }
         return map;
+    }
+
+    public boolean remove(Function<LambdaQueryWrapper<T>, Wrapper<T>> q) {
+        return remove(q.apply(new LambdaQueryWrapper<T>()));
+    }
+
+    public boolean update(Function<LambdaUpdateWrapper<T>, Wrapper<T>> q) {
+        return update(q.apply(new LambdaUpdateWrapper<T>()));
+    }
+
+    public long count(Function<LambdaUpdateWrapper<T>, Wrapper<T>> q) {
+        return count(q.apply(new LambdaUpdateWrapper<T>()));
     }
 
 }

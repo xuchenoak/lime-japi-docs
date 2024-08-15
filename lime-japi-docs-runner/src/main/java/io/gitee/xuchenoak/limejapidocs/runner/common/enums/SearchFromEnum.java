@@ -3,34 +3,31 @@ package io.gitee.xuchenoak.limejapidocs.runner.common.enums;
 import io.gitee.xuchenoak.limejapidocs.runner.common.validatron.EnumValidator;
 
 /**
- * 是或否枚举
+ * 搜索来源枚举
  **/
-public enum TrueOrFalseEnum implements EnumValidator.EnumConverter<Integer> {
+public enum SearchFromEnum implements EnumValidator.EnumConverter<Integer> {
 
-    TRUE(1, "是"),
-    FALSE(0, "否"),
+    ALL(1, "所有"),
+    CATALOG(2, "目录"),
+    INTERFACE(3, "接口"),
 
     ;
 
     private int value;
     private String msg;
 
-    TrueOrFalseEnum(int value, String msg) {
+    SearchFromEnum(int value, String msg) {
         this.value = value;
         this.msg = msg;
     }
 
-    public static int getResolve(int status) {
-        return status == TRUE.value ? FALSE.value : TRUE.value;
-    }
-
-    public static String getMsgByValue(Integer value) {
+    public static SearchFromEnum getEnumByValue(Integer value) {
         if (value == null) {
             return null;
         }
-        for (TrueOrFalseEnum e : TrueOrFalseEnum.values()) {
+        for (SearchFromEnum e : SearchFromEnum.values()) {
             if (value.equals(e.value)) {
-                return e.msg;
+                return e;
             }
         }
         return null;
@@ -44,9 +41,5 @@ public enum TrueOrFalseEnum implements EnumValidator.EnumConverter<Integer> {
     @Override
     public String msg() {
         return msg;
-    }
-
-    public boolean getBool() {
-        return value == 1;
     }
 }

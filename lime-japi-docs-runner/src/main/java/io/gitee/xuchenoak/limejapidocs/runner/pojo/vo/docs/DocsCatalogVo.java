@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 /**
  * 接口文档目录输出对象
  *
- * @author: xuchenoak
- * @create: 2022-06-06 8:26
+ * @author xuchenoak
  **/
 @Data
 @AllArgsConstructor

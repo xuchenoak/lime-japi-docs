@@ -49,8 +49,9 @@
                                                 :showArrow="false"
                                             ></a-select>
                                             <a-select v-model="searchConfig.type" default-value="interface" :showArrow="false" style="width: 70px">
-                                                <a-select-option value="controller">搜目录</a-select-option>
-                                                <a-select-option value="interface">搜接口</a-select-option>
+                                                <a-select-option :value="1">搜全部</a-select-option>
+                                                <a-select-option :value="2">搜目录</a-select-option>
+                                                <a-select-option :value="3">搜接口</a-select-option>
                                             </a-select>
                                             <a-input-search v-model="searchConfig.value" placeholder="请输入搜索关键字" style="width: 300px" @search="handleSearch" @pressEnter="handleSearch" :allowClear="true" :loading="searchConfig.loading"/>
                                         </a-input-group>
@@ -119,6 +120,7 @@
                 </div>
             </a-space>
         </div>
+        <search-drawer ref="search_drawer"/>
     </loading>
 </template>
 
@@ -126,10 +128,11 @@
 
 import Interface from "@/view/DocsPage/components/Interface"
 import Catalog from "./components/Catalog"
+import SearchDrawer from "./components/SearchDrawer"
 import {listCreateTime, runDocsParse, getPareMsg} from "@/api/docs"
 import {getDocsConfigSimple} from "@/api/docsConfig"
 export default {
-    components: { Interface, Catalog },
+    components: { Interface, Catalog, SearchDrawer },
     name: "index",
     data() {
         return {
@@ -154,7 +157,7 @@ export default {
                 controllerName: ''
             },
             searchConfig: {
-                type: 'interface',
+                type: 3,
                 value: '',
                 loading: false
             },
@@ -257,26 +260,27 @@ export default {
             }
             if (key) {
                 this.show.interfaceShow = true
-                this.$refs['interface'].init(this.createTime, key, name, likeStr)
+                this.$refs['interface'].init(this.docsConfigId, this.createTime, key, name, likeStr)
             }
             this.show.initInfoShow = false
         },
 
         // 触发搜索
         handleSearch() {
-            this.searchConfig.loading = true
-            switch (this.searchConfig.type) {
-                case 'interface':
-                    if (this.checkedInterface.controllerId) {
-                        this.show.interfaceShow = true
-                        this.$refs['interface'].init(this.createTime, this.checkedInterface.controllerId, this.checkedInterface.controllerName, this.searchConfig.value)
-                    }
-                    break
-                case 'controller':
-                    this.showCatalog()
-                    break
-            }
-            this.searchConfig.loading = false
+            this.$refs['search_drawer'].init(this.docsConfigId, this.createTime, this.searchConfig.type, this.searchConfig.value)
+            // this.searchConfig.loading = true
+            // switch (this.searchConfig.type) {
+            //     case 'interface':
+            //         if (this.checkedInterface.controllerId) {
+            //             this.show.interfaceShow = true
+            //             this.$refs['interface'].init(this.docsConfigId, this.createTime, this.checkedInterface.controllerId, this.checkedInterface.controllerName, this.searchConfig.value)
+            //         }
+            //         break
+            //     case 'controller':
+            //         this.showCatalog()
+            //         break
+            // }
+            // this.searchConfig.loading = false
         },
 
         showDrawer() {
