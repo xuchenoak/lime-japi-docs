@@ -18,8 +18,15 @@ const constantRoutes = [
         path: '/init',
         component: SysInit,
     },
+    ,
     {
         path: '/docs/:id',
+        redirect: to => {
+            return '/404'
+        },
+    },
+    {
+        path: '/docs/:docsConfigId/:controllerId',
         component: DocsPage,
     },
     {

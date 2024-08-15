@@ -29,7 +29,7 @@ export default {
     methods: {
         // 返回主页
         backToRoot() {
-            this.$router.push({path: '/'})
+            this.$router.push({path: sessionStorage.getItem("root") || "/"})
         }
     }
 }

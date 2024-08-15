@@ -124,6 +124,8 @@
                     @input="(e)=>{configItem.paramValidFunc = e}"
                     :sub-height="280"
                     language="javascript"
+                    btn="恢复默认值"
+                    @btn="()=> {configItem.paramValidFunc = defaultParamValidFuc}"
                 ></code-editor>
             </a-tab-pane>
             <a-tab-pane key="4" tab="字段默认值注入">
@@ -131,6 +133,8 @@
                     v-model="configItem.paramDefaultValueFunc"
                     :sub-height="280"
                     language="javascript"
+                    btn="恢复默认值"
+                    @btn="()=> {configItem.paramDefaultValueFunc = defaultParamDefaultValueFunc}"
                 ></code-editor>
             </a-tab-pane>
         </a-tabs>
@@ -143,6 +147,8 @@ export default {
     name: "EditDocsConfig",
     data() {
         return {
+            defaultParamValidFuc,
+            defaultParamDefaultValueFunc,
             id: null,
             visible: false,
             loading: false,

@@ -120,7 +120,7 @@
                 </div>
             </a-space>
         </div>
-        <search-drawer ref="search_drawer"/>
+        <search-drawer ref="search_drawer" @ok="init"/>
     </loading>
 </template>
 
@@ -157,7 +157,7 @@ export default {
                 controllerName: ''
             },
             searchConfig: {
-                type: 3,
+                type: 1,
                 value: '',
                 loading: false
             },
@@ -178,8 +178,8 @@ export default {
         // 初始化
         init() {
             this.slogan = this.$store.getters.sysConfig.sysSlogan
-            let docsConfigId = this.$route.params['id']
-            if (!docsConfigId || Number(docsConfigId) < 1) {
+            let docsConfigId = this.$route.params['docsConfigId']
+            if (!docsConfigId) {
                 this.docsNotFound = true
                 return
             }
@@ -245,8 +245,7 @@ export default {
             } else {
                 this.show.interfaceShow = false
                 this.show.initInfoShow = true
-                const likeStr = this.searchConfig.type == 'controller' ? this.searchConfig.value : null
-                this.$refs['catalogRef'].init(this.docsConfigId, this.createTime, likeStr)
+                this.$refs['catalogRef'].init(this.docsConfigId, this.createTime)
             }
         },
 
@@ -254,33 +253,18 @@ export default {
         handleMenuItem(key, name) {
             this.checkedInterface.controllerId = key
             this.checkedInterface.controllerName = name
-            let likeStr = null
-            if (this.searchConfig.type == 'interface') {
-                likeStr = this.searchConfig.value
-            }
             if (key) {
                 this.show.interfaceShow = true
-                this.$refs['interface'].init(this.docsConfigId, this.createTime, key, name, likeStr)
+                this.$refs['interface'].init(this.docsConfigId, this.createTime, key, name)
             }
             this.show.initInfoShow = false
         },
 
         // 触发搜索
-        handleSearch() {
-            this.$refs['search_drawer'].init(this.docsConfigId, this.createTime, this.searchConfig.type, this.searchConfig.value)
-            // this.searchConfig.loading = true
-            // switch (this.searchConfig.type) {
-            //     case 'interface':
-            //         if (this.checkedInterface.controllerId) {
-            //             this.show.interfaceShow = true
-            //             this.$refs['interface'].init(this.docsConfigId, this.createTime, this.checkedInterface.controllerId, this.checkedInterface.controllerName, this.searchConfig.value)
-            //         }
-            //         break
-            //     case 'controller':
-            //         this.showCatalog()
-            //         break
-            // }
-            // this.searchConfig.loading = false
+        handleSearch(e) {
+            if (e) {
+                this.$refs['search_drawer'].init(this.docsConfigId, this.createTime, this.searchConfig.type, this.searchConfig.value)
+            }
         },
 
         showDrawer() {

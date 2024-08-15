@@ -60,8 +60,8 @@ public class SysConfigController {
      */
     @PostMapping("/save_sys_config")
     public AjaxResult saveSysConfig(@Validated @RequestBody SysConfigRf rf) {
-        sysConfigService.saveSysConfig(rf);
-        return AjaxResult.success();
+//        sysConfigService.saveSysConfig(rf);
+        return AjaxResult.error("当前为预览版本暂不支持修改系统配置");
     }
 
     /**

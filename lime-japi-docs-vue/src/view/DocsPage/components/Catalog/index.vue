@@ -28,10 +28,9 @@ export default {
             docsCatalogList: [],
             loading: false,
             cataLogParams: {
+                docsConfigId: '',
                 // 生成时间
                 createTime: '',
-                // 搜索关键字
-                likeStr: ''
             },
             defaultSelectedKeys: []
         }
@@ -39,14 +38,13 @@ export default {
     methods: {
 
         // 初始化
-        init(docsConfigId, createTime, likeStr) {
+        init(docsConfigId, createTime) {
             if (!createTime) {
                 this.docsCatalogList = []
                 return
             }
             this.cataLogParams.docsConfigId = docsConfigId
             this.cataLogParams.createTime = createTime
-            this.cataLogParams.likeStr = likeStr
             this.getCatalogList()
         },
 
@@ -54,7 +52,7 @@ export default {
         getCatalogList() {
             this.docsCatalogList = []
             this.loading = true
-            const currentMenuItemKey = localStorage.getItem("currentMenuItemKey")
+            const currentMenuItemKey = this.$route.params['controllerId']
             listCatalog(this.cataLogParams).then(res => {
                 if (res.code === 200) {
                     this.docsCatalogList = res.data
@@ -76,6 +74,12 @@ export default {
         // 触发点击目录
         handleMenuItem(key, name) {
             localStorage.setItem("currentMenuItemKey", key)
+            const path = `/docs/${this.$route.params['docsConfigId']}/${key}`
+            if (this.$route.path !== path) {
+                this.$router.push({
+                    path: path
+                })
+            }
             this.$emit("handleMenuItem", key, name)
         },
     }

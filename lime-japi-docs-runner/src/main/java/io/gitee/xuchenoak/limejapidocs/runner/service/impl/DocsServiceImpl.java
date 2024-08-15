@@ -69,6 +69,12 @@ public class DocsServiceImpl implements DocsService {
                 apiDocsControllerDataService.remove(new LambdaQueryWrapper<ApiDocsControllerData>()
                         .eq(ApiDocsControllerData::getDocsConfigId, docsConfigId)
                         .lt(ApiDocsControllerData::getCreateTime, beforeTime));
+                apiDocsInterfaceDataService.remove(new LambdaQueryWrapper<ApiDocsInterfaceData>()
+                        .eq(ApiDocsInterfaceData::getDocsConfigId, docsConfigId)
+                        .lt(ApiDocsInterfaceData::getControllerCreateTime, beforeTime));
+                apiDocsInterfaceDataSearchService.remove(new LambdaQueryWrapper<ApiDocsInterfaceDataSearch>()
+                        .eq(ApiDocsInterfaceDataSearch::getDocsConfigId, docsConfigId)
+                        .lt(ApiDocsInterfaceDataSearch::getControllerCreateTime, beforeTime));
                 apiDocsParseLogService.remove(new LambdaQueryWrapper<ApiDocsParseLog>()
                         .eq(ApiDocsParseLog::getDocsConfigId, docsConfigId)
                         .lt(ApiDocsParseLog::getCreateTimestamp, beforeTime.getTime()));

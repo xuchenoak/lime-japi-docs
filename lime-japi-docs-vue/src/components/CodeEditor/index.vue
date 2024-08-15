@@ -1,6 +1,7 @@
 <template>
     <div class="editor-container">
         <div class="editor-language">{{language}}</div>
+        <div v-if="btn" class="editor-btn diy-cursor" @click="handleBtn">{{btn}}</div>
 
 <!--        <copy-text :value="value" class="editor-copy">-->
 <!--            <a-icon type="copy"/>-->
@@ -78,6 +79,10 @@
                 type: String,
                 default() { return "js" }
             },
+            btn: {
+                type: String,
+                default() { return "" }
+            },
             height: {
                 type: Number,
                 default() { return 0 }
@@ -149,6 +154,9 @@
                     // }
                 })
             },
+            handleBtn() {
+                this.$emit('btn')
+            }
         }
     };
 </script>
@@ -174,6 +182,20 @@
             width: 100%;
             background: #666;
          }
+        .editor-btn {
+            color: #fff;
+            font-size: .6rem;
+            font-weight: 600;
+            height: 30px;
+            line-height: 26px;
+            padding: 0px 10px;
+            position: absolute;
+            right: 0;
+            text-align: left;
+            top: 0;
+            user-select: none;
+            background: #666;
+        }
         .editor-copy {
             color: #999;
             font-size: .8rem;

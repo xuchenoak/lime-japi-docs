@@ -4,6 +4,7 @@
         :closable="false"
         :visible="visible"
         :loading="loading"
+        :has-btn="false"
         @close="handleClose"
     >
         <template slot="title">
@@ -19,11 +20,11 @@
         <div style="min-height: 200px">
             <div v-if="dataList.length > 0 || loading">
                 <div class="search-content-item" v-for="item in dataList" :key="item.controllerId">
-                    <div class="item-controller diy-cursor">
+                    <div class="item-controller diy-cursor" @click="handleItem(item.controllerId)">
                         <a-tag color="green" class="diy-cursor">C</a-tag>
                         <span v-html="toRed(item.controllerComment, searchParams.likeStr, [1,2].includes(searchParams.searchFrom))"></span>
                     </div>
-                    <div class="item-interface diy-cursor" v-for="inter in item.interfaceSearchVoList" :key="inter.interfaceId">
+                    <div class="item-interface diy-cursor" v-for="inter in item.interfaceSearchVoList" :key="inter.interfaceId" @click="handleItem(item.controllerId, inter.interfaceId)">
                         <div>
                             <a-tag color="orange" class="diy-cursor" :key="inter.interfaceId + requestType" v-for="requestType in inter.requestTypeList">{{requestType}}</a-tag>
                             <span v-html="toRed(inter.interfaceComment, searchParams.likeStr, [1,3].includes(searchParams.searchFrom))"></span>
@@ -50,7 +51,7 @@ export default {
             searchParams: {
                 docsConfigId: '',
                 createTime: '',
-                searchFrom: 3,
+                searchFrom: 1,
                 likeStr: ''
             },
             dataList: []
@@ -76,6 +77,22 @@ export default {
             }).finally(()=>{
                 this.loading = false
             })
+        },
+        handleItem(controllerId, interfaceId = '') {
+            const hash = interfaceId ? '#_' + interfaceId : ''
+            const path = `/docs/${this.searchParams.docsConfigId}/${controllerId}`
+            if (this.$route.path !== path) {
+                this.$router.push({
+                    path: path,
+                    hash: hash
+                })
+            } else if (this.$route.hash !== hash) {
+                this.$router.push({
+                    hash: hash
+                })
+            }
+            this.$emit('ok')
+            this.handleClose()
         },
         handleClose() {
             this.visible = false

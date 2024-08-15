@@ -43,7 +43,7 @@ export default {
         },
         hasBtn: {
             type: Boolean,
-            default() { return false }
+            default() { return true }
         },
         saveBtnDisabled: {
             type: Boolean,

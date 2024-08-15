@@ -155,7 +155,7 @@
                                 </a-checkbox>
                             </a-space>
                         </div>
-                        <a-anchor :offsetTop="200" style="min-width: 1px" :getContainer="getContainer">
+                        <a-anchor :affix="false" :offsetTop="200" style="min-width: 1px" :getContainer="getContainer" @change="handleAnchor" wrapperClass="anchor-box">
                             <a-anchor-link v-for="(item, index) in interfaceList"
                                            :href="'#_' + item.interfaceId"
                                            :key="getInterfaceIndex(index)"
@@ -195,9 +195,7 @@ export default {
                 // 是否有验证
                 hasValid: true,
                 // 是否有默认值
-                addDefaultValue: true,
-                // 搜索关键字
-                likeStr: ''
+                addDefaultValue: true
             },
             disabledStatus: {
                 hasValid: false,
@@ -229,7 +227,7 @@ export default {
     methods: {
 
         // 初始化
-        init(docsConfigId, createTime, controllerId, controllerName, likeStr) {
+        init(docsConfigId, createTime, controllerId, controllerName) {
             this.controllerName = controllerName ? controllerName : '未知接口分组'
             if (!docsConfigId || !createTime || !controllerId) {
                 this.interfaceShow = false
@@ -238,7 +236,6 @@ export default {
             this.interfaceParams.docsConfigId = docsConfigId
             this.interfaceParams.createTime = createTime
             this.interfaceParams.controllerId = controllerId
-            this.interfaceParams.likeStr = likeStr
             this.getInterfaceList()
         },
 
@@ -267,17 +264,27 @@ export default {
         // 滚动到锚点
         scrollToAnchor() {
             // 获取URL中的锚点
-            const hash = this.$route.hash;
+            const hash = this.$route.hash
             // 如果存在锚点
             if (hash) {
                 // 获取对应锚点的DOM元素
-                const anchorElement = document.querySelector(hash);
+                const anchorElement = document.querySelector(hash)
                 // 如果找到了对应的元素
                 if (anchorElement) {
                     // 滚动到该元素位置
-                    anchorElement.scrollIntoView({ behavior: 'auto', block: 'start', inline: 'nearest' });
-                    this.getContainer().scrollBy(0, -200);
+                    anchorElement.scrollIntoView({ behavior: 'auto', block: 'start', inline: 'nearest' })
+                    this.getContainer().scrollBy(0, -200)
                 }
+            }
+        },
+
+        // 锚点改变
+        handleAnchor(e) {
+            localStorage.setItem("currentMenuItemKey", this.interfaceParams.controllerId + e)
+            if (e && this.$route.hash !== e) {
+                this.$router.push({
+                    hash: e
+                })
             }
         },
 
@@ -338,10 +345,22 @@ export default {
         margin-bottom: 10px;
     }
 }
-.catalog-bg .checkbox-bg {
+.catalog-bg {
     position: fixed;
-    margin-top: 50px;
-    min-width: 200px;
+    width: 100%;
+    .checkbox-bg {
+        margin-top: 50px;
+        min-width: 200px;
+    }
+    .anchor-box {
+        margin-top: 40px;
+        height: calc(100vh - 330px);
+        width: 100%;
+        position: relative;
+        /deep/ .ant-anchor-ink-ball {
+            display: inline-block!important;
+        }
+    }
 }
 
 h1 {
