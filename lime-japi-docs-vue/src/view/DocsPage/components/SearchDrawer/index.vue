@@ -130,6 +130,6 @@ export default {
     }
 }
 /deep/ .ant-drawer-body {
-    padding: 20px 0;
+    padding: 20px 0!important;
 }
 </style>

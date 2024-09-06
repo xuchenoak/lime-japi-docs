@@ -57,12 +57,14 @@ export default {
                 if (res.code === 200) {
                     this.docsCatalogList = res.data
                     if (currentMenuItemKey) {
+                        let index = 0
                         for (let item of this.docsCatalogList) {
                             if (item.id === currentMenuItemKey) {
                                 this.defaultSelectedKeys = [currentMenuItemKey]
-                                this.handleMenuItem(currentMenuItemKey, item.name)
+                                this.handleMenuItem(currentMenuItemKey, item.name, index * 48)
                                 break;
                             }
+                            index ++
                         }
                     }
                 }
@@ -72,7 +74,7 @@ export default {
         },
 
         // 触发点击目录
-        handleMenuItem(key, name) {
+        handleMenuItem(key, name, scrollPx = -1) {
             localStorage.setItem("currentMenuItemKey", key)
             const path = `/docs/${this.$route.params['docsConfigId']}/${key}`
             if (this.$route.path !== path) {
@@ -80,7 +82,7 @@ export default {
                     path: path
                 })
             }
-            this.$emit("handleMenuItem", key, name)
+            this.$emit("handleMenuItem", key, name, scrollPx)
         },
     }
 }
@@ -89,6 +91,13 @@ export default {
 <style scoped lang="less">
     .menu-container {
         border: 0px;
+    }
+    /deep/ .ant-menu-item {
+        padding: 4px 16px;
+        height: 48px;
+        &:not(:last-child) {
+            margin: 0;
+        }
     }
 
 </style>

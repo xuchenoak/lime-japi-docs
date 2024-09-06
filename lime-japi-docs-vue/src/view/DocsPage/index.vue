@@ -12,7 +12,7 @@
                             <a-layout-footer class="menu-comment">
                                 <span>目录</span>
                             </a-layout-footer>
-                            <a-layout-content class="menu-content" style="background: transparent">
+                            <a-layout-content class="menu-content" style="background: transparent" ref="menu_content">
                                 <catalog ref="catalogRef" @handleMenuItem="handleMenuItem"/>
                             </a-layout-content>
                         </a-layout-sider>
@@ -94,14 +94,14 @@
                     :closable="false"
                     :visible="drawerVisible"
                     @close="onClose"
-                    width="500"
+                    width="800"
                 >
                     <template slot="title">
                         <a-input-search :disabled="parseRunning" allowClear placeholder="请输入文档生成秘钥" v-model="password" @pressEnter="handleParse">
                             <a-button slot="enterButton" :disabled="parseRunning" @click.native="handleParse">开始</a-button>
                         </a-input-search>
                     </template>
-                    <div style="overflow-y: auto; height: 100%">
+                    <div style="overflow-y: auto; height: 100%" ref="parse_log_content">
                         <div v-if="msgList.length == 0 && !parseRunning" style="font-size: 13px">请输入文档生成秘钥后点击“开始”生成文档……</div>
                         <div v-else>
                             <p style="font-size: 13px; color: #666" :key="index" v-for="(msg, index) in msgList">{{msg}}</p>
@@ -129,8 +129,9 @@
 import Interface from "@/view/DocsPage/components/Interface"
 import Catalog from "./components/Catalog"
 import SearchDrawer from "./components/SearchDrawer"
-import {listCreateTime, runDocsParse, getPareMsg} from "@/api/docs"
+import {getPareMsg, listCreateTime, runDocsParse} from "@/api/docs"
 import {getDocsConfigSimple} from "@/api/docsConfig"
+
 export default {
     components: { Interface, Catalog, SearchDrawer },
     name: "index",
@@ -139,7 +140,6 @@ export default {
             firstOpen: true,
             collapsed: false,
             createTimeList: [],
-            docsCatalogList: [],
             loading: false,
             show: {
                 pageShow: false,
@@ -250,7 +250,12 @@ export default {
         },
 
         // 触发点击目录
-        handleMenuItem(key, name) {
+        handleMenuItem(key, name, scrollPx) {
+            if (scrollPx >= 0) {
+                this.$nextTick(()=> {
+                    this.$refs['menu_content'].$el.scrollTop = scrollPx
+                })
+            }
             this.checkedInterface.controllerId = key
             this.checkedInterface.controllerName = name
             if (key) {
@@ -314,6 +319,12 @@ export default {
                     }
                     if (msgList && msgList.length > 0) {
                         this.msgList = msgList
+                        this.$nextTick(()=> {
+                            const el = this.$refs['parse_log_content']
+                            if (el && el.scrollHeight) {
+                                el.scrollTop = el.scrollHeight
+                            }
+                        })
                     }
                 }
             })
@@ -491,6 +502,14 @@ export default {
 
 .ant-layout {
     background: #F3F5F7;
+}
+
+/deep/ .ant-drawer-header {
+    padding: 14px 24px;
+}
+/deep/ .ant-drawer-body {
+    height: calc(100vh - 80px);
+    padding: 24px 0px 24px 24px;
 }
 
 </style>
