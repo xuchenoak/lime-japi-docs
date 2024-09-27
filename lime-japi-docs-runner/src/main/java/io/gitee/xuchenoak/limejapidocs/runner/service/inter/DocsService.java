@@ -57,6 +57,14 @@ public interface DocsService {
     List<DocsInterfaceVo> getDocsInterface(Long docsConfigId, String createTime, String controllerId, boolean hasComment, boolean hasType, boolean hasValid, boolean addDefaultValue, String likeStr);
 
     /**
+     * 执行文档解析（异步）
+     *
+     * @param docsConfigId 文档配置Id
+     * @param password     解析秘钥
+     */
+    void runDocsParseAsync(Long docsConfigId, String password);
+
+    /**
      * 执行文档解析
      *
      * @param docsConfigId 文档配置Id

@@ -25,12 +25,20 @@
                     <a-form-item>
                         <span slot="label">
                             <span>启动时是否解析</span>
-                            <why-box-text text="若为“是”则每次服务启动后会自动解析一次该文档"/>
+                            <why-box-text text="若为“是”则每次服务启动后会自动生成一次该文档"/>
                         </span>
                         <a-radio-group v-decorator="['sysStartParse', { initialValue: 0, rules: [{required: true, message: ''}] }]" >
                             <a-radio :value="1">是</a-radio>
                             <a-radio :value="0">否</a-radio>
                         </a-radio-group>
+                    </a-form-item>
+                    <a-form-item
+                    >
+                        <span slot="label">
+                            <span>文档标识码</span>
+                            <why-box-text text="用于触发生成文档时作为入参，可多文档使用同一个标识码，但需要下方的秘钥一致才可生成对应文档"/>
+                        </span>
+                        <a-input placeholder="请输入文档标识码" v-decorator="['docsKey', {rules: [{required: true, message: '请输入文档标识码'}]}]" />
                     </a-form-item>
                     <a-form-item>
                         <span slot="label">
@@ -39,7 +47,7 @@
                         </span>
                         <a-textarea
                             placeholder="请输入触发文档生成需要的秘钥"
-                            :rows="3"
+                            :rows="2"
                             v-decorator="['apiRunKey']" />
                     </a-form-item>
                     <a-form-item>
@@ -49,7 +57,7 @@
                                 <a style="margin-left: 10px" :disabled="id == null || id === ''">点击复制</a>
                             </copy-text>
                         </span>
-                        <a-textarea :rows="3" :value="getRunParseUrl()" :disabled="true" />
+                        <a-textarea style="color: #444" :rows="2" :value="getRunParseUrl()" :disabled="true" />
                     </a-form-item>
                     <a-form-item>
                         <span slot="label">
@@ -143,6 +151,7 @@
 
 <script>
 import {add, edit, getDocsConfig} from '@/api/docsConfig'
+
 export default {
     name: "EditDocsConfig",
     data() {
@@ -159,6 +168,7 @@ export default {
                 docsName: '',
                 docsVersion: '',
                 sysStartParse: 0,
+                docsKey: '',
                 apiRunKey: '',
                 sort: 0,
                 javaFilePaths: [],
@@ -183,6 +193,7 @@ export default {
                             docsName: data.docsName,
                             docsVersion: data.docsVersion,
                             sysStartParse: data.sysStartParse,
+                            docsKey: data.docsKey,
                             apiRunKey: data.apiRunKey,
                             javaFilePaths: data.javaFilePaths || [],
                             filterPackages: data.filterPackages || [],
@@ -197,6 +208,7 @@ export default {
                                 docsName: data.docsName,
                                 docsVersion: data.docsVersion,
                                 sysStartParse: data.sysStartParse,
+                                docsKey: data.docsKey,
                                 apiRunKey: data.apiRunKey,
                                 sort: data.sort
                             })
@@ -248,6 +260,7 @@ export default {
                 docsName: '',
                 docsVersion: '',
                 sysStartParse: 0,
+                docsKey: '',
                 apiRunKey: '',
                 sort: 0,
                 javaFilePaths: [],
@@ -260,8 +273,16 @@ export default {
             this.visible = false
         },
         getRunParseUrl() {
+            const docsKey = this.form.getFieldValue("docsKey") || ""
+            if (!docsKey) {
+                return ''
+            }
             const apiRunKey = this.form.getFieldValue("apiRunKey") || ""
-            return `${window.location.origin}/lime_japi_docs/api/docs/run_docs_parse?docsConfigId=${this.id}&password=${apiRunKey}`
+            let url = `${window.location.origin}/lime_japi_docs/api/docs/run_docs_parsing?docsKey=${docsKey}`
+            if (apiRunKey) {
+                url += `&password=${apiRunKey}`
+            }
+            return url
         }
     }
 }

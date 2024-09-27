@@ -20,6 +20,7 @@ import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;
 import io.gitee.xuchenoak.limejapidocs.runner.util.MsgUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -311,6 +312,18 @@ public class DocsServiceImpl implements DocsService {
             docsInterfaceVoList = new ArrayList<>();
         }
         return docsInterfaceVoList;
+    }
+
+    /**
+     * 执行文档解析
+     *
+     * @param docsConfigId 文档配置Id
+     * @param password     解析秘钥
+     */
+    @Async
+    @Override
+    public void runDocsParseAsync(Long docsConfigId, String password) {
+        runDocsParse(docsConfigId, password);
     }
 
     /**

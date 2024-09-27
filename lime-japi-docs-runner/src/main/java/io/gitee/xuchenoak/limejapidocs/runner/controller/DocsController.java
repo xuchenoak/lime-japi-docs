@@ -1,17 +1,23 @@
 package io.gitee.xuchenoak.limejapidocs.runner.controller;
 
+import cn.hutool.core.util.StrUtil;
 import io.gitee.xuchenoak.limejapidocs.parser.util.StringUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.common.bean.AjaxResult;
 import io.gitee.xuchenoak.limejapidocs.runner.common.enums.SearchFromEnum;
+import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.*;
+import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsService;
 import io.gitee.xuchenoak.limejapidocs.runner.util.IdUtils;
+import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +34,9 @@ public class DocsController {
 
     @Autowired
     private DocsService docsService;
+
+    @Resource
+    private ApiDocsConfigService apiDocsConfigService;
 
     /**
      * 获取生成时间集
@@ -122,6 +131,27 @@ public class DocsController {
     @GetMapping("/run_docs_parse")
     public AjaxResult<DocsParseVo> runDocsParse(@NotNull(message = "文档配置Id不能为空") String docsConfigId, String password) {
         return AjaxResult.success(docsService.runDocsParse(IdUtils.decryptIdOrExc(docsConfigId), password));
+    }
+
+    /**
+     * 执行文档解析
+     *
+     * @param docsKey  文档标识码
+     * @param password 解析秘钥
+     * @return
+     */
+    @GetMapping("/run_docs_parsing")
+    public AjaxResult<String> runDocsParsing(@NotBlank(message = "文档标识码不能为空") String docsKey, String password) {
+        List<ApiDocsConfig> list = apiDocsConfigService.list(q -> q.eq(ApiDocsConfig::getDocsKey, docsKey));
+        if (ListUtils.isBlank(list)) {
+            return AjaxResult.error(StrUtil.format("根据文档标识码[{}]未查询到文档", docsKey));
+        }
+        List<String> docNames = new ArrayList<>();
+        for (ApiDocsConfig apiDocsConfig : list) {
+            docNames.add(apiDocsConfig.getDocsName());
+            docsService.runDocsParseAsync(apiDocsConfig.getId(), password);
+        }
+        return AjaxResult.success("操作成功", StrUtil.format("已触发生成文档：{}", String.join("；", docNames)));
     }
 
     /**

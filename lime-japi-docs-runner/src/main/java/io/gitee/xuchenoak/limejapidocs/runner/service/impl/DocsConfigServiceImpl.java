@@ -113,6 +113,7 @@ public class DocsConfigServiceImpl implements DocsConfigService {
                 bean.getParamValidFunc(),
                 bean.getParamDefaultValueFunc(),
                 bean.getSort(),
+                bean.getDocsKey(),
                 bean.getCreateTime(),
                 bean.getUpdateTime()
         );
@@ -139,6 +140,7 @@ public class DocsConfigServiceImpl implements DocsConfigService {
                 rf.getParamValidFunc(),
                 rf.getParamDefaultValueFunc(),
                 Optional.ofNullable(rf.getSort()).orElse(0),
+                rf.getDocsKey(),
                 now,
                 now
         );
@@ -170,7 +172,8 @@ public class DocsConfigServiceImpl implements DocsConfigService {
                 rf.getIgnoreClassNames(),
                 rf.getParamValidFunc(),
                 rf.getParamDefaultValueFunc(),
-                Optional.ofNullable(rf.getSort()).orElse(0)
+                Optional.ofNullable(rf.getSort()).orElse(0),
+                rf.getDocsKey()
         );
         apiDocsConfigService.edit(bean);
         return getDocsConfig(id);

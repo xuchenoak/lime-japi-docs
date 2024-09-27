@@ -93,6 +93,11 @@ public class ApiDocsConfig {
     private Integer sort;
 
     /**
+     * 文档标识码
+     */
+    private String docsKey;
+
+    /**
      * 创建时间
      */
     private Date createTime;
@@ -102,7 +107,7 @@ public class ApiDocsConfig {
      */
     private Date updateTime;
 
-    public ApiDocsConfig(String docsName, String docsVersion, Integer sysStartParse, String apiRunKey, List<String> javaFilePaths, List<String> filterPackages, List<String> filterClassNames, List<String> ignoreClassNames, String paramValidFunc, String paramDefaultValueFunc, Integer sort, Date createTime, Date updateTime) {
+    public ApiDocsConfig(String docsName, String docsVersion, Integer sysStartParse, String apiRunKey, List<String> javaFilePaths, List<String> filterPackages, List<String> filterClassNames, List<String> ignoreClassNames, String paramValidFunc, String paramDefaultValueFunc, Integer sort, String docsKey, Date createTime, Date updateTime) {
         this.docsName = docsName;
         this.docsVersion = docsVersion;
         this.sysStartParse = sysStartParse;
@@ -114,6 +119,7 @@ public class ApiDocsConfig {
         this.paramValidFunc = paramValidFunc;
         this.paramDefaultValueFunc = paramDefaultValueFunc;
         this.sort = sort;
+        this.docsKey = docsKey;
         this.createTime = createTime;
         this.updateTime = updateTime;
     }
@@ -132,7 +138,7 @@ public class ApiDocsConfig {
         return this.apiRunKey.equals(apiRunKey);
     }
 
-    public ApiDocsConfig buildEdit(String docsName, String docsVersion, Integer sysStartParse, String apiRunKey, List<String> javaFilePaths, List<String> filterPackages, List<String> filterClassNames, List<String> ignoreClassNames, String paramValidFunc, String paramDefaultValueFunc, Integer sort) {
+    public ApiDocsConfig buildEdit(String docsName, String docsVersion, Integer sysStartParse, String apiRunKey, List<String> javaFilePaths, List<String> filterPackages, List<String> filterClassNames, List<String> ignoreClassNames, String paramValidFunc, String paramDefaultValueFunc, Integer sort, String docsKey) {
         this.docsName = docsName;
         this.docsVersion = docsVersion;
         this.sysStartParse = sysStartParse;
@@ -144,6 +150,7 @@ public class ApiDocsConfig {
         this.paramValidFunc = paramValidFunc;
         this.paramDefaultValueFunc = paramDefaultValueFunc;
         this.sort = sort;
+        this.docsKey = docsKey;
         this.updateTime = DateUtil.date();
         return this;
     }

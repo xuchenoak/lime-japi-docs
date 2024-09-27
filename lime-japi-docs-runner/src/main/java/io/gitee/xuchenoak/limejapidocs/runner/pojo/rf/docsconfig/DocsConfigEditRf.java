@@ -85,4 +85,9 @@ public class DocsConfigEditRf {
      */
     private Integer sort;
 
+    /**
+     * 文档标识码
+     */
+    private String docsKey;
+
 }
