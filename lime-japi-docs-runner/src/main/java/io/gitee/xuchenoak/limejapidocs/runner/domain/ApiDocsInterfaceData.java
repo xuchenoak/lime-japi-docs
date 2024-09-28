@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * controller数据
+ * interface数据
  *
  * @author: xuchenoak
  * @create: 2022-06-05 22:57
@@ -18,8 +18,8 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("api_docs_controller_data")
-public class ApiDocsControllerData {
+@TableName(value = "api_docs_interface_data", autoResultMap = true)
+public class ApiDocsInterfaceData {
 
     /**
      * 自增Id
@@ -38,37 +38,25 @@ public class ApiDocsControllerData {
     private String controllerId;
 
     /**
-     * controller类全名
-     */
-    private String controllerFullName;
-
-    /**
      * controller名称注释
      */
-    private String comment;
+    private String controllerComment;
 
     /**
-     * 请求前缀
+     * controller生成时间
      */
-    private String baseUriList;
+    private Date controllerCreateTime;
 
     /**
-     * 排序
+     * 接口方法集
      */
-    private Integer sort;
+    private String interfaceDataList;
 
-    /**
-     * 生成时间
-     */
-    private Date createTime;
-
-    public ApiDocsControllerData(Long docsConfigId, String controllerId, String controllerFullName, String comment, String baseUriList, Integer sort, Date createTime) {
+    public ApiDocsInterfaceData(Long docsConfigId, String controllerId, String controllerComment, Date controllerCreateTime, String interfaceDataList) {
         this.docsConfigId = docsConfigId;
         this.controllerId = controllerId;
-        this.controllerFullName = controllerFullName;
-        this.comment = comment;
-        this.baseUriList = baseUriList;
-        this.sort = sort;
-        this.createTime = createTime;
+        this.controllerComment = controllerComment;
+        this.controllerCreateTime = controllerCreateTime;
+        this.interfaceDataList = interfaceDataList;
     }
 }

@@ -12,7 +12,7 @@
                             <a-layout-footer class="menu-comment">
                                 <span>目录</span>
                             </a-layout-footer>
-                            <a-layout-content class="menu-content" style="background: transparent">
+                            <a-layout-content class="menu-content" style="background: transparent" ref="menu_content">
                                 <catalog ref="catalogRef" @handleMenuItem="handleMenuItem"/>
                             </a-layout-content>
                         </a-layout-sider>
@@ -49,8 +49,9 @@
                                                 :showArrow="false"
                                             ></a-select>
                                             <a-select v-model="searchConfig.type" default-value="interface" :showArrow="false" style="width: 70px">
-                                                <a-select-option value="controller">搜目录</a-select-option>
-                                                <a-select-option value="interface">搜接口</a-select-option>
+                                                <a-select-option :value="1">搜全部</a-select-option>
+                                                <a-select-option :value="2">搜目录</a-select-option>
+                                                <a-select-option :value="3">搜接口</a-select-option>
                                             </a-select>
                                             <a-input-search v-model="searchConfig.value" placeholder="请输入搜索关键字" style="width: 300px" @search="handleSearch" @pressEnter="handleSearch" :allowClear="true" :loading="searchConfig.loading"/>
                                         </a-input-group>
@@ -93,14 +94,14 @@
                     :closable="false"
                     :visible="drawerVisible"
                     @close="onClose"
-                    width="500"
+                    width="800"
                 >
                     <template slot="title">
                         <a-input-search :disabled="parseRunning" allowClear placeholder="请输入文档生成秘钥" v-model="password" @pressEnter="handleParse">
                             <a-button slot="enterButton" :disabled="parseRunning" @click.native="handleParse">开始</a-button>
                         </a-input-search>
                     </template>
-                    <div style="overflow-y: auto; height: 100%">
+                    <div style="overflow-y: auto; height: 100%" ref="parse_log_content">
                         <div v-if="msgList.length == 0 && !parseRunning" style="font-size: 13px">请输入文档生成秘钥后点击“开始”生成文档……</div>
                         <div v-else>
                             <p style="font-size: 13px; color: #666" :key="index" v-for="(msg, index) in msgList">{{msg}}</p>
@@ -119,6 +120,7 @@
                 </div>
             </a-space>
         </div>
+        <search-drawer ref="search_drawer" @ok="init"/>
     </loading>
 </template>
 
@@ -126,17 +128,18 @@
 
 import Interface from "@/view/DocsPage/components/Interface"
 import Catalog from "./components/Catalog"
-import {listCreateTime, runDocsParse, getPareMsg} from "@/api/docs"
+import SearchDrawer from "./components/SearchDrawer"
+import {getPareMsg, listCreateTime, runDocsParse} from "@/api/docs"
 import {getDocsConfigSimple} from "@/api/docsConfig"
+
 export default {
-    components: { Interface, Catalog },
+    components: { Interface, Catalog, SearchDrawer },
     name: "index",
     data() {
         return {
             firstOpen: true,
             collapsed: false,
             createTimeList: [],
-            docsCatalogList: [],
             loading: false,
             show: {
                 pageShow: false,
@@ -154,7 +157,7 @@ export default {
                 controllerName: ''
             },
             searchConfig: {
-                type: 'interface',
+                type: 1,
                 value: '',
                 loading: false
             },
@@ -175,8 +178,8 @@ export default {
         // 初始化
         init() {
             this.slogan = this.$store.getters.sysConfig.sysSlogan
-            let docsConfigId = this.$route.params['id']
-            if (!docsConfigId || Number(docsConfigId) < 1) {
+            let docsConfigId = this.$route.params['docsConfigId']
+            if (!docsConfigId) {
                 this.docsNotFound = true
                 return
             }
@@ -242,41 +245,31 @@ export default {
             } else {
                 this.show.interfaceShow = false
                 this.show.initInfoShow = true
-                const likeStr = this.searchConfig.type == 'controller' ? this.searchConfig.value : null
-                this.$refs['catalogRef'].init(this.docsConfigId, this.createTime, likeStr)
+                this.$refs['catalogRef'].init(this.docsConfigId, this.createTime)
             }
         },
 
         // 触发点击目录
-        handleMenuItem(key, name) {
+        handleMenuItem(key, name, scrollPx) {
+            if (scrollPx >= 0) {
+                this.$nextTick(()=> {
+                    this.$refs['menu_content'].$el.scrollTop = scrollPx
+                })
+            }
             this.checkedInterface.controllerId = key
             this.checkedInterface.controllerName = name
-            let likeStr = null
-            if (this.searchConfig.type == 'interface') {
-                likeStr = this.searchConfig.value
-            }
             if (key) {
                 this.show.interfaceShow = true
-                this.$refs['interface'].init(this.createTime, key, name, likeStr)
+                this.$refs['interface'].init(this.docsConfigId, this.createTime, key, name)
             }
             this.show.initInfoShow = false
         },
 
         // 触发搜索
-        handleSearch() {
-            this.searchConfig.loading = true
-            switch (this.searchConfig.type) {
-                case 'interface':
-                    if (this.checkedInterface.controllerId) {
-                        this.show.interfaceShow = true
-                        this.$refs['interface'].init(this.createTime, this.checkedInterface.controllerId, this.checkedInterface.controllerName, this.searchConfig.value)
-                    }
-                    break
-                case 'controller':
-                    this.showCatalog()
-                    break
+        handleSearch(e) {
+            if (e) {
+                this.$refs['search_drawer'].init(this.docsConfigId, this.createTime, this.searchConfig.type, this.searchConfig.value)
             }
-            this.searchConfig.loading = false
         },
 
         showDrawer() {
@@ -326,6 +319,12 @@ export default {
                     }
                     if (msgList && msgList.length > 0) {
                         this.msgList = msgList
+                        this.$nextTick(()=> {
+                            const el = this.$refs['parse_log_content']
+                            if (el && el.scrollHeight) {
+                                el.scrollTop = el.scrollHeight
+                            }
+                        })
                     }
                 }
             })
@@ -503,6 +502,14 @@ export default {
 
 .ant-layout {
     background: #F3F5F7;
+}
+
+/deep/ .ant-drawer-header {
+    padding: 14px 24px;
+}
+/deep/ .ant-drawer-body {
+    height: calc(100vh - 80px);
+    padding: 24px 0px 24px 24px;
 }
 
 </style>

@@ -154,8 +154,9 @@ export default {
 
         // 查看文档
         handleView(id) {
+            const currentMenuItemKey = localStorage.getItem("currentMenuItemKey") || 666
             this.$router.push({
-                path: '/docs/' + id
+                path: `/docs/${id}/${currentMenuItemKey}`
             })
         },
 

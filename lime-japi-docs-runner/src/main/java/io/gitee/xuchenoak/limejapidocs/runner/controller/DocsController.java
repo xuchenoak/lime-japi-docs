@@ -1,19 +1,23 @@
 package io.gitee.xuchenoak.limejapidocs.runner.controller;
 
+import cn.hutool.core.util.StrUtil;
 import io.gitee.xuchenoak.limejapidocs.parser.util.StringUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.common.bean.AjaxResult;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsCatalogVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsInterfaceVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseMsgVo;
-import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.DocsParseVo;
+import io.gitee.xuchenoak.limejapidocs.runner.common.enums.SearchFromEnum;
+import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
+import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.*;
+import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsService;
 import io.gitee.xuchenoak.limejapidocs.runner.util.IdUtils;
+import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +35,9 @@ public class DocsController {
     @Autowired
     private DocsService docsService;
 
+    @Resource
+    private ApiDocsConfigService apiDocsConfigService;
+
     /**
      * 获取生成时间集
      *
@@ -45,8 +52,9 @@ public class DocsController {
     /**
      * 获取接口文档目录
      *
-     * @param createTime 生成时间
-     * @param likeStr    搜索关键字
+     * @param docsConfigId 文档配置Id
+     * @param createTime   生成时间
+     * @param likeStr      搜索关键字
      * @return
      */
     @GetMapping("/list_catalog")
@@ -59,10 +67,32 @@ public class DocsController {
         return AjaxResult.success(docsService.getDocsCatalog(IdUtils.decryptIdOrExc(docsConfigId), createTime, likeStr));
     }
 
+    /**
+     * 获取文档搜索列表
+     *
+     * @param docsConfigId 文档配置Id
+     * @param createTime   生成时间
+     * @param searchFrom   搜索来源 1-所有 2-目录 3-接口
+     * @param likeStr      搜索关键字
+     * @return
+     */
+    @GetMapping("/list_docs_search")
+    public AjaxResult<List<DocsCatalogSearchVo>> listDocsSearch(@NotNull(message = "文档配置Id不能为空") String docsConfigId,
+                                                                String createTime,
+                                                                Integer searchFrom,
+                                                                String likeStr) {
+        SearchFromEnum e = SearchFromEnum.getEnumByValue(searchFrom);
+        if (StringUtil.isBlank(createTime) || e == null || StringUtil.isBlank(likeStr)) {
+            return AjaxResult.success(new ArrayList<>());
+        }
+        return AjaxResult.success(docsService.listDocsSearch(IdUtils.decryptIdOrExc(docsConfigId), createTime, e, likeStr));
+    }
+
 
     /**
      * 获取接口文档列表
      *
+     * @param docsConfigId    文档配置Id
      * @param createTime      生成时间
      * @param controllerId    controller标识
      * @param hasComment      是否有注释
@@ -73,21 +103,22 @@ public class DocsController {
      * @return
      */
     @GetMapping("/list_interface")
-    public AjaxResult<List<DocsInterfaceVo>> listInterface(String createTime,
+    public AjaxResult<List<DocsInterfaceVo>> listInterface(String docsConfigId,
+                                                           String createTime,
                                                            String controllerId,
                                                            Boolean hasComment,
                                                            Boolean hasType,
                                                            Boolean hasValid,
                                                            Boolean addDefaultValue,
                                                            String likeStr) {
-        if (StringUtil.isBlank(createTime) || StringUtil.isBlank(controllerId)) {
+        if (StringUtil.isBlank(docsConfigId) || StringUtil.isBlank(createTime) || StringUtil.isBlank(controllerId)) {
             return AjaxResult.success(new ArrayList<>());
         }
         hasComment = hasComment == null ? true : hasComment;
         hasType = hasType == null ? true : hasType;
         hasValid = hasValid == null ? true : hasValid;
         addDefaultValue = addDefaultValue == null ? true : addDefaultValue;
-        return AjaxResult.success(docsService.getDocsInterface(createTime, controllerId, hasComment, hasType, hasValid, addDefaultValue, likeStr));
+        return AjaxResult.success(docsService.getDocsInterface(IdUtils.decryptIdOrExc(docsConfigId), createTime, controllerId, hasComment, hasType, hasValid, addDefaultValue, likeStr));
     }
 
     /**
@@ -100,6 +131,27 @@ public class DocsController {
     @GetMapping("/run_docs_parse")
     public AjaxResult<DocsParseVo> runDocsParse(@NotNull(message = "文档配置Id不能为空") String docsConfigId, String password) {
         return AjaxResult.success(docsService.runDocsParse(IdUtils.decryptIdOrExc(docsConfigId), password));
+    }
+
+    /**
+     * 执行文档解析
+     *
+     * @param docsKey  文档标识码
+     * @param password 解析秘钥
+     * @return
+     */
+    @GetMapping("/run_docs_parsing")
+    public AjaxResult<String> runDocsParsing(@NotBlank(message = "文档标识码不能为空") String docsKey, String password) {
+        List<ApiDocsConfig> list = apiDocsConfigService.list(q -> q.eq(ApiDocsConfig::getDocsKey, docsKey));
+        if (ListUtils.isBlank(list)) {
+            return AjaxResult.error(StrUtil.format("根据文档标识码[{}]未查询到文档", docsKey));
+        }
+        List<String> docNames = new ArrayList<>();
+        for (ApiDocsConfig apiDocsConfig : list) {
+            docNames.add(apiDocsConfig.getDocsName());
+            docsService.runDocsParseAsync(apiDocsConfig.getId(), password);
+        }
+        return AjaxResult.success("操作成功", StrUtil.format("已触发生成文档：{}", String.join("；", docNames)));
     }
 
     /**

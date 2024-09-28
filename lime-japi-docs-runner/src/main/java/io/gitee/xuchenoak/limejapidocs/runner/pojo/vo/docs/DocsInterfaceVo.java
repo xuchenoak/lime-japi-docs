@@ -10,8 +10,7 @@ import java.util.List;
 /**
  * 接口文档数据输出对象
  *
- * @author: xuchenoak
- * @create: 2022-06-06 8:26
+ * @author xuchenoak
  **/
 @Data
 @AllArgsConstructor

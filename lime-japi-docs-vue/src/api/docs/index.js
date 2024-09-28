@@ -18,6 +18,15 @@ export function listCatalog(params) {
   })
 }
 
+// 获取接口文档搜索列表
+export function listDocsSearch(params) {
+    return request({
+        url: '/lime_japi_docs/api/docs/list_docs_search',
+        method: 'get',
+        params: params
+    })
+}
+
 // 获取接口文档列表
 export function listInterface(params) {
   return request({

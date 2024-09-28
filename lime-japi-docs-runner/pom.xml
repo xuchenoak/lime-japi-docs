@@ -16,7 +16,7 @@
 
     <groupId>io.gitee.xuchenoak</groupId>
     <artifactId>lime-japi-docs-runner</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
 
     <dependencies>
         <dependency>
@@ -103,18 +103,18 @@
         </plugins>
 
         <!-- 类似于webjar方式打包成静态资源包 -->
-<!--        <resources>-->
-<!--            <resource>-->
-<!--                <directory>${project.basedir}/src/main/resources</directory>-->
-<!--                <targetPath>${destDir}</targetPath>-->
-<!--            </resource>-->
-<!--        </resources>-->
+        <!--        <resources>-->
+        <!--            <resource>-->
+        <!--                <directory>${project.basedir}/src/main/resources</directory>-->
+        <!--                <targetPath>${destDir}</targetPath>-->
+        <!--            </resource>-->
+        <!--        </resources>-->
 
     </build>
 
-<!--    <properties>-->
-<!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
-<!--        <destDir>${project.build.outputDirectory}/META-INF/resources</destDir>-->
-<!--    </properties>-->
+    <!--    <properties>-->
+    <!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+    <!--        <destDir>${project.build.outputDirectory}/META-INF/resources</destDir>-->
+    <!--    </properties>-->
 
 </project>

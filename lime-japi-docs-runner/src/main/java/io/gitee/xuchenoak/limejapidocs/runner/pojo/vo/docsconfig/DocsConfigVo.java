@@ -79,6 +79,11 @@ public class DocsConfigVo {
     private Integer sort;
 
     /**
+     * 文档标识码
+     */
+    private String docsKey;
+
+    /**
      * 创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

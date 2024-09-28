@@ -79,4 +79,9 @@ public class DocsConfigAddRf {
      */
     private Integer sort;
 
+    /**
+     * 文档标识码
+     */
+    private String docsKey;
+
 }
