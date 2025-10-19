@@ -1,12 +1,14 @@
 package io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.gitee.xuchenoak.limejapidocs.runner.common.enums.CodeSourceEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 文档配置
@@ -84,6 +86,31 @@ public class DocsConfigVo {
     private String docsKey;
 
     /**
+     * 代码来源 本地/git仓库
+     */
+    private String codeSource;
+
+    /**
+     * git仓库地址
+     */
+    private String gitUrl;
+
+     /**
+     * git仓库分支
+     */
+    private String gitBranch;
+
+    /**
+     * git仓库用户名
+     */
+    private String gitUsername;
+
+    /**
+     * git仓库密码
+     */
+    private String gitPassword;
+
+    /**
      * 创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -95,4 +122,7 @@ public class DocsConfigVo {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
+    public String getCodeSource() {
+        return Optional.ofNullable(codeSource).orElse(CodeSourceEnum.LOCAL.value());
+    }
 }

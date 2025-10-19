@@ -1,5 +1,6 @@
 package io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig;
 
+import io.gitee.xuchenoak.limejapidocs.runner.common.enums.CodeSourceEnum;
 import io.gitee.xuchenoak.limejapidocs.runner.common.enums.TrueOrFalseEnum;
 import io.gitee.xuchenoak.limejapidocs.runner.common.validatron.CollectionValid;
 import io.gitee.xuchenoak.limejapidocs.runner.common.validatron.EnumValid;
@@ -83,5 +84,31 @@ public class DocsConfigAddRf {
      * 文档标识码
      */
     private String docsKey;
+
+    /**
+     * 代码来源 本地/git仓库
+     */
+    @EnumValid(enumClass = CodeSourceEnum.class)
+    private String codeSource;
+
+    /**
+     * git仓库地址
+     */
+    private String gitUrl;
+
+     /**
+     * git仓库分支
+     */
+    private String gitBranch;
+
+    /**
+     * git仓库用户名
+     */
+    private String gitUsername;
+
+    /**
+     * git仓库密码
+     */
+    private String gitPassword;
 
 }

@@ -97,6 +97,31 @@ public class ApiDocsConfig {
      */
     private String docsKey;
 
+     /**
+     * 代码来源 本地/git仓库
+     */
+    private String codeSource;
+
+     /**
+     * git仓库地址
+     */
+    private String gitUrl;
+
+     /**
+     * git仓库分支
+     */
+    private String gitBranch;
+
+     /**
+     * git仓库用户名
+     */
+    private String gitUsername;
+
+     /**
+     * git仓库密码
+     */
+    private String gitPassword;
+
     /**
      * 创建时间
      */
@@ -107,7 +132,7 @@ public class ApiDocsConfig {
      */
     private Date updateTime;
 
-    public ApiDocsConfig(String docsName, String docsVersion, Integer sysStartParse, String apiRunKey, List<String> javaFilePaths, List<String> filterPackages, List<String> filterClassNames, List<String> ignoreClassNames, String paramValidFunc, String paramDefaultValueFunc, Integer sort, String docsKey, Date createTime, Date updateTime) {
+    public ApiDocsConfig(String docsName, String docsVersion, Integer sysStartParse, String apiRunKey, List<String> javaFilePaths, List<String> filterPackages, List<String> filterClassNames, List<String> ignoreClassNames, String paramValidFunc, String paramDefaultValueFunc, Integer sort, String docsKey, String codeSource, String gitUrl, String gitBranch, String gitUsername, String gitPassword, Date createTime, Date updateTime) {
         this.docsName = docsName;
         this.docsVersion = docsVersion;
         this.sysStartParse = sysStartParse;
@@ -120,6 +145,11 @@ public class ApiDocsConfig {
         this.paramDefaultValueFunc = paramDefaultValueFunc;
         this.sort = sort;
         this.docsKey = docsKey;
+        this.codeSource = codeSource;
+        this.gitUrl = gitUrl;
+        this.gitBranch = gitBranch;
+        this.gitUsername = gitUsername;
+        this.gitPassword = gitPassword;
         this.createTime = createTime;
         this.updateTime = updateTime;
     }
@@ -138,7 +168,7 @@ public class ApiDocsConfig {
         return this.apiRunKey.equals(apiRunKey);
     }
 
-    public ApiDocsConfig buildEdit(String docsName, String docsVersion, Integer sysStartParse, String apiRunKey, List<String> javaFilePaths, List<String> filterPackages, List<String> filterClassNames, List<String> ignoreClassNames, String paramValidFunc, String paramDefaultValueFunc, Integer sort, String docsKey) {
+    public ApiDocsConfig buildEdit(String docsName, String docsVersion, Integer sysStartParse, String apiRunKey, List<String> javaFilePaths, List<String> filterPackages, List<String> filterClassNames, List<String> ignoreClassNames, String paramValidFunc, String paramDefaultValueFunc, Integer sort, String docsKey, String codeSource, String gitUrl, String gitBranch, String gitUsername, String gitPassword) {
         this.docsName = docsName;
         this.docsVersion = docsVersion;
         this.sysStartParse = sysStartParse;
@@ -151,6 +181,11 @@ public class ApiDocsConfig {
         this.paramDefaultValueFunc = paramDefaultValueFunc;
         this.sort = sort;
         this.docsKey = docsKey;
+        this.codeSource = codeSource;
+        this.gitUrl = gitUrl;
+        this.gitBranch = gitBranch;
+        this.gitUsername = gitUsername;
+        this.gitPassword = gitPassword;
         this.updateTime = DateUtil.date();
         return this;
     }

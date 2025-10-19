@@ -114,6 +114,11 @@ public class DocsConfigServiceImpl implements DocsConfigService {
                 bean.getParamDefaultValueFunc(),
                 bean.getSort(),
                 bean.getDocsKey(),
+                bean.getCodeSource(),
+                bean.getGitUrl(),
+                bean.getGitBranch(),
+                bean.getGitUsername(),
+                bean.getGitPassword(),
                 bean.getCreateTime(),
                 bean.getUpdateTime()
         );
@@ -141,6 +146,11 @@ public class DocsConfigServiceImpl implements DocsConfigService {
                 rf.getParamDefaultValueFunc(),
                 Optional.ofNullable(rf.getSort()).orElse(0),
                 rf.getDocsKey(),
+                rf.getCodeSource(),
+                rf.getGitUrl(),
+                rf.getGitBranch(),
+                rf.getGitUsername(),
+                rf.getGitPassword(),
                 now,
                 now
         );
@@ -173,7 +183,12 @@ public class DocsConfigServiceImpl implements DocsConfigService {
                 rf.getParamValidFunc(),
                 rf.getParamDefaultValueFunc(),
                 Optional.ofNullable(rf.getSort()).orElse(0),
-                rf.getDocsKey()
+                rf.getDocsKey(),
+                rf.getCodeSource(),
+                rf.getGitUrl(),
+                rf.getGitBranch(),
+                rf.getGitUsername(),
+                rf.getGitPassword()
         );
         apiDocsConfigService.edit(bean);
         return getDocsConfig(id);
