@@ -33,3 +33,6 @@ hs_err_pid*
 *.iws
 *.iml
 *.ipr
+
+### 数据目录 ###
+data

@@ -7,7 +7,7 @@
         @close="close"
         @save="handleSave"
     >
-        <a-tabs default-active-key="1">
+        <a-tabs default-active-key="1" @change="handleTab">
             <a-tab-pane key="1" tab="基本信息">
                 <a-form :form="form" layout="vertical" >
                     <a-form-item
@@ -74,8 +74,46 @@
                 <a-form layout="vertical">
                     <a-form-item>
                         <span slot="label">
+                            <span class="pre-rule-item">Java源码来源</span>
+                            <why-box-text text="本地：源码在部署服务的本地目录；git仓库：生成前根据配置自动拉取远程源码到本地工作空间"/>
+                        </span>
+                        <a-radio-group v-model="configItem.codeSource">
+                            <a-radio value="本地">本地</a-radio>
+                            <a-radio value="git仓库">git仓库</a-radio>
+                        </a-radio-group>
+                    </a-form-item>
+                    <a-form-item v-if="configItem.codeSource === 'git仓库'">
+                        <span slot="label">
+                            <span class="pre-rule-item">git仓库地址</span>
+                            <why-box-text text="仅支持.git地址（若为私有仓库则需要配置下面的账号密码）。注：删除文档时不会删除已拉取的源码，若需删除源码请到部署目录“./data/workspace”下进行手动删除"/>
+                        </span>
+                        <a-textarea :rows="2" placeholder="请输入git仓库地址" v-model="configItem.gitUrl" />
+                    </a-form-item>
+                    <a-form-item v-if="configItem.codeSource === 'git仓库'">
+                        <span slot="label">
+                            <span class="pre-rule-item">
+                                <span>git拉取分支</span>
+                                <a @click="handleGetGitRemoteBranches" style="margin-left: 10px" :disabled="configItem.gitUrl == null || configItem.gitUrl === '' || !configItem.gitUrl.endsWith('.git')">获取远程分支</a>
+                            </span>
+                            <why-box-text text="填写git仓库地址（私有仓库请先配置下方账号密码）后请点击“获取远程分支”获取远程分支列表"/>
+                        </span>
+                        <a-select placeholder="请选择git拉取分支" v-model="configItem.gitBranch">
+                            <a-select-option v-for="item in gitRemoteBranches" :key="item" :value="item">
+                                {{item}}
+                            </a-select-option>
+                        </a-select>
+                    </a-form-item>
+                    <a-form-item v-if="configItem.codeSource === 'git仓库'" label="git仓库账号">
+                        <a-input placeholder="请输入git仓库账号" v-model="configItem.gitUsername" />
+                    </a-form-item>
+                    <a-form-item v-if="configItem.codeSource === 'git仓库'" label="git仓库密码">
+                        <a-input type="password" placeholder="请输入git仓库密码" v-model="configItem.gitPassword" />
+                    </a-form-item>
+                    <a-form-item>
+                        <span slot="label">
                             <span class="pre-rule-item">Java源码所在目录绝对路径</span>
-                            <why-box-text text="路径必须填到“ **/main/java ”目录，多模块时需填写所以引用到的模块"/>
+                            <why-box-text v-if="configItem.codeSource === 'git仓库'" text="以git仓库名称为项目根目录进行配置，如果“https://xxx.com/demo.git”，则配置为“demo/**/main/java”，路径必须填到“**/main/java”目录，多模块时需填写所有引用到的模块"/>
+                            <why-box-text v-else text="绝对路径且必须填到“**/main/java”目录，多模块时需填写所有引用到的模块"/>
                         </span>
                         <div :key="index" v-for="(item, index) in configItem.javaFilePaths">
                             <a-input v-model="configItem.javaFilePaths[index]" placeholder="请输入绝对路径" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
@@ -150,7 +188,7 @@
 </template>
 
 <script>
-import {add, edit, getDocsConfig} from '@/api/docsConfig'
+import {add, edit, getDocsConfig, getGitRemoteBranches} from '@/api/docsConfig'
 
 export default {
     name: "EditDocsConfig",
@@ -177,7 +215,13 @@ export default {
                 ignoreClassNames: [],
                 paramValidFunc: defaultParamValidFuc,
                 paramDefaultValueFunc: defaultParamDefaultValueFunc,
+                codeSource: '本地',
+                gitUrl: '',
+                gitBranch: '111',
+                gitUsername: '',
+                gitPassword: '',
             },
+            gitRemoteBranches: [],
         }
     },
     methods: {
@@ -201,7 +245,12 @@ export default {
                             ignoreClassNames: data.ignoreClassNames || [],
                             paramValidFunc: data.paramValidFunc,
                             paramDefaultValueFunc: data.paramDefaultValueFunc,
-                            sort: data.sort
+                            sort: data.sort,
+                            codeSource: data.codeSource || '本地',
+                            gitUrl: data.gitUrl || '',
+                            gitBranch: data.gitBranch || '',
+                            gitUsername: data.gitUsername || '',
+                            gitPassword: data.gitPassword || '',
                         }
                         this.$nextTick(()=> {
                             this.form.setFieldsValue({
@@ -222,6 +271,33 @@ export default {
         handleSave() {
             this.form.validateFields((errors, values)=> {
                 if (!errors) {
+                    const codeSource = this.configItem.codeSource
+                    if (codeSource.length < 1) {
+                        this.$message.warn('请先配置源码扫码配置：java源码来源')
+                        return
+                    }
+                    const gitUrl = this.configItem.gitUrl || ''
+                    const gitBranch = this.configItem.gitBranch || ''
+                    if (codeSource === 'git仓库') {
+                        if (gitUrl.length < 1) {
+                            this.$message.warn('请先配置源码扫码配置：git仓库地址')
+                            return
+                        }
+                        if (!gitUrl.endsWith('.git')) {
+                            this.$message.warn('请先配置源码扫码配置：git仓库地址必须以.git结尾')
+                            return
+                        }
+                        if (gitBranch.length < 1) {
+                            this.$message.warn('请先配置源码扫码配置：git拉取分支')
+                            return
+                        }
+                    }
+                    values['codeSource'] = codeSource
+                    values['gitUrl'] = gitUrl
+                    values['gitBranch'] = gitBranch
+                    values['gitUsername'] = this.configItem.gitUsername || ''
+                    values['gitPassword'] = this.configItem.gitPassword || ''
+
                     values['javaFilePaths'] = this.configItem.javaFilePaths.filter(item => !!item.trim())
                     if (values['javaFilePaths'].length < 1) {
                         this.$message.warn('请先配置源码扫码配置：Java源码所在目录绝对路径')
@@ -254,6 +330,36 @@ export default {
                 }
             })
         },
+        handleGetGitRemoteBranches(showMsg) {
+            this.loading = true
+            getGitRemoteBranches(this.configItem.gitUrl, this.configItem.gitUsername, this.configItem.gitPassword).then(res => {
+                if (res['data']) {
+                    const list = res['data'] || []
+                    this.gitRemoteBranches = list
+                    if (showMsg) {
+                        this.$message.success('获取git远程分支成功')
+                        if (list.length > 0) {
+                            const gitBranch = this.configItem.gitBranch || ''
+                            if (gitBranch.length < 1) {
+                                this.configItem.gitBranch = list[0]
+                            } else {
+                                if (!list.includes(gitBranch)) {
+                                    this.$message.warning(`分支${gitBranch}不存在远程分支列表，已切换为默认分支${list[0]}`)
+                                    this.configItem.gitBranch = list[0]
+                                }
+                            }
+                        }
+                    }
+                }
+            }).finally(()=> {
+                this.loading = false
+            })
+        },
+        handleTab(key) {
+            if (key == 2 && this.id && this.configItem.codeSource === 'git仓库') {
+                this.handleGetGitRemoteBranches(false)
+            }
+        },
         close() {
             this.form.resetFields()
             this.configItem = {
@@ -269,7 +375,13 @@ export default {
                 ignoreClassNames: [],
                 paramValidFunc: defaultParamValidFuc,
                 paramDefaultValueFunc: defaultParamDefaultValueFunc,
+                codeSource: '本地',
+                gitUrl: '',
+                gitBranch: '',
+                gitUsername: '',
+                gitPassword: '',
             }
+            this.gitRemoteBranches = []
             this.visible = false
         },
         getRunParseUrl() {

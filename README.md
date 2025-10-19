@@ -6,7 +6,7 @@
 
 lime-japi-docs是一个简单的Java接口文档生成工具，通过解析Java源码及其注释生成Controller接口文档，可在网页端管理、生成和浏览文档。项目打包为独立可执行jar包，对解析的源码零侵入，直接运行后在网页上进行初始化和配置即可。若只想解析获取Controller源码接口数据，只需要在自己项目中引入核心解析包「<a href="https://gitee.com/xuchenoak/lime-japi-docs-parser" target="_blank">lime-japi-docs-parser</a>」进行解析即可，核心包已开源并上传至maven中央仓库。
 
-运行环境：JDK1.8+
+运行环境：JDK1.8+（项目基于JDK1.8开发和编译）
 
 ## 2 下载
 
@@ -36,6 +36,11 @@ lime-japi-docs是一个简单的Java接口文档生成工具，通过解析Java�
 | ![输入图片说明](v-images/search.png) | ![输入图片说明](v-images/docs_key.png) |
 |--------------------------------|----------------------------------|
 | ![输入图片说明](v-images/router.png) |                                  |
+
+- 2025-10-19 v1.1.3更新截图
+
+| ![输入图片说明](v-images/20251019_git_config.png) | ![输入图片说明](v-images/20251019_git_code_parse_log.png) |
+|---------------------------------------------|----------------------------------|
 
 ## 3 使用
 
@@ -176,6 +181,11 @@ public class UserVo {
   - 文档配置新增“文档标识码”字段，用于触发生成文档时作为入参，实现调用一次触发接口即可以触发多个相同“文档标识码”的文档生成；
   - 文档访问地址支持“文档/目录/接口”三级定位，访问带有相应参数的url即可定位到对应的文档、接口或目录。
 
+
+- 2025-10-19 V1.1.3更新（兼容上一版本，更换jar包即可）
+  - 文档配置新增源码来源git仓库，只要进行git仓库地址等配置，在触发文档生成前系统会从git仓库中拉取最新的代码进行解析；
+  - 新增了本地git源码工作空间，位于jar包目录下的`./data/workspace`内，可手动管理源码。
+
 ## 6 最后&致谢
 
 - 本项目的灵感源于`@YeDaxia`的项目 <a href="https://github.com/YeDaxia/JApiDocs" target="_blank">JApiDocs</a>，它是一个可以解析Java源码并生成接口文档（支持生成html静态页或markdown等）的工具；
@@ -185,6 +195,12 @@ public class UserVo {
 
 
 - 本项目使用的前端框架是`vue`，UI框架是`ant-design-vue`，代码编辑器是`vue2-ace-editor`；
+
+
+- 本项目使用的git工具来源于项目 <a href="https://github.com/eclipse-jgit/jgit" target="_blank">jgit</a> ；
+
+
+- 感谢在本项目中使用到的所有第三方项目（工具、框架）的作者和贡献者们，这些项目的版权归其原作者所有。
 
 
 - 特别感谢小伙伴 <a href="https://weibo.com/u/7805144171" target="_blank">@hantai喔</a> 提供的logo设计，欢迎大家多多关注TA。

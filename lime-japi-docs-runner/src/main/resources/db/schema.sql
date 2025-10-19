@@ -18,6 +18,16 @@ CREATE TABLE IF NOT EXISTS `api_docs_config` (
 
 ALTER TABLE api_docs_config
     ADD COLUMN IF NOT EXISTS `docs_key` VARCHAR(255) NULL DEFAULT NULL COMMENT '文档标识码' AFTER `sort`;
+ALTER TABLE api_docs_config
+    ADD COLUMN IF NOT EXISTS `code_source` VARCHAR(255) NOT NULL DEFAULT '本地' COMMENT '代码源' AFTER `docs_key`;
+ALTER TABLE api_docs_config
+    ADD COLUMN IF NOT EXISTS `git_url` VARCHAR(2048) NULL DEFAULT NULL COMMENT 'git仓库地址' AFTER `code_source`;
+ALTER TABLE api_docs_config
+    ADD COLUMN IF NOT EXISTS `git_branch` VARCHAR(255) NULL DEFAULT NULL COMMENT 'git分支' AFTER `git_url`;
+ALTER TABLE api_docs_config
+    ADD COLUMN IF NOT EXISTS `git_username` VARCHAR(255) NULL DEFAULT NULL COMMENT 'git用户名' AFTER `git_branch`;
+ALTER TABLE api_docs_config
+    ADD COLUMN IF NOT EXISTS `git_password` VARCHAR(255) NULL DEFAULT NULL COMMENT 'git密码' AFTER `git_username`;
 
 CREATE TABLE IF NOT EXISTS `api_docs_controller_data` (
     `id` BIGINT ( 20 ) NOT NULL AUTO_INCREMENT COMMENT '自增Id',

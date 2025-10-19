@@ -313,8 +313,11 @@ export default {
                             this.refreshParseMsg()
                         }, 3000)
                         if (!this.parseRunning) {
-                            this.getCreateTimeList()
-                            this.onClose()
+                            const hasErrorInLastMsg = msgList?.length && msgList[msgList.length - 1].includes('生成异常');
+                            if (!hasErrorInLastMsg) {
+                                this.getCreateTimeList();
+                                this.onClose();
+                            }
                         }
                     }
                     if (msgList && msgList.length > 0) {

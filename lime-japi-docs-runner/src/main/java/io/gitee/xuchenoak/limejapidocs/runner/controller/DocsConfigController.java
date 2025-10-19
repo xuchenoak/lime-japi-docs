@@ -2,6 +2,7 @@ package io.gitee.xuchenoak.limejapidocs.runner.controller;
 
 import io.gitee.xuchenoak.limejapidocs.runner.common.bean.AjaxResult;
 import io.gitee.xuchenoak.limejapidocs.runner.common.enums.ResCodeEnum;
+import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigAddRf;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigEditRf;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigIdRf;
@@ -10,12 +11,14 @@ import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig.DocsConfigVo;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.SysConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.util.IdUtils;
+import io.gitee.xuchenoak.limejapidocs.runner.util.JGitUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -117,6 +120,25 @@ public class DocsConfigController {
     public AjaxResult del(@Validated @RequestBody DocsConfigIdRf rf) {
         docsConfigService.del(IdUtils.decryptIdOrExc(rf.getId()));
         return AjaxResult.success();
+    }
+
+    /**
+     * 获取git仓库远程分支列表
+     *
+     * @param gitUrl  仓库URL
+     * @param username 账号
+     * @param password 密码
+     */
+    @GetMapping("/get_git_remote_branches")
+    public AjaxResult<List<String>> getRemoteBranches(@NotBlank(message = "仓库URL不能为空") String gitUrl,
+                                                      String username, String password) {
+        try {
+            return AjaxResult.success(JGitUtil.getRemoteBranches(gitUrl, username, password));
+        } catch (Exception e) {
+            log.error("获取远程分支异常", e);
+            CusExc.e("获取远程分支失败！{}", e.getMessage());
+            return AjaxResult.error();
+        }
     }
 
 }

@@ -71,3 +71,12 @@ export function del(id) {
     data: {id}
   })
 }
+
+// 获取git仓库远程分支列表
+export function getGitRemoteBranches(gitUrl, username, password) {
+  return request({
+    url: '/lime_japi_docs/api/docs_config/get_git_remote_branches',
+    method: 'get',
+    params: {gitUrl, username, password}
+  })
+}
