@@ -62,7 +62,7 @@
         <dependency>
             <groupId>io.gitee.xuchenoak</groupId>
             <artifactId>lime-japi-docs-parser</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.5</version>
             <exclusions>
                 <exclusion>
                     <groupId>cn.hutool</groupId>

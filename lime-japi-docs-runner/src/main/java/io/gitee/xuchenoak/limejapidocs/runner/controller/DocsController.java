@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -140,7 +141,7 @@ public class DocsController {
      * @param password 解析秘钥
      * @return
      */
-    @GetMapping("/run_docs_parsing")
+    @RequestMapping(value = "/run_docs_parsing", method = {RequestMethod.GET, RequestMethod.POST})
     public AjaxResult<String> runDocsParsing(@NotBlank(message = "文档标识码不能为空") String docsKey, String password) {
         List<ApiDocsConfig> list = apiDocsConfigService.list(q -> q.eq(ApiDocsConfig::getDocsKey, docsKey));
         if (ListUtils.isBlank(list)) {

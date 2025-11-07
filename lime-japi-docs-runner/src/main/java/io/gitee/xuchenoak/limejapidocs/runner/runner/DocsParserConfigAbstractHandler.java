@@ -125,4 +125,8 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
         }
     }
 
+    @Override
+    public boolean isParseControllerFirstParent() {
+        return true;
+    }
 }
