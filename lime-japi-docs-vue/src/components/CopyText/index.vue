@@ -28,6 +28,10 @@
                 type: Boolean,
                 default() {return true}
             },
+            preTipValue: {
+                type: String,
+                default() {return '点击复制'}
+            },
             disabled: {
                 type: Boolean,
                 default() {return false}
@@ -36,7 +40,7 @@
         data() {
             return {
                 copyStatus: false,
-                copyTitle: "点击复制",
+                copyTitle: "",
                 copyValue: ""
             }
         },
@@ -46,7 +50,7 @@
              */
             handleMouseenter() {
                 if (this.preTip) {
-                    this.copyTitle = "点击复制"
+                    this.copyTitle = this.preTipValue
                     this.copyStatus = true
                 }
             },
@@ -54,7 +58,7 @@
              * 鼠标移开
              */
             handleMouseleave() {
-                if (this.copyTitle === "点击复制") this.copyStatus = false
+                if (this.copyTitle === this.preTipValue) this.copyStatus = false
             },
             /**
              * 点击触发复制
