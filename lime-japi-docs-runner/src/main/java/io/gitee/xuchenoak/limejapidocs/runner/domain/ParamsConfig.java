@@ -1,6 +1,7 @@
 package io.gitee.xuchenoak.limejapidocs.runner.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -29,11 +30,13 @@ public class ParamsConfig {
     /**
      * 配置标识
      */
+    @TableField("`key`")
     private String key;
 
     /**
      * 配置值
      */
+    @TableField("`value`")
     private String value;
 
     /**
