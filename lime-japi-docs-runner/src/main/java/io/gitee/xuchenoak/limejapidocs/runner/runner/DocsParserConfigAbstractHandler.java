@@ -71,6 +71,35 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
                 parserConfig.addIgnoreControllerName(name);
             }
         }
+        parserConfig.addLastValueTypeFullName(
+
+                // java.time 时间系列
+                "java.time.Instant",
+                "java.time.LocalDate",
+                "java.time.LocalTime",
+                "java.time.LocalDateTime",
+                "java.time.ZonedDateTime",
+                "java.time.OffsetDateTime",
+                "java.time.OffsetTime",
+                "java.time.Duration",
+                "java.time.Period",
+                "java.time.Year",
+                "java.time.YearMonth",
+                "java.time.MonthDay",
+
+                // 其他JDK原子属性类型
+                "java.util.UUID",
+                "java.net.InetAddress",
+                "java.nio.charset.Charset",
+                "java.util.Currency",
+                "java.util.Locale",
+
+                // 旧时间类（业务上作为单一值，注意本身是可变类）
+                "java.util.Date",
+                "java.sql.Timestamp",
+                "java.sql.Date",
+                "java.sql.Time"
+        );
         return parserConfig;
     }
 
