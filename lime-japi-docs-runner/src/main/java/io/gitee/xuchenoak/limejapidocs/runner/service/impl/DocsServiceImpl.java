@@ -20,7 +20,6 @@ import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;
 import io.gitee.xuchenoak.limejapidocs.runner.util.MsgUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -314,19 +313,7 @@ public class DocsServiceImpl implements DocsService {
         return docsInterfaceVoList;
     }
 
-    /**
-     * 执行文档解析
-     *
-     * @param docsConfigId 文档配置Id
-     * @param password     解析秘钥
-     */
-    @Async
-    @Override
-    public void runDocsParseAsync(Long docsConfigId, String password) {
-        runDocsParse(docsConfigId, password);
-    }
-
-    /**
+/**
      * 执行文档解析
      *
      * @param docsConfigId 文档配置Id
@@ -342,12 +329,11 @@ public class DocsServiceImpl implements DocsService {
         if (!docsConfig.checkedApiRun(password)) {
             return new DocsParseVo(false, null, "生成秘钥错误！请输入正确解析秘钥再重试");
         }
-        // 验证是否还在进行解析
-        if (MsgUtil.isParseRun(docsConfigId)) {
+        // 原子抢占解析状态，若已在解析则直接返回
+        if (!MsgUtil.startParse(docsConfigId)) {
             return new DocsParseVo(true, MsgUtil.getParseTimestamp(docsConfigId), "正在生成");
         }
         // 执行解析
-        MsgUtil.statusParseRun(docsConfigId);
         docsParseService.runParseAsync(docsConfig);
         return new DocsParseVo(true, MsgUtil.getParseTimestamp(docsConfigId), "开始生成");
     }

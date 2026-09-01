@@ -46,7 +46,12 @@ public class JGitUtil {
             if (!workspace.exists()) {
                 workspace.mkdirs();
             }
-            File projectDir = FileUtil.file(workspace, repoName);
+            // 以“仓库名[-分支名]”作为工作区目录，避免同一仓库不同分支相互踩踏
+            String dirName = repoName;
+            if (StrUtil.isNotBlank(gitBranch)) {
+                dirName = StrUtil.format("{}-{}", repoName, gitBranch.replaceAll("[\\\\/:*?\"<>| ]", "_"));
+            }
+            File projectDir = FileUtil.file(workspace, dirName);
             if (!projectDir.exists()) {
                 projectDir.mkdirs();
             }
@@ -61,7 +66,7 @@ public class JGitUtil {
                 cloneRepository(gitUrl, gitBranch, projectDir, username, password);
                 log.info("项目已克隆到工作空间：" + projectDir.getAbsolutePath());
             }
-            return workspace.getAbsolutePath();
+            return projectDir.getAbsolutePath();
         } catch (Exception e) {
             log.error("git获取源码异常", e);
             CusExc.e("git获取源码异常：{}", e.getMessage());

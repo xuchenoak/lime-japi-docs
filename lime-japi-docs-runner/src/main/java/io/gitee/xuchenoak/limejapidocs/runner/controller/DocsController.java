@@ -147,12 +147,22 @@ public class DocsController {
         if (ListUtils.isBlank(list)) {
             return AjaxResult.error(StrUtil.format("根据文档标识码[{}]未查询到文档", docsKey));
         }
-        List<String> docNames = new ArrayList<>();
+        List<String> runningNames = new ArrayList<>();
+        List<String> failMsgList = new ArrayList<>();
         for (ApiDocsConfig apiDocsConfig : list) {
-            docNames.add(apiDocsConfig.getDocsName());
-            docsService.runDocsParseAsync(apiDocsConfig.getId(), password);
+            DocsParseVo parseVo = docsService.runDocsParse(apiDocsConfig.getId(), password);
+            if (parseVo.isRunning()) {
+                runningNames.add(apiDocsConfig.getDocsName());
+            } else if (StrUtil.isNotBlank(parseVo.getMsg())) {
+                failMsgList.add(StrUtil.format("{}：{}", apiDocsConfig.getDocsName(), parseVo.getMsg()));
+            }
         }
-        return AjaxResult.success("操作成功", StrUtil.format("已触发生成文档：{}", String.join("；", docNames)));
+        String successMsg = runningNames.isEmpty() ? "" : StrUtil.format("已触发生成文档：{}", String.join("；", runningNames));
+        if (ListUtils.isNotBlank(failMsgList)) {
+            String prefix = runningNames.isEmpty() ? "未成功触发生成文档" : successMsg;
+            return AjaxResult.error(StrUtil.format("{}，失败：{}", prefix, String.join("；", failMsgList)));
+        }
+        return AjaxResult.success(successMsg);
     }
 
     /**
