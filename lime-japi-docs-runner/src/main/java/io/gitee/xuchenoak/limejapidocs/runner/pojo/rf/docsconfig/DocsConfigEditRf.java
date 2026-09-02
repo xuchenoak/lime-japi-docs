@@ -2,7 +2,6 @@ package io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig;
 
 import io.gitee.xuchenoak.limejapidocs.runner.common.enums.CodeSourceEnum;
 import io.gitee.xuchenoak.limejapidocs.runner.common.enums.TrueOrFalseEnum;
-import io.gitee.xuchenoak.limejapidocs.runner.common.validatron.CollectionValid;
 import io.gitee.xuchenoak.limejapidocs.runner.common.validatron.EnumValid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -53,7 +52,6 @@ public class DocsConfigEditRf {
     /**
      * java文件所在目录绝对路径（必须写到java目录，多模块时填写多个）
      */
-    @CollectionValid(message = "java文件所在目录绝对路径不能为空")
     private List<String> javaFilePaths;
 
     /**
@@ -102,7 +100,7 @@ public class DocsConfigEditRf {
      */
     private String gitUrl;
 
-     /**
+    /**
      * git仓库分支
      */
     private String gitBranch;

@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -102,6 +103,7 @@ public class DocsParseService {
 
     /**
      * 处理源码来源
+     *
      * @param docsConfig
      */
     private void handleCodeSource(ApiDocsConfig docsConfig) throws FileNotFoundException {
@@ -115,11 +117,7 @@ public class DocsParseService {
             apiDocsParseLogService.addMsg(docsConfig.getId(), StrUtil.format("正在从{}拉取{}分支源码", docsConfig.getGitUrl(), StrUtil.isBlank(docsConfig.getGitBranch()) ? "默认" : docsConfig.getGitBranch()));
             String prePath = JGitUtil.autoManageRepository(docsConfig.getGitUrl(), docsConfig.getGitBranch(), docsConfig.getGitUsername(), docsConfig.getGitPassword(), workspace);
             apiDocsParseLogService.addMsg(docsConfig.getId(), StrUtil.format("源码拉取成功", docsConfig.getGitUrl()));
-            List<String> newPaths = new ArrayList<>();
-            for (String javaFilePath : docsConfig.getJavaFilePaths()) {
-                newPaths.add(Paths.get(prePath, javaFilePath).toString());
-            }
-            docsConfig.setJavaFilePaths(newPaths);
+            docsConfig.setJavaFilePaths(new ArrayList<>(Arrays.asList(prePath)));
         }
     }
 
