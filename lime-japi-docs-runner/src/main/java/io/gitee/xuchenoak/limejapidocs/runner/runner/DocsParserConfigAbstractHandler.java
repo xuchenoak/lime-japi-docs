@@ -2,7 +2,6 @@ package io.gitee.xuchenoak.limejapidocs.runner.runner;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import cn.hutool.script.ScriptUtil;
 import io.gitee.xuchenoak.limejapidocs.parser.basenode.AnnotationNode;
 import io.gitee.xuchenoak.limejapidocs.parser.config.ParserConfig;
 import io.gitee.xuchenoak.limejapidocs.parser.handler.ParserConfigHandler;
@@ -11,6 +10,7 @@ import io.gitee.xuchenoak.limejapidocs.parser.util.ListUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
 import io.gitee.xuchenoak.limejapidocs.runner.util.MsgUtil;
+import io.gitee.xuchenoak.limejapidocs.runner.util.ScriptCallbackUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -119,7 +119,7 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
         Set<String> annotationNames = Optional.ofNullable(annotationNodeList).orElse(new ArrayList<>()).stream().map(AnnotationNode::getName).collect(Collectors.toSet());
         String valid = "";
         try {
-            Object value = ScriptUtil.invoke(func, "valid", ScriptUtil.eval(JSONUtil.toJsonStr(annotationNames)), fieldInfo.getName(), fieldInfo.getComment());
+            Object value = ScriptCallbackUtil.invoke(func, "valid", JSONUtil.toJsonStr(annotationNames), fieldInfo.getName(), fieldInfo.getComment());
             if (value != null) {
                 valid = value.toString();
             }
@@ -144,7 +144,7 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
         }
         String valid = "";
         try {
-            Object value = ScriptUtil.invoke(func, "defaultValue", fieldInfo.getType(), fieldInfo.getName(), fieldInfo.getComment());
+            Object value = ScriptCallbackUtil.invoke(func, "defaultValue", fieldInfo.getType(), fieldInfo.getName(), fieldInfo.getComment());
             if (value != null) {
                 valid = value.toString();
             }
