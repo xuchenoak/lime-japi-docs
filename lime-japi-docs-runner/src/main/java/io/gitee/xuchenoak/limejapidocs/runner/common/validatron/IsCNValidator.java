@@ -1,7 +1,7 @@
 package io.gitee.xuchenoak.limejapidocs.runner.common.validatron;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
 public class IsCNValidator implements ConstraintValidator<IsCN, String> {

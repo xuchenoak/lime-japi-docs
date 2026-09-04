@@ -109,11 +109,10 @@
                     <a-form-item v-if="configItem.codeSource === 'git仓库'" label="git仓库密码">
                         <a-input type="password" placeholder="请输入git仓库密码" v-model="configItem.gitPassword" />
                     </a-form-item>
-                    <a-form-item>
+                    <a-form-item v-if="configItem.codeSource !== 'git仓库'">
                         <span slot="label">
                             <span class="pre-rule-item">Java源码所在目录绝对路径</span>
-                            <why-box-text v-if="configItem.codeSource === 'git仓库'" text="以git仓库名称为项目根目录进行配置，如果“https://xxx.com/demo.git”，则配置为“demo/**/main/java”，路径必须填到“**/main/java”目录，多模块时需填写所有引用到的模块"/>
-                            <why-box-text v-else text="绝对路径且必须填到“**/main/java”目录，多模块时需填写所有引用到的模块"/>
+                            <why-box-text text="会扫描这些目录下所有的java文件进行解析，多模块时需填写最顶级目录或所有引用到的模块目录"/>
                         </span>
                         <div :key="index" v-for="(item, index) in configItem.javaFilePaths">
                             <a-input v-model="configItem.javaFilePaths[index]" placeholder="请输入绝对路径" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
@@ -125,8 +124,8 @@
                     </a-form-item>
                     <a-form-item>
                         <span slot="label">
-                            <span>仅扫描解析该包集合下的controller类</span>
-                            <why-box-text text="必须位于以上源码目录下的包，默认扫描所有"/>
+                            <span>仅扫描解析这些包下的controller类</span>
+                            <why-box-text text="支持*（单段）或**（多段）通配，默认扫描所有（大项目建议配置以缩小扫描范围，提升效率）"/>
                         </span>
                         <div :key="index" v-for="(item, index) in configItem.filterPackages">
                             <a-input v-model="configItem.filterPackages[index]" placeholder="请输入包名" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
@@ -138,11 +137,11 @@
                     </a-form-item>
                     <a-form-item>
                         <span slot="label">
-                            <span>仅扫描的controller类名集</span>
-                            <why-box-text text="非类全名，如UserController，优先级高于下方的排除配置"/>
+                            <span>仅扫描解析的controller类（全名）</span>
+                            <why-box-text text="类全名，如com.test.UserController，优先级低于下方的排除配置"/>
                         </span>
                         <div :key="index" v-for="(item, index) in configItem.filterClassNames">
-                            <a-input v-model="configItem.filterClassNames[index]" placeholder="请输入类名（非类全名，如UserController）" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
+                            <a-input v-model="configItem.filterClassNames[index]" placeholder="请输入类全名" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
                             <a-icon style="font-size: 18px" type="minus-circle-o" @click="configItem.filterClassNames.splice(index, 1)"/>
                         </div>
                         <a-button type="dashed" style="width: calc(100% - 30px)" @click="configItem.filterClassNames.push('')">
@@ -151,11 +150,11 @@
                     </a-form-item>
                     <a-form-item>
                         <span slot="label">
-                            <span>需要排除的controller类名集</span>
-                            <why-box-text text="非类全名，如UserController，优先级低于上方的仅扫描配置"/>
+                            <span>需要排除的controller类（全名）</span>
+                            <why-box-text text="类全名，如com.test.UserController，优先级高于上方的仅扫描配置"/>
                         </span>
                         <div :key="index" v-for="(item, index) in configItem.ignoreClassNames">
-                            <a-input v-model="configItem.ignoreClassNames[index]" placeholder="请输入类名（非类全名，如UserController）" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
+                            <a-input v-model="configItem.ignoreClassNames[index]" placeholder="请输入类全名" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
                             <a-icon style="font-size: 18px" type="minus-circle-o" @click="configItem.ignoreClassNames.splice(index, 1)"/>
                         </div>
                         <a-button type="dashed" style="width: calc(100% - 30px)" @click="configItem.ignoreClassNames.push('')">
@@ -276,6 +275,7 @@ export default {
                         this.$message.warn('请先配置源码扫码配置：java源码来源')
                         return
                     }
+                    values['javaFilePaths'] = this.configItem.javaFilePaths.filter(item => !!item.trim())
                     const gitUrl = this.configItem.gitUrl || ''
                     const gitBranch = this.configItem.gitBranch || ''
                     if (codeSource === 'git仓库') {
@@ -291,18 +291,17 @@ export default {
                             this.$message.warn('请先配置源码扫码配置：git拉取分支')
                             return
                         }
+                    } else {
+                        if (values['javaFilePaths'].length < 1) {
+                            this.$message.warn('请先配置源码扫码配置：Java源码所在目录绝对路径')
+                            return
+                        }
                     }
                     values['codeSource'] = codeSource
                     values['gitUrl'] = gitUrl
                     values['gitBranch'] = gitBranch
                     values['gitUsername'] = this.configItem.gitUsername || ''
                     values['gitPassword'] = this.configItem.gitPassword || ''
-
-                    values['javaFilePaths'] = this.configItem.javaFilePaths.filter(item => !!item.trim())
-                    if (values['javaFilePaths'].length < 1) {
-                        this.$message.warn('请先配置源码扫码配置：Java源码所在目录绝对路径')
-                        return
-                    }
                     values['filterPackages'] = this.configItem.filterPackages.filter(item => !!item.trim())
                     values['filterClassNames'] = this.configItem.filterClassNames.filter(item => !!item.trim())
                     values['ignoreClassNames'] = this.configItem.ignoreClassNames.filter(item => !!item.trim())

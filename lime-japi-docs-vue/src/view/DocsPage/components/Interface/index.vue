@@ -15,14 +15,17 @@
                                                 :key="inter.interfaceId + '_' + index"
                                                 v-for="(inter, index) in interfaceList">
                                     <template #title>
-                                        <h2>
-                                            <copy-text :value="inter.interfaceName" placement="right">
-                                            <span style="padding: 0px 5px">
-                                              {{getInterfaceIndex(index)}}
-                                            </span>
-                                                <span class="diy-cursor" :id="'_' + inter.interfaceId">{{inter.interfaceName}}</span>
+                                        <div class="content-title">
+                                            <h2>
+                                                <copy-text :value="inter.interfaceName" placement="right">
+                                                    <span style="padding: 0px 5px">{{getInterfaceIndex(index)}}</span>
+                                                    <span class="diy-cursor" :id="'_' + inter.interfaceId">{{inter.interfaceName}}</span>
+                                                </copy-text>
+                                            </h2>
+                                            <copy-text :value="buildCopyInterfaceData(inter)" class="editor-copy" pre-tip-value="点击复制接口数据">
+                                                <a-icon type="copy"/>
                                             </copy-text>
-                                        </h2>
+                                        </div>
                                     </template>
                                     <a-descriptions-item :span="3">
                                         <template #label>
@@ -313,6 +316,42 @@ export default {
         // 获取滚动容器
         getContainer() {
             return this.$refs['interfaceContainer']
+        },
+        // 构建复制接口数据
+        buildCopyInterfaceData(item) {
+            const reqTypes = (item.requestTypeList || []).join(",");
+            const uriLines = (item.uriList || []).map(v => " - " + v).join("\n");
+            const contentType = item.requestContentType || "未知";
+            const queryJson = item.formDataJson ?? "";
+            const bodyJson = item.bodyData ?? "";
+            const resJson = item.resData ?? "";
+            const name = item.interfaceName || "未命名接口";
+
+            const paramArray = []
+            if (!this.isEmptyStr(queryJson)) {
+                paramArray.push(' - query：')
+                paramArray.push(queryJson)
+            }
+            if (!this.isEmptyStr(bodyJson)) {
+                paramArray.push(' - body：')
+                paramArray.push(bodyJson)
+            }
+
+            return [
+                `接口名称：${name}`,
+                `请求地址[${reqTypes}]：`,
+                uriLines,
+                `请求参数[${contentType}]：`,
+                paramArray.join("\n"),
+                `响应示例[application/json]：`,
+                resJson
+            ].join("\n");
+        },
+        // 判断你接口数据字符串是否为空
+        isEmptyStr(val) {
+            if (!val) return true;
+            const str = String(val).trim();
+            return str === "" || str === "{}" || str === "[]";
         }
     }
 }
@@ -337,6 +376,11 @@ export default {
     }
     .interface-content {
         margin-bottom: 40px;
+        .content-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
     }
     .request-uri {
         font-size: 1.1em;
@@ -370,6 +414,23 @@ h1 {
     color: #1d365d;
     font-size: 28px;
     margin: 0;
+}
+
+.editor-copy {
+    color: #999;
+    font-size: .8rem;
+    font-weight: 600;
+    line-height: 15px;
+    padding: 5px;
+    margin: 0 5px;
+    border-radius: 2px;
+    user-select: none;
+    transition:  all .2s;
+    cursor: pointer;
+}
+.editor-copy:hover {
+    background-color: #eee;
+    color: #666;
 }
 
 </style>

@@ -2,7 +2,6 @@ package io.gitee.xuchenoak.limejapidocs.runner.runner;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import cn.hutool.script.ScriptUtil;
 import io.gitee.xuchenoak.limejapidocs.parser.basenode.AnnotationNode;
 import io.gitee.xuchenoak.limejapidocs.parser.config.ParserConfig;
 import io.gitee.xuchenoak.limejapidocs.parser.handler.ParserConfigHandler;
@@ -11,6 +10,7 @@ import io.gitee.xuchenoak.limejapidocs.parser.util.ListUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
 import io.gitee.xuchenoak.limejapidocs.runner.util.MsgUtil;
+import io.gitee.xuchenoak.limejapidocs.runner.util.ScriptCallbackSession;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,8 +24,17 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
 
     private ApiDocsConfig docsConfig;
 
+    private final ScriptCallbackSession scriptCallbackSession = new ScriptCallbackSession();
+
     public DocsParserConfigAbstractHandler(ApiDocsConfig docsConfig) {
         this.docsConfig = docsConfig;
+    }
+
+    /**
+     * 关闭JS回调会话，释放GraalVM堆外内存（解析结束后由调用方执行）
+     */
+    public void closeScriptCallbackSession() {
+        scriptCallbackSession.close();
     }
 
     /**
@@ -71,6 +80,35 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
                 parserConfig.addIgnoreControllerName(name);
             }
         }
+        parserConfig.addLastValueTypeFullName(
+
+                // java.time 时间系列
+                "java.time.Instant",
+                "java.time.LocalDate",
+                "java.time.LocalTime",
+                "java.time.LocalDateTime",
+                "java.time.ZonedDateTime",
+                "java.time.OffsetDateTime",
+                "java.time.OffsetTime",
+                "java.time.Duration",
+                "java.time.Period",
+                "java.time.Year",
+                "java.time.YearMonth",
+                "java.time.MonthDay",
+
+                // 其他JDK原子属性类型
+                "java.util.UUID",
+                "java.net.InetAddress",
+                "java.nio.charset.Charset",
+                "java.util.Currency",
+                "java.util.Locale",
+
+                // 旧时间类（业务上作为单一值，注意本身是可变类）
+                "java.util.Date",
+                "java.sql.Timestamp",
+                "java.sql.Date",
+                "java.sql.Time"
+        );
         return parserConfig;
     }
 
@@ -90,7 +128,7 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
         Set<String> annotationNames = Optional.ofNullable(annotationNodeList).orElse(new ArrayList<>()).stream().map(AnnotationNode::getName).collect(Collectors.toSet());
         String valid = "";
         try {
-            Object value = ScriptUtil.invoke(func, "valid", ScriptUtil.eval(JSONUtil.toJsonStr(annotationNames)), fieldInfo.getName(), fieldInfo.getComment());
+            Object value = scriptCallbackSession.invoke(func, "valid", JSONUtil.toJsonStr(annotationNames), fieldInfo.getName(), fieldInfo.getComment());
             if (value != null) {
                 valid = value.toString();
             }
@@ -115,7 +153,7 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
         }
         String valid = "";
         try {
-            Object value = ScriptUtil.invoke(func, "defaultValue", fieldInfo.getType(), fieldInfo.getName(), fieldInfo.getComment());
+            Object value = scriptCallbackSession.invoke(func, "defaultValue", fieldInfo.getType(), fieldInfo.getName(), fieldInfo.getComment());
             if (value != null) {
                 valid = value.toString();
             }
@@ -125,4 +163,8 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
         }
     }
 
+    @Override
+    public boolean isParseControllerFirstParent() {
+        return true;
+    }
 }

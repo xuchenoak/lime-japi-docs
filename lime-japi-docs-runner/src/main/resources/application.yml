@@ -4,12 +4,15 @@ server:
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    # 每次启动程序，程序都会运行schema.sql文件，对数据库的数据操作
-    schema: classpath:db/schema.sql
-    initialization-mode: always
-    url: jdbc:h2:file:./data/data;MODE=MYSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
+    # H2 2.x新增保留字（KEY/VALUE）需用NON_KEYWORDS放行，避免MyBatis-Plus拼SQL时未加引号报错
+    url: jdbc:h2:file:./data/data;MODE=MYSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;NON_KEYWORDS=KEY,VALUE
     username: admin
     password: admin666
+  sql:
+    init:
+      # 每次启动程序，程序都会运行schema.sql文件（CREATE TABLE IF NOT EXISTS，幂等）
+      mode: always
+      schema-locations: classpath:db/schema.sql
   h2:
     console:
       #开启web console功能

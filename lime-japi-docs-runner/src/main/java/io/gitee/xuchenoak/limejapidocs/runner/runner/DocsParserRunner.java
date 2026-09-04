@@ -12,7 +12,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**
@@ -37,10 +37,10 @@ public class DocsParserRunner implements ApplicationRunner {
         if (ListUtils.isNotBlank(docsConfigs)) {
             for (ApiDocsConfig docsConfig : docsConfigs) {
                 if (ListUtils.isBlank(docsConfig.getJavaFilePaths()) || !docsConfig.hasSysStartParse()) {
-                    return;
+                    continue;
                 }
                 try {
-                    MsgUtil.statusParseRun(docsConfig.getId());
+                    MsgUtil.startParse(docsConfig.getId());
                     docsParseService.runParse(docsConfig);
                 } catch (Exception e) {
                     logger.info(StrUtil.format("解析文档 docsConfigId={} 异常", docsConfig.getId()), e);

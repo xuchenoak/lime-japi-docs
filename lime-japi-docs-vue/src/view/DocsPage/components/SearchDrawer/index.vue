@@ -103,11 +103,26 @@ export default {
             }
             return uriList.join('；')
         },
-        toRed(source, repStr, isRep = false) {
-            if (source && repStr && isRep) {
-                return source.replace(repStr, `<span style="color: #f40">${repStr}</span>`)
+        // HTML转义，防止源码注释等内容注入
+        escapeHtml(str) {
+            if (str == null) {
+                return ''
             }
-            return source
+            return String(str).replace(/[&<>"']/g, c => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[c]))
+        },
+        toRed(source, repStr, isRep = false) {
+            const s = this.escapeHtml(source)
+            const r = this.escapeHtml(repStr)
+            if (s && r && isRep) {
+                return s.replace(r, `<span style="color: #f40">${r}</span>`)
+            }
+            return s
         }
     }
 }

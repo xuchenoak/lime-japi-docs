@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
 import io.gitee.xuchenoak.limejapidocs.runner.util.BeanUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;

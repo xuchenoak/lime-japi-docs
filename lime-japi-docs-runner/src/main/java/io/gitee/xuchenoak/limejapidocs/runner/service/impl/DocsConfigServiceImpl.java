@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsControllerData;
+import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsInterfaceData;
+import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsInterfaceDataSearch;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsParseLog;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigAddRf;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigEditRf;
@@ -15,14 +17,17 @@ import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig.DocsConfigListV
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig.DocsConfigVo;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsControllerDataService;
+import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsInterfaceDataSearchService;
+import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsInterfaceDataService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsParseLogService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.util.IdUtils;
 import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;
+import io.gitee.xuchenoak.limejapidocs.runner.util.MsgUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +47,12 @@ public class DocsConfigServiceImpl implements DocsConfigService {
 
     @Resource
     private ApiDocsParseLogService apiDocsParseLogService;
+
+    @Resource
+    private ApiDocsInterfaceDataService apiDocsInterfaceDataService;
+
+    @Resource
+    private ApiDocsInterfaceDataSearchService apiDocsInterfaceDataSearchService;
 
     /**
      * 获取文档列表
@@ -208,6 +219,9 @@ public class DocsConfigServiceImpl implements DocsConfigService {
         }
         apiDocsConfigService.removeById(id);
         apiDocsControllerDataService.remove(new LambdaUpdateWrapper<ApiDocsControllerData>().eq(ApiDocsControllerData::getDocsConfigId, id));
+        apiDocsInterfaceDataService.remove(new LambdaUpdateWrapper<ApiDocsInterfaceData>().eq(ApiDocsInterfaceData::getDocsConfigId, id));
+        apiDocsInterfaceDataSearchService.remove(new LambdaUpdateWrapper<ApiDocsInterfaceDataSearch>().eq(ApiDocsInterfaceDataSearch::getDocsConfigId, id));
         apiDocsParseLogService.remove(new LambdaUpdateWrapper<ApiDocsParseLog>().eq(ApiDocsParseLog::getDocsConfigId, id));
+        MsgUtil.clear(id);
     }
 }

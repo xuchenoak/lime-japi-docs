@@ -18,13 +18,17 @@ import java.util.List;
 @MappedJdbcTypes({JdbcType.VARCHAR})
 public class StringCommaListTypeHandler extends AbstractJsonTypeHandler<List<String>> {
 
+    public StringCommaListTypeHandler(Class<?> type) {
+        super(type);
+    }
+
     @Override
-    protected List<String> parse(String json) {
+    public List<String> parse(String json) {
         return parseToList(json);
     }
 
     @Override
-    protected String toJson(List<String> obj) {
+    public String toJson(List<String> obj) {
         return toStr(obj);
     }
 

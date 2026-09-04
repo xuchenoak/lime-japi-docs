@@ -15,13 +15,13 @@
                 label="账号"
                 has-feedback=""
             >
-                <a-input placeholder="请输入账号" v-decorator="['account', {rules: [{required: true, message: '请输入账号'}]}]" />
+                <a-input placeholder="请输入账号" @keyup.enter="handleSave" v-decorator="['account', {rules: [{required: true, message: '请输入账号'}]}]" />
             </a-form-item>
             <a-form-item
                 label="密码"
                 has-feedback=""
             >
-                <a-input type="password" autocomplete="off" placeholder="请输入密码" v-decorator="['password', {rules: [{required: true, message: '请输入密码'}]}]" />
+                <a-input type="password" autocomplete="off" placeholder="请输入密码" @keyup.enter="handleSave" v-decorator="['password', {rules: [{required: true, message: '请输入密码'}]}]" />
             </a-form-item>
         </a-form>
     </a-modal>

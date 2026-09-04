@@ -14,11 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.annotation.Resource;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,18 +141,28 @@ public class DocsController {
      * @param password 解析秘钥
      * @return
      */
-    @GetMapping("/run_docs_parsing")
+    @RequestMapping(value = "/run_docs_parsing", method = {RequestMethod.GET, RequestMethod.POST})
     public AjaxResult<String> runDocsParsing(@NotBlank(message = "文档标识码不能为空") String docsKey, String password) {
         List<ApiDocsConfig> list = apiDocsConfigService.list(q -> q.eq(ApiDocsConfig::getDocsKey, docsKey));
         if (ListUtils.isBlank(list)) {
             return AjaxResult.error(StrUtil.format("根据文档标识码[{}]未查询到文档", docsKey));
         }
-        List<String> docNames = new ArrayList<>();
+        List<String> runningNames = new ArrayList<>();
+        List<String> failMsgList = new ArrayList<>();
         for (ApiDocsConfig apiDocsConfig : list) {
-            docNames.add(apiDocsConfig.getDocsName());
-            docsService.runDocsParseAsync(apiDocsConfig.getId(), password);
+            DocsParseVo parseVo = docsService.runDocsParse(apiDocsConfig.getId(), password);
+            if (parseVo.isRunning()) {
+                runningNames.add(apiDocsConfig.getDocsName());
+            } else if (StrUtil.isNotBlank(parseVo.getMsg())) {
+                failMsgList.add(StrUtil.format("{}：{}", apiDocsConfig.getDocsName(), parseVo.getMsg()));
+            }
         }
-        return AjaxResult.success("操作成功", StrUtil.format("已触发生成文档：{}", String.join("；", docNames)));
+        String successMsg = runningNames.isEmpty() ? "" : StrUtil.format("已触发生成文档：{}", String.join("；", runningNames));
+        if (ListUtils.isNotBlank(failMsgList)) {
+            String prefix = runningNames.isEmpty() ? "未成功触发生成文档" : successMsg;
+            return AjaxResult.error(StrUtil.format("{}，失败：{}", prefix, String.join("；", failMsgList)));
+        }
+        return AjaxResult.success(successMsg);
     }
 
     /**
