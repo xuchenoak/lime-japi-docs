@@ -6,7 +6,7 @@
 
 lime-japi-docs是一个简单的Java接口文档生成工具，通过解析Java源码及其注释生成Controller接口文档，可在网页端管理、生成和浏览文档。项目打包为独立可执行jar包，对解析的源码零侵入，直接运行后在网页上进行初始化和配置即可。若只想解析获取Controller源码接口数据，只需要在自己项目中引入核心解析包「<a href="https://gitee.com/xuchenoak/lime-japi-docs-parser" target="_blank">lime-japi-docs-parser</a>」进行解析即可，核心包已开源并上传至maven中央仓库。
 
-运行环境：JDK1.8+（项目基于JDK1.8开发和编译）
+运行环境：JDK 17+（推荐 JDK 25，项目基于 JDK 25 与 Spring Boot 4 开发编译）
 
 ## 2 下载
 
@@ -47,7 +47,7 @@ lime-japi-docs是一个简单的Java接口文档生成工具，通过解析Java�
 ### 3.1 运行服务
 
 进入「<a href="https://gitee.com/xuchenoak/lime-japi-docs/releases" target="_blank">下载</a>」页面下载最新版本的zip包，然后将压缩包解压，在java环境下`java -jar lime-japi-docs-版本号.jar`直接运行目录下的jar包，启动后访问 http://127.0.0.1:3001 即可进行初始化并开始配置生成文档了！
-1. 建议下载`lime-japi-docs-1.1.*.zip`的最新版本，`lime-japi-docs-1.0.1.zip`版本比较粗糙，感兴趣的话需要找到对应版本标签里的`README.md`；
+1. 建议下载`lime-japi-docs-2.0.*.zip`的最新版本，更早的`lime-japi-docs-1.1.*.zip`版本为JDK8/Spring Boot 2时代的旧版，感兴趣的话需要找到对应版本标签里的`README.md`；
 2. jar包目录下贴心提供了`restart.cmd`（重启）和`stop.cmd`（关闭）服务的脚本，默认端口3001，如果使用其它端口启动记得脚本里也改一下；
 3. jar包目录下会生成数据库文件`./data/data.mv.db`（所有配置都在数据库里，数据库删除了就要重新配置和生成文档了）和日志文件`./data/log`（想看日志自己查）。
 
@@ -185,6 +185,27 @@ public class UserVo {
 - 2025-10-19 V1.1.3更新（兼容上一版本，更换jar包即可）
   - 文档配置新增源码来源git仓库，只要进行git仓库地址等配置，在触发文档生成前系统会从git仓库中拉取最新的代码进行解析；
   - 新增了本地git源码工作空间，位于jar包目录下的`./data/workspace`内，可手动管理源码。
+
+
+- 2026-09-04 V2.0.1更新（不兼容上一版本，更换jar包+删除或迁移数据库后运行）
+  - 技术栈全面升级：Spring Boot 2.4.2 → **Spring Boot 4.0.8**（Jakarta EE 11），JDK 1.8 → **JDK 25**，`javax.*` 全部迁移为 `jakarta.*`；
+  - MyBatis-Plus 升级至 3.5.17（`mybatis-plus-spring-boot4-starter`），适配新的 `ServiceImpl` 包名与类型处理器API；
+  - H2 数据库升级至 2.x（1.4.200 → 2.4.240），数据库文件格式**不兼容**：2.x 无法直接打开 1.4 生成的文件，旧版也无法打开新文件。**迁移前务必停止服务并备份`./data`目录**，三种处理方式任选：
+    - **方式一：官方 SCRIPT/RUNSCRIPT 迁移（推荐，已验证）**——保留原配置与已生成文档：
+      1. 备份：`copy data\data.mv.db data\data.mv.db.bak140`；
+      2. 用旧驱动导出SQL：`java -cp h2-1.4.200.jar org.h2.tools.Script -url "jdbc:h2:file:./data/data;MODE=MYSQL;DATABASE_TO_UPPER=false" -user admin -password admin666 -script data_export.sql`；
+      3. 移走旧库：`move data\data.mv.db data\data.mv.db.bak140`；
+      4. 用新驱动导入（URL需含`NON_KEYWORDS=KEY,VALUE`，并加`FROM_1X`参数）：`java -cp h2-2.4.240.jar org.h2.tools.RunScript -url "jdbc:h2:file:./data/data;MODE=MYSQL;DATABASE_TO_UPPER=false;NON_KEYWORDS=KEY,VALUE" -user admin -password admin666 -script data_export.sql -options FROM_1X`；
+      5. 启动 2.0.1，启动时会幂等叠加`schema.sql`，原有系统配置、文档配置与已生成文档完整保留，无需重新初始化。
+    - **方式二：H2MigrationTool 图形化迁移**：下载「<a href="https://github.com/manticore-projects/H2MigrationTool" target="_blank">H2MigrationTool</a>」，指定旧驱动1.4.200导出、新驱动2.4.240导入即可（本质同上，自动完成SCRIPT/RUNSCRIPT）。
+    - **方式三：重置（最省事，丢失数据）**：直接删除`./data`目录后启动，重新在页面完成初始化、配置并解析生成文档，旧的系统配置与已生成文档会丢失。
+    - 迁移只影响数据库内部格式，业务数据（系统配置、文档配置、接口文档、解析日志、参数回调）可完整保留；`./data/workspace`（git源码工作空间）不受影响。
+  - JS回调执行器改用 GraalJS polyglot 方式（每次解析创建Context、结束后关闭），修复参数验证/默认值回调导致的内存随解析次数累积的问题。
+  - **功能升级和优化**：
+    - 核心解析包「<a href="https://gitee.com/xuchenoak/lime-japi-docs-parser" target="_blank">lime-japi-docs-parser</a>」升级至 2.1.2，支持解析JDK25以下语法的同时优化了解析性能；
+    - 源码来源为git时去除配置源码路径，减少了配置步骤；
+    - 忽略controller包名支持*/**通配符配置，配置更灵活，系统也能更方便定位controller文件以提升解析性能；
+    - 只解析和忽略controller类配置也从类名改成了类全名，更精准。
 
 ## 6 最后&致谢
 

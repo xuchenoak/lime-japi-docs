@@ -17,7 +17,7 @@
 
     <groupId>io.gitee.xuchenoak</groupId>
     <artifactId>lime-japi-docs-runner</artifactId>
-    <version>1.1.3</version>
+    <version>2.0.1</version>
 
     <dependencies>
         <dependency>
