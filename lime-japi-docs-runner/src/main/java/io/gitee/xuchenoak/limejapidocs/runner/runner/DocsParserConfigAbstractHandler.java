@@ -10,7 +10,7 @@ import io.gitee.xuchenoak.limejapidocs.parser.util.ListUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
 import io.gitee.xuchenoak.limejapidocs.runner.util.MsgUtil;
-import io.gitee.xuchenoak.limejapidocs.runner.util.ScriptCallbackUtil;
+import io.gitee.xuchenoak.limejapidocs.runner.util.ScriptCallbackSession;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,8 +24,17 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
 
     private ApiDocsConfig docsConfig;
 
+    private final ScriptCallbackSession scriptCallbackSession = new ScriptCallbackSession();
+
     public DocsParserConfigAbstractHandler(ApiDocsConfig docsConfig) {
         this.docsConfig = docsConfig;
+    }
+
+    /**
+     * 关闭JS回调会话，释放GraalVM堆外内存（解析结束后由调用方执行）
+     */
+    public void closeScriptCallbackSession() {
+        scriptCallbackSession.close();
     }
 
     /**
@@ -119,7 +128,7 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
         Set<String> annotationNames = Optional.ofNullable(annotationNodeList).orElse(new ArrayList<>()).stream().map(AnnotationNode::getName).collect(Collectors.toSet());
         String valid = "";
         try {
-            Object value = ScriptCallbackUtil.invoke(func, "valid", JSONUtil.toJsonStr(annotationNames), fieldInfo.getName(), fieldInfo.getComment());
+            Object value = scriptCallbackSession.invoke(func, "valid", JSONUtil.toJsonStr(annotationNames), fieldInfo.getName(), fieldInfo.getComment());
             if (value != null) {
                 valid = value.toString();
             }
@@ -144,7 +153,7 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
         }
         String valid = "";
         try {
-            Object value = ScriptCallbackUtil.invoke(func, "defaultValue", fieldInfo.getType(), fieldInfo.getName(), fieldInfo.getComment());
+            Object value = scriptCallbackSession.invoke(func, "defaultValue", fieldInfo.getType(), fieldInfo.getName(), fieldInfo.getComment());
             if (value != null) {
                 valid = value.toString();
             }

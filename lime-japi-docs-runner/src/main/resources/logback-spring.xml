@@ -9,7 +9,7 @@
     <!--只在控制台输出日志组件-->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%highlight(%d{yyyy-MM-dd HH:mm:ss,CTT}) %boldYellow([%thread]) %-5level
+            <pattern>%highlight(%d{yyyy-MM-dd HH:mm:ss,Asia/Shanghai}) %boldYellow([%thread]) %-5level
                 %boldCyan([%logger{50}[%L]]) %msg%n
             </pattern>
             <charset>UTF-8</charset>
@@ -32,7 +32,7 @@
         </rollingPolicy>
         <!--日志输出格式，编码以及信息格式-->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss,CTT} [%thread] %-5level %logger{50}[%L] - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss,Asia/Shanghai} [%thread] %-5level %logger{50}[%L] - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>
@@ -52,7 +52,7 @@
             <level>ERROR</level>
         </filter>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss,CTT} [%thread] %-5level %logger{50}[%L] - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss,Asia/Shanghai} [%thread] %-5level %logger{50}[%L] - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>
@@ -71,7 +71,7 @@
         <append>true</append>
         <!-- 日志文件的格式 -->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss,CTT} %-5level %logger Line:%-3L - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss,Asia/Shanghai} %-5level %logger Line:%-3L - %msg%n</pattern>
             <charset>utf-8</charset>
         </encoder>
         <!--过滤日志-->

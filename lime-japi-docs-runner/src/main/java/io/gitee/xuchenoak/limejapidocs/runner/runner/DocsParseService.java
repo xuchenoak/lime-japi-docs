@@ -17,7 +17,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class DocsParseService {
             }
 
             // 调用解析方法
-            LimeJapiDocsParser.build(new DocsParserConfigAbstractHandler(docsConfig) {
+            DocsParserConfigAbstractHandler handler = new DocsParserConfigAbstractHandler(docsConfig) {
                 @Override
                 public void controllerDataHandle(ControllerData controllerData) {
                     String msg = StrUtil.format("成功生成-{}：{}", controllerData.getSort(), controllerData.getComment());
@@ -89,7 +89,13 @@ public class DocsParseService {
                     apiDocsParseLogService.addMsg(docsConfigId, msg);
                 }
 
-            });
+            };
+            try {
+                LimeJapiDocsParser.build(handler);
+            } finally {
+                // 关闭JS回调会话，释放GraalVM堆外内存
+                handler.closeScriptCallbackSession();
+            }
 
             logger.info("\n\n------ LimeJapiDocs 生成完成 ------\n");
 
