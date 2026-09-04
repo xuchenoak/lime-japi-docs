@@ -124,8 +124,8 @@
                     </a-form-item>
                     <a-form-item>
                         <span slot="label">
-                            <span>仅扫描解析该包集合下的controller类</span>
-                            <why-box-text text="必须位于以上源码目录下的包，默认扫描所有"/>
+                            <span>仅扫描解析这些包下的controller类</span>
+                            <why-box-text text="支持*（单段）或**（多段）通配，默认扫描所有（大项目建议配置以缩小扫描范围，提升效率）"/>
                         </span>
                         <div :key="index" v-for="(item, index) in configItem.filterPackages">
                             <a-input v-model="configItem.filterPackages[index]" placeholder="请输入包名" allowClear style="width: calc(100% - 30px); margin-right: 10px; margin-bottom: 10px"/>
@@ -137,7 +137,7 @@
                     </a-form-item>
                     <a-form-item>
                         <span slot="label">
-                            <span>仅扫描的controller类</span>
+                            <span>仅扫描解析的controller类（全名）</span>
                             <why-box-text text="类全名，如com.test.UserController，优先级低于下方的排除配置"/>
                         </span>
                         <div :key="index" v-for="(item, index) in configItem.filterClassNames">
@@ -150,7 +150,7 @@
                     </a-form-item>
                     <a-form-item>
                         <span slot="label">
-                            <span>需要排除的controller类</span>
+                            <span>需要排除的controller类（全名）</span>
                             <why-box-text text="类全名，如com.test.UserController，优先级高于上方的仅扫描配置"/>
                         </span>
                         <div :key="index" v-for="(item, index) in configItem.ignoreClassNames">
