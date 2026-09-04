@@ -13,6 +13,8 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -94,6 +96,18 @@ public class GlobalExceptionHandler {
     public AjaxResult exceptionHandler(HttpRequestMethodNotSupportedException e) {
         logger.error("接口请示方式错误", e);
         return AjaxResult.error("接口请示方式错误");
+    }
+
+    /**
+     * 前端history路由（SPA）回退
+     * <p>
+     * Boot 4对未命中Controller的路径（如 /666 查看码URL）会抛NoResourceFoundException，
+     * 若被下方Exception兜底拦截则返回JSON而非页面。这里单独处理，返回index视图，
+     * 由前端Vue-router的 /:viewKey 等路由接管。等价于Boot 2.4时代 404→/error→index 的行为。
+     */
+    @ExceptionHandler(value = NoResourceFoundException.class)
+    public ModelAndView noResourceExceptionHandler(NoResourceFoundException e) {
+        return new ModelAndView("index");
     }
 
     /**
