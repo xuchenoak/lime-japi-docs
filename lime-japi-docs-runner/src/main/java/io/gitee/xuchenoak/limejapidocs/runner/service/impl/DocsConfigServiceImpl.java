@@ -6,28 +6,21 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
-import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
-import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsControllerData;
-import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsInterfaceData;
-import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsInterfaceDataSearch;
-import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsParseLog;
+import io.gitee.xuchenoak.limejapidocs.runner.common.mybatisplus.StringListTypeHandler;
+import io.gitee.xuchenoak.limejapidocs.runner.domain.*;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigAddRf;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.rf.docsconfig.DocsConfigEditRf;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig.DocsConfigListVo;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docsconfig.DocsConfigVo;
-import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsConfigService;
-import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsControllerDataService;
-import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsInterfaceDataSearchService;
-import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsInterfaceDataService;
-import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsParseLogService;
+import io.gitee.xuchenoak.limejapidocs.runner.service.base.*;
 import io.gitee.xuchenoak.limejapidocs.runner.service.inter.DocsConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.util.IdUtils;
 import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;
 import io.gitee.xuchenoak.limejapidocs.runner.util.MsgUtil;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,10 +110,10 @@ public class DocsConfigServiceImpl implements DocsConfigService {
                 bean.getDocsVersion(),
                 bean.getSysStartParse(),
                 bean.getApiRunKey(),
-                bean.getJavaFilePaths(),
-                bean.getFilterPackages(),
-                bean.getFilterClassNames(),
-                bean.getIgnoreClassNames(),
+                StringListTypeHandler.parseToList(bean.getJavaFilePaths()),
+                StringListTypeHandler.parseToList(bean.getFilterPackages()),
+                StringListTypeHandler.parseToList(bean.getFilterClassNames()),
+                StringListTypeHandler.parseToList(bean.getIgnoreClassNames()),
                 bean.getParamValidFunc(),
                 bean.getParamDefaultValueFunc(),
                 bean.getSort(),

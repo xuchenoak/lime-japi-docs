@@ -2,6 +2,7 @@ package io.gitee.xuchenoak.limejapidocs.runner.runner;
 
 
 import cn.hutool.core.util.StrUtil;
+import io.gitee.xuchenoak.limejapidocs.runner.common.mybatisplus.StringListTypeHandler;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsConfigService;
 import io.gitee.xuchenoak.limejapidocs.runner.util.ListUtils;
@@ -36,7 +37,8 @@ public class DocsParserRunner implements ApplicationRunner {
         List<ApiDocsConfig> docsConfigs = apiDocsConfigService.list();
         if (ListUtils.isNotBlank(docsConfigs)) {
             for (ApiDocsConfig docsConfig : docsConfigs) {
-                if (ListUtils.isBlank(docsConfig.getJavaFilePaths()) || !docsConfig.hasSysStartParse()) {
+                List<String> javaFilePaths = StringListTypeHandler.parseToList(docsConfig.getJavaFilePaths());
+                if (ListUtils.isBlank(javaFilePaths) || !docsConfig.hasSysStartParse()) {
                     continue;
                 }
                 try {

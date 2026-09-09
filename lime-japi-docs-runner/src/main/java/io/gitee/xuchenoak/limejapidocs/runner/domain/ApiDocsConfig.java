@@ -2,7 +2,6 @@ package io.gitee.xuchenoak.limejapidocs.runner.domain;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.gitee.xuchenoak.limejapidocs.parser.util.StringUtil;
@@ -24,7 +23,7 @@ import java.util.Optional;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "api_docs_config", autoResultMap = true)
+@TableName(value = "api_docs_config")
 public class ApiDocsConfig {
 
     /**
@@ -56,26 +55,22 @@ public class ApiDocsConfig {
     /**
      * java文件所在目录绝对路径（必须写到java目录，多模块时填写多个）
      */
-    @TableField(typeHandler = StringListTypeHandler.class)
-    private List<String> javaFilePaths;
+    private String javaFilePaths;
 
     /**
      * 仅扫描解析该包集合下的controller类（必须位于javaFilePaths下，若不配置默认扫描javaFilePaths下所有）
      */
-    @TableField(typeHandler = StringListTypeHandler.class)
-    private List<String> filterPackages;
+    private String filterPackages;
 
     /**
      * 仅扫描的controller类名集（非类全名）
      */
-    @TableField(typeHandler = StringListTypeHandler.class)
-    private List<String> filterClassNames;
+    private String filterClassNames;
 
     /**
      * 需要排除的controller类名集（非类全名）
      */
-    @TableField(typeHandler = StringListTypeHandler.class)
-    private List<String> ignoreClassNames;
+    private String ignoreClassNames;
 
     /**
      * 参数验证函数
@@ -97,27 +92,27 @@ public class ApiDocsConfig {
      */
     private String docsKey;
 
-     /**
+    /**
      * 代码来源 本地/git仓库
      */
     private String codeSource;
 
-     /**
+    /**
      * git仓库地址
      */
     private String gitUrl;
 
-     /**
+    /**
      * git仓库分支
      */
     private String gitBranch;
 
-     /**
+    /**
      * git仓库用户名
      */
     private String gitUsername;
 
-     /**
+    /**
      * git仓库密码
      */
     private String gitPassword;
@@ -137,10 +132,10 @@ public class ApiDocsConfig {
         this.docsVersion = docsVersion;
         this.sysStartParse = sysStartParse;
         this.apiRunKey = apiRunKey;
-        this.javaFilePaths = javaFilePaths;
-        this.filterPackages = filterPackages;
-        this.filterClassNames = filterClassNames;
-        this.ignoreClassNames = ignoreClassNames;
+        this.javaFilePaths = StringListTypeHandler.toStr(javaFilePaths);
+        this.filterPackages = StringListTypeHandler.toStr(filterPackages);
+        this.filterClassNames = StringListTypeHandler.toStr(filterClassNames);
+        this.ignoreClassNames = StringListTypeHandler.toStr(ignoreClassNames);
         this.paramValidFunc = paramValidFunc;
         this.paramDefaultValueFunc = paramDefaultValueFunc;
         this.sort = sort;
@@ -173,10 +168,10 @@ public class ApiDocsConfig {
         this.docsVersion = docsVersion;
         this.sysStartParse = sysStartParse;
         this.apiRunKey = apiRunKey;
-        this.javaFilePaths = javaFilePaths;
-        this.filterPackages = filterPackages;
-        this.filterClassNames = filterClassNames;
-        this.ignoreClassNames = ignoreClassNames;
+        this.javaFilePaths = StringListTypeHandler.toStr(javaFilePaths);
+        this.filterPackages = StringListTypeHandler.toStr(filterPackages);
+        this.filterClassNames = StringListTypeHandler.toStr(filterClassNames);
+        this.ignoreClassNames = StringListTypeHandler.toStr(ignoreClassNames);
         this.paramValidFunc = paramValidFunc;
         this.paramDefaultValueFunc = paramDefaultValueFunc;
         this.sort = sort;

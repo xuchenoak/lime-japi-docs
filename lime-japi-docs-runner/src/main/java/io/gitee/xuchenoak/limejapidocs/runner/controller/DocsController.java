@@ -22,6 +22,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 接口文档业务接口
@@ -83,6 +84,7 @@ public class DocsController {
                                                                 Integer searchFrom,
                                                                 String likeStr) {
         SearchFromEnum e = SearchFromEnum.getEnumByValue(searchFrom);
+        likeStr = Optional.ofNullable(likeStr).orElse("").trim();
         if (StringUtil.isBlank(createTime) || e == null || StringUtil.isBlank(likeStr)) {
             return AjaxResult.success(new ArrayList<>());
         }

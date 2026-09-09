@@ -11,6 +11,7 @@ import io.gitee.xuchenoak.limejapidocs.parser.util.ListUtil;
 import io.gitee.xuchenoak.limejapidocs.parser.util.StringUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.common.enums.SearchFromEnum;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
+import io.gitee.xuchenoak.limejapidocs.runner.common.mybatisplus.StringCommaListTypeHandler;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.*;
 import io.gitee.xuchenoak.limejapidocs.runner.pojo.vo.docs.*;
 import io.gitee.xuchenoak.limejapidocs.runner.runner.DocsParseService;
@@ -228,8 +229,8 @@ public class DocsServiceImpl implements DocsService {
                     interfaceDataSearch.getControllerCreateTime(),
                     interfaceDataSearch.getInterfaceId(),
                     interfaceDataSearch.getInterfaceComment(),
-                    interfaceDataSearch.getUriList(),
-                    interfaceDataSearch.getRequestTypeList()
+                    StringCommaListTypeHandler.parseToList(interfaceDataSearch.getUriList()),
+                    StringCommaListTypeHandler.parseToList(interfaceDataSearch.getRequestTypeList())
             ));
         }
         for (ApiDocsControllerData controllerData : controllerDataList) {

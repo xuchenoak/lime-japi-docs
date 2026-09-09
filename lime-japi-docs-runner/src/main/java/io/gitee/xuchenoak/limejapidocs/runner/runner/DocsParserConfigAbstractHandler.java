@@ -8,6 +8,7 @@ import io.gitee.xuchenoak.limejapidocs.parser.handler.ParserConfigHandler;
 import io.gitee.xuchenoak.limejapidocs.parser.parsendoe.FieldInfo;
 import io.gitee.xuchenoak.limejapidocs.parser.util.ListUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
+import io.gitee.xuchenoak.limejapidocs.runner.common.mybatisplus.StringListTypeHandler;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
 import io.gitee.xuchenoak.limejapidocs.runner.util.MsgUtil;
 import io.gitee.xuchenoak.limejapidocs.runner.util.ScriptCallbackSession;
@@ -54,29 +55,34 @@ public abstract class DocsParserConfigAbstractHandler implements ParserConfigHan
      */
     @Override
     public ParserConfig getParserConfig() {
-        if (ListUtil.isBlank(docsConfig.getJavaFilePaths())) {
+        List<String> javaFilePaths = StringListTypeHandler.parseToList(docsConfig.getJavaFilePaths());
+        if (ListUtil.isBlank(javaFilePaths)) {
             CusExc.e("源码路径不能为空");
         }
         ParserConfig parserConfig = null;
-        for (String filePath : docsConfig.getJavaFilePaths()) {
+        for (String filePath : javaFilePaths) {
             if (parserConfig == null) {
                 parserConfig = ParserConfig.build(filePath);
             } else {
                 parserConfig.addJavaFilePath(filePath);
             }
         }
-        if (ListUtil.isNotBlank(docsConfig.getFilterPackages())) {
-            for (String filterPackage : docsConfig.getFilterPackages()) {
+        List<String> filterPackages = StringListTypeHandler.parseToList(docsConfig.getFilterPackages());
+        if (ListUtil.isNotBlank(filterPackages)) {
+            for (String filterPackage : filterPackages) {
                 parserConfig.addFilterControllerPackage(filterPackage);
             }
         }
-        if (ListUtil.isNotBlank(docsConfig.getFilterClassNames())) {
-            for (String name : docsConfig.getFilterClassNames()) {
+
+        List<String> filterClassNames = StringListTypeHandler.parseToList(docsConfig.getFilterClassNames());
+        if (ListUtil.isNotBlank(filterClassNames)) {
+            for (String name : filterClassNames) {
                 parserConfig.addFilterControllerName(name);
             }
         }
-        if (ListUtil.isNotBlank(docsConfig.getIgnoreClassNames())) {
-            for (String name : docsConfig.getIgnoreClassNames()) {
+        List<String> ignoreClassNames = StringListTypeHandler.parseToList(docsConfig.getIgnoreClassNames());
+        if (ListUtil.isNotBlank(ignoreClassNames)) {
+            for (String name : ignoreClassNames) {
                 parserConfig.addIgnoreControllerName(name);
             }
         }

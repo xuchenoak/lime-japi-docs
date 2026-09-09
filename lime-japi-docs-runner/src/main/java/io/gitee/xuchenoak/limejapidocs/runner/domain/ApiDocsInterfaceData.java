@@ -18,7 +18,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "api_docs_interface_data", autoResultMap = true)
+@TableName("api_docs_interface_data")
 public class ApiDocsInterfaceData {
 
     /**

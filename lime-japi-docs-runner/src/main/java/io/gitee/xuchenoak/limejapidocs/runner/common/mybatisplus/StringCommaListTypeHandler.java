@@ -33,7 +33,7 @@ public class StringCommaListTypeHandler extends AbstractJsonTypeHandler<List<Str
     }
 
     public static String toStr(List<String> obj) {
-        return String.join(",", obj.toArray(new String[obj.size()]));
+        return String.join(",", obj);
     }
 
     public static List<String> parseToList(String json) {

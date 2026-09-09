@@ -5,6 +5,8 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.handlers.AbstractJsonTypeHandler;
 import org.apache.ibatis.type.MappedTypes;
 
+import java.util.List;
+
 /**
  * 字符串数组反序列化控制（JSON数组格式存储）
  * <p>
@@ -31,6 +33,18 @@ public class StringListTypeHandler extends AbstractJsonTypeHandler<Object> {
     @Override
     public String toJson(Object obj) {
         return JSONUtil.toJsonStr(obj);
+    }
+
+    public static String toStr(Object obj) {
+        return JSONUtil.toJsonStr(obj);
+    }
+
+
+    public static List<String> parseToList(String json) {
+        if (StrUtil.isBlank(json)) {
+            return null;
+        }
+        return JSONUtil.toList(json, String.class);
     }
 
 }

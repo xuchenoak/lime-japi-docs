@@ -6,6 +6,7 @@ import io.gitee.xuchenoak.limejapidocs.parser.LimeJapiDocsParser;
 import io.gitee.xuchenoak.limejapidocs.parser.bean.ControllerData;
 import io.gitee.xuchenoak.limejapidocs.runner.common.enums.CodeSourceEnum;
 import io.gitee.xuchenoak.limejapidocs.runner.common.exception.CusExc;
+import io.gitee.xuchenoak.limejapidocs.runner.common.mybatisplus.StringListTypeHandler;
 import io.gitee.xuchenoak.limejapidocs.runner.domain.ApiDocsConfig;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsControllerDataService;
 import io.gitee.xuchenoak.limejapidocs.runner.service.base.ApiDocsParseLogService;
@@ -123,7 +124,7 @@ public class DocsParseService {
             apiDocsParseLogService.addMsg(docsConfig.getId(), StrUtil.format("正在从{}拉取{}分支源码", docsConfig.getGitUrl(), StrUtil.isBlank(docsConfig.getGitBranch()) ? "默认" : docsConfig.getGitBranch()));
             String prePath = JGitUtil.autoManageRepository(docsConfig.getGitUrl(), docsConfig.getGitBranch(), docsConfig.getGitUsername(), docsConfig.getGitPassword(), workspace);
             apiDocsParseLogService.addMsg(docsConfig.getId(), StrUtil.format("源码拉取成功", docsConfig.getGitUrl()));
-            docsConfig.setJavaFilePaths(new ArrayList<>(Arrays.asList(prePath)));
+            docsConfig.setJavaFilePaths(StringListTypeHandler.toStr(Arrays.asList(prePath)));
         }
     }
 

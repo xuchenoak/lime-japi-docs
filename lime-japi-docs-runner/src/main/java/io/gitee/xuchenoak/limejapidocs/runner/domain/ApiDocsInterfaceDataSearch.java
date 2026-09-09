@@ -1,7 +1,6 @@
 package io.gitee.xuchenoak.limejapidocs.runner.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.gitee.xuchenoak.limejapidocs.runner.common.mybatisplus.StringCommaListTypeHandler;
@@ -21,7 +20,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "api_docs_interface_data_search", autoResultMap = true)
+@TableName("api_docs_interface_data_search")
 public class ApiDocsInterfaceDataSearch {
 
     /**
@@ -63,14 +62,12 @@ public class ApiDocsInterfaceDataSearch {
     /**
      * 接口uri列表
      */
-    @TableField(typeHandler = StringCommaListTypeHandler.class)
-    private List<String> uriList;
+    private String uriList;
 
     /**
      * 接口请求方式列表
      */
-    @TableField(typeHandler = StringCommaListTypeHandler.class)
-    private List<String> requestTypeList;
+    private String requestTypeList;
 
     public ApiDocsInterfaceDataSearch(Long docsConfigId, String controllerId, String controllerComment, Date controllerCreateTime, String interfaceId, String interfaceComment, List<String> uriList, List<String> requestTypeList) {
         this.docsConfigId = docsConfigId;
@@ -79,7 +76,7 @@ public class ApiDocsInterfaceDataSearch {
         this.controllerCreateTime = controllerCreateTime;
         this.interfaceId = interfaceId;
         this.interfaceComment = interfaceComment;
-        this.uriList = uriList;
-        this.requestTypeList = requestTypeList;
+        this.uriList = StringCommaListTypeHandler.toStr(uriList);
+        this.requestTypeList = StringCommaListTypeHandler.toStr(requestTypeList);
     }
 }
