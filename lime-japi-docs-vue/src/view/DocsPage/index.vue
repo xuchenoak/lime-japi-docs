@@ -56,6 +56,11 @@
                                             <a-input-search v-model="searchConfig.value" placeholder="请输入搜索关键字" style="width: 300px" @search="handleSearch" @pressEnter="handleSearch" :allowClear="true" :loading="searchConfig.loading"/>
                                         </a-input-group>
                                     </div>
+                                    <export-dropdown
+                                        v-if="createTimeList && createTimeList.length > 0"
+                                        :params="projectExportParams"
+                                        :disabled="!createTime"
+                                        tip="导出整个文档"/>
                                 </a-space>
                                 <a-space class="docs-config-right" align="center" :style="{right: collapsed ? '40px' : '340px'}">
                                     <div class="home-box" @click="backToRoot">
@@ -169,6 +174,16 @@ export default {
             docsConfigId: null,
             docsNotFound: false
         };
+    },
+    computed: {
+        // 整个文档导出参数
+        projectExportParams() {
+            return {
+                docsConfigId: this.docsConfigId,
+                createTime: this.createTime,
+                scope: 'project'
+            }
+        }
     },
     created() {
         this.init()

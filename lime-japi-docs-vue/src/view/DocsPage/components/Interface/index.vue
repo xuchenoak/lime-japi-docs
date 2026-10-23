@@ -4,11 +4,17 @@
             <a-row >
                 <a-col :span="interfaceShow ? 18 : 24">
                     <div class="interface-bg">
-                        <copy-text :value="controllerName" placement="right">
-                            <h1>
-                                <span class="diy-cursor">{{controllerName}}</span>
-                            </h1>
-                        </copy-text>
+                        <div class="controller-title">
+                            <copy-text :value="controllerName" placement="right">
+                                <h1>
+                                    <span class="diy-cursor">{{controllerName}}</span>
+                                </h1>
+                            </copy-text>
+                            <export-dropdown
+                                :params="controllerExportParams"
+                                :disabled="!interfaceShow"
+                                tip="导出当前接口分组"/>
+                        </div>
                         <div class="interface-content-bg">
                             <div v-if="interfaceShow">
                                 <a-descriptions class="interface-content" layout="vertical" bordered size="small"
@@ -22,9 +28,15 @@
                                                     <span class="diy-cursor" :id="'_' + inter.interfaceId">{{inter.interfaceName}}</span>
                                                 </copy-text>
                                             </h2>
-                                            <copy-text :value="buildCopyInterfaceData(inter)" class="editor-copy" pre-tip-value="点击复制接口数据">
-                                                <a-icon type="copy"/>
-                                            </copy-text>
+                                            <div class="content-actions">
+                                                <copy-text :value="buildCopyInterfaceData(inter)" class="editor-copy" pre-tip-value="点击复制接口数据">
+                                                    <a-icon type="copy"/>
+                                                </copy-text>
+                                                <export-dropdown
+                                                    :params="buildInterfaceExportParams(inter)"
+                                                    :disabled="!inter.interfaceId"
+                                                    tip="导出当前接口"/>
+                                            </div>
                                         </div>
                                     </template>
                                     <a-descriptions-item :span="3">
@@ -227,6 +239,17 @@ export default {
             ],
         }
     },
+    computed: {
+        // 单个controller导出参数
+        controllerExportParams() {
+            return {
+                docsConfigId: this.interfaceParams.docsConfigId,
+                createTime: this.interfaceParams.createTime,
+                scope: 'controller',
+                controllerId: this.interfaceParams.controllerId
+            }
+        }
+    },
     methods: {
 
         // 初始化
@@ -317,6 +340,16 @@ export default {
         getContainer() {
             return this.$refs['interfaceContainer']
         },
+        // 构建单个接口导出参数
+        buildInterfaceExportParams(inter) {
+            return {
+                docsConfigId: this.interfaceParams.docsConfigId,
+                createTime: this.interfaceParams.createTime,
+                scope: 'interface',
+                controllerId: this.interfaceParams.controllerId,
+                interfaceId: inter.interfaceId
+            }
+        },
         // 构建复制接口数据
         buildCopyInterfaceData(item) {
             const reqTypes = (item.requestTypeList || []).join(",");
@@ -374,12 +407,24 @@ export default {
         min-height: calc(100vh - 310px);
         position: relative;
     }
+    .controller-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
     .interface-content {
         margin-bottom: 40px;
         .content-title {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            .content-actions {
+                display: flex;
+                align-items: center;
+                > * + * {
+                    margin-left: 6px;
+                }
+            }
         }
     }
     .request-uri {

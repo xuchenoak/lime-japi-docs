@@ -25,6 +25,10 @@ Vue.component('CodeViewer', CodeViewer)
 import CopyText from '@/components/CopyText'
 Vue.component('CopyText', CopyText)
 
+// 文档导出组件
+import ExportDropdown from '@/components/ExportDropdown'
+Vue.component('ExportDropdown', ExportDropdown)
+
 // 空盒组件
 import EmptyBox from '@/components/EmptyBox'
 Vue.component('EmptyBox', EmptyBox)
