@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `api_docs_controller_data` (
     `docs_config_id` BIGINT ( 20 ) NOT NULL COMMENT '文档配置Id',
     `controller_id` VARCHAR ( 255 ) NOT NULL COMMENT 'controller唯一标识',
     `controller_full_name` VARCHAR ( 255 ) NULL DEFAULT NULL COMMENT 'controller类全名',
-    `comment` VARCHAR ( 255 ) NULL DEFAULT NULL COMMENT 'controller名称注释',
+    `comment` TEXT NULL COMMENT 'controller名称注释',
     `base_uri_list` VARCHAR ( 255 ) NULL DEFAULT NULL COMMENT '请求前缀',
     `interface_data_list` LONGTEXT NULL COMMENT '接口方法集',
     `sort` INT ( 11 ) NULL DEFAULT NULL COMMENT '排序',
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `api_docs_interface_data` (
     `id` BIGINT ( 20 ) NOT NULL AUTO_INCREMENT COMMENT '自增Id',
     `docs_config_id` BIGINT ( 20 ) NOT NULL COMMENT '文档配置Id',
     `controller_id` VARCHAR ( 255 ) NOT NULL COMMENT 'controller唯一标识',
-    `controller_comment` VARCHAR ( 255 ) NULL DEFAULT NULL COMMENT 'controller名称注释',
+    `controller_comment` TEXT NULL COMMENT 'controller名称注释',
     `controller_create_time` datetime ( 0 ) NULL DEFAULT NULL COMMENT 'controller生成时间',
     `interface_data_list` LONGTEXT NULL COMMENT '接口方法集',
     PRIMARY KEY ( `id` )
@@ -56,10 +56,10 @@ CREATE TABLE IF NOT EXISTS `api_docs_interface_data_search` (
     `id` BIGINT ( 20 ) NOT NULL AUTO_INCREMENT COMMENT '自增Id',
     `docs_config_id` BIGINT ( 20 ) NOT NULL COMMENT '文档配置Id',
     `controller_id` VARCHAR ( 255 ) NOT NULL COMMENT 'controller唯一标识',
-    `controller_comment` VARCHAR ( 255 ) NULL DEFAULT NULL COMMENT 'controller名称注释',
+    `controller_comment` TEXT NULL COMMENT 'controller名称注释',
     `controller_create_time` datetime ( 0 ) NULL DEFAULT NULL COMMENT 'controller生成时间',
     `interface_id` VARCHAR ( 255 ) NOT NULL COMMENT '接口唯一标识',
-    `interface_comment` VARCHAR ( 255 ) NULL DEFAULT NULL COMMENT '接口注释',
+    `interface_comment` TEXT NULL COMMENT '接口注释',
     `uri_list` TEXT NULL COMMENT '接口uri列表',
     `request_type_list` TEXT NULL COMMENT '接口请求方式列表',
     PRIMARY KEY ( `id` )
@@ -83,3 +83,13 @@ CREATE TABLE IF NOT EXISTS `params_config` (
     PRIMARY KEY ( `id` ),
     UNIQUE KEY `unique_key` ( `key` )
     );
+
+-- 注释字段可能超过255个字符，统一升级为TEXT；以下语句可重复执行
+ALTER TABLE `api_docs_controller_data`
+    ALTER COLUMN `comment` SET DATA TYPE TEXT;
+ALTER TABLE `api_docs_interface_data`
+    ALTER COLUMN `controller_comment` SET DATA TYPE TEXT;
+ALTER TABLE `api_docs_interface_data_search`
+    ALTER COLUMN `controller_comment` SET DATA TYPE TEXT;
+ALTER TABLE `api_docs_interface_data_search`
+    ALTER COLUMN `interface_comment` SET DATA TYPE TEXT;
